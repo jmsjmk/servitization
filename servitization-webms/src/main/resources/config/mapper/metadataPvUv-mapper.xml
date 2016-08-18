@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.servitization.webms.mapper.MetadataPvUvMapper">
+	<resultMap type="com.servitization.webms.entity.MetadataPvUv"
+		id="MetadataPvUvResult">
+		<id property="id" column="id" />
+		<result property="metadataId" column="metadata_id" />
+		<result property="proxyId" column="proxy_id" />
+		<result property="sourceUrl" column="source_url" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+	<insert id="addPvUv" parameterType="java.util.Map">
+		insert into
+		metadata_pvLog(metadata_id,proxy_id,create_time)
+		values
+		(#{metadataId},#{proxyId},#{createTime})
+	</insert>
+
+	<select id="getMetadataPvUvList" parameterType="java.util.Map"
+		resultMap="MetadataPvUvResult">
+		SELECT
+		d.id, d.metadata_id, d.proxy_id,
+		p.source_url,
+		d.create_time
+		FROM metadata_pvLog d,
+		metadata_proxy p
+		WHERE d.metadata_id
+		= #{metadataId} AND d.proxy_id =
+		p.id
+		ORDER BY create_time DESC
+	</select>
+
+	<select id="getMetadataPvUvCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM metadata_pvLog d, metadata_proxy p
+		WHERE d.proxy_id
+		= p.id AND d.metadata_id = #{metadataId}
+		<if test="sourceUrl != null and sourceUrl != ''">
+			AND p.source_url LIKE CONCAT(CONCAT('%',
+			#{sourceUrl}),'%')
+		</if>
+	</select>
+
+	<select id="vertifyPvUv" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*)
+		from metadata_pvLog
+		where proxy_id =
+		#{proxyId} and metadata_id = #{metadataId}
+	</select>
+	<delete id="delete" parameterType="java.util.Map">
+		delete from metadata_pvLog
+		where proxy_id = #{proxyId} and metadata_id = #{metadataId}
+	</delete>
+
+	<delete id="deleteMany" parameterType="java.util.List">
+		delete from metadata_pvLog where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<delete id="deletePvUvByMetadataid">
+		delete from metadata_pvLog where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="selectPvUvList" resultMap="MetadataPvUvResult"
+		parameterType="java.lang.Long">
+		select * from metadata_pvLog
+		where metadata_id =
+		#{oldMetaId} and proxy_id=#{oldProxyId}
+	</select>
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into
+		metadata_pvLog(metadata_id,proxy_id,create_time)
+		values
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.metadataId},#{item.proxyId},#{item.createTime})
+		</foreach>
+	</insert>
+</mapper>    

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.servitization.webms.mapper.MetadataProxyMapper">
+
+	<resultMap type="MetadataProxy" id="MetadataProxyResultMap">
+		<id property="id" column="id" />
+		<result property="metadataId" column="metadata_id" />
+		<result property="sourceUrl" column="source_url" />
+		<result property="sourceMethod" column="source_method" />
+		<result property="isForward" column="is_forward" />
+		<result property="targetUrl" column="target_url" />
+		<result property="targetMethod" column="target_method" />
+		<result property="connectTimeout" column="connect_timeout" />
+		<result property="socketTimeout" column="socket_timeout" />
+		<result property="threshold" column="threshold" />
+		<result property="seviceType" column="sevice_type" />
+		<result property="createTime" column="create_time" />
+		<result property="serviceName" column="service_name" />
+		<result property="serviceVersion" column="service_version" />
+		<result property="servicePoolName" column="service_pool_name" />
+		<result property="thresholdType" column="threshold_type" />
+		<result property="convert" column="isconvert" />
+	</resultMap>
+
+	<sql id="tableColumns">
+		id,
+		metadata_id,
+		source_url,
+		source_method,
+		is_forward,
+		target_url,
+		target_method,
+		connect_timeout,
+		socket_timeout
+		,threshold,
+		sevice_type,
+		create_time,
+		service_name,
+		service_version,
+		service_pool_name,
+		isconvert,
+		threshold_type
+	</sql>
+
+	<select id="getMetadataProxyList" resultMap="MetadataProxyResultMap">
+		SELECT
+		<include refid="tableColumns" />
+		FROM metadata_proxy
+		WHERE metadata_id = #{metadataId}
+		ORDER BY
+		create_time DESC
+	</select>
+
+	<select id="getProxyById" resultMap="MetadataProxyResultMap">
+		SELECT
+		<include refid="tableColumns" />
+		FROM metadata_proxy
+		WHERE id = #{proxyId}
+	</select>
+
+	<select id="getMetadataProxyListByParams" parameterType="java.util.Map"
+		resultMap="MetadataProxyResultMap">
+		SELECT
+		<include refid="tableColumns" />
+		FROM metadata_proxy
+		WHERE metadata_id = #{metadataId}
+		<if test="sourceUrl != null and sourceUrl != ''">
+			AND source_url LIKE CONCAT(CONCAT('%', #{sourceUrl}),'%')
+		</if>
+		<if test="targetUrl != null and targetUrl != ''">
+			AND service_name LIKE CONCAT(CONCAT('%',
+			#{targetUrl}),'%')
+		</if>
+		ORDER BY create_time DESC
+		limit #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="getMetadataProxyCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM metadata_proxy
+		WHERE metadata_id = #{metadataId}
+		<if test="sourceUrl != null and sourceUrl != ''">
+			AND source_url LIKE CONCAT(CONCAT('%', #{sourceUrl}),'%')
+		</if>
+		<if test="targetUrl != null and targetUrl != ''">
+			AND target_url LIKE CONCAT(CONCAT('%', #{targetUrl}),'%')
+		</if>
+	</select>
+
+	<delete id="deleteMetadataProxys" parameterType="java.util.List">
+		delete from metadata_proxy where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<delete id="deleteProxyByMetadataid">
+		delete from metadata_proxy where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<insert id="addMetadataProxy" parameterType="MetadataProxy"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO metadata_proxy(metadata_id,
+			source_url, source_method,
+			target_url,target_method,
+			connect_timeout,socket_timeout,
+			threshold,create_time,
+			service_name,service_version,
+			service_pool_name,sevice_type,isconvert,
+			threshold_type
+		)
+		VALUES (#{metadataId}, #{sourceUrl}, #{sourceMethod},
+		#{targetUrl},
+		#{targetMethod}, #{connectTimeout}, #{socketTimeout},
+		#{threshold},
+		#{createTime}, #{serviceName}, #{serviceVersion},
+		#{servicePoolName},
+		#{seviceType}, #{convert},
+		#{thresholdType})
+	</insert>
+
+	<update id="updateMetadataProxy" parameterType="MetadataProxy">
+		UPDATE
+		metadata_proxy
+		SET source_url = #{sourceUrl}, source_method =
+		#{sourceMethod},
+		target_url = #{targetUrl},
+		target_method = #{targetMethod},
+		connect_timeout=#{connectTimeout},
+		socket_timeout= #{socketTimeout},
+		threshold=#{threshold},
+		service_name=#{serviceName},
+		service_version=#{serviceVersion},
+		service_pool_name=#{servicePoolName},
+		isconvert=#{convert},
+		threshold_type=#{thresholdType},
+		sevice_type=#{seviceType}
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectServiceNameByServicePoolName" parameterType="map"
+		resultType="java.lang.String">
+		select
+		service_name
+		from
+		metadata_proxy
+		where
+			service_pool_name = #{servicePoolName}
+		and
+			metadata_id = #{metadataId}
+	</select>
+
+	<update id="updateProxyPoolName" parameterType="map">
+		update
+		metadata_proxy
+		set
+		service_pool_name = #{servicePoolName}
+		where
+		service_pool_name = #{oldServicePoolName} and
+		metadata_id =
+		#{metadataId}
+	</update>
+
+	<select id="sourcesUrlIsAgain" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) from
+			metadata_proxy
+		where
+			metadata_id = #{metadataId}
+		and
+			source_url = #{sourceUrl}
+	</select>
+</mapper>

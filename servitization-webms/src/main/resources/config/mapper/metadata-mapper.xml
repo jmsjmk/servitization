@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.servitization.webms.mapper.MetadataMapper">
+
+    <resultMap type="Metadata" id="MetadataResultMap">
+        <id property="id" column="id"/>
+        <result property="metaKey" column="meta_key"/>
+        <result property="description" column="description"/>
+        <result property="deployModel" column="deploy_model"/>
+        <result property="upChain" column="up_chain"/>
+        <result property="downChain" column="down_chain"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="getMetadataList" parameterType="java.util.Map" resultMap="MetadataResultMap">
+        SELECT
+          id,
+          meta_key,
+          description,
+          deploy_model,
+          up_chain,
+          down_chain,
+          create_time
+        from metadata
+        ORDER BY create_time DESC
+        limit #{pageIndex}, #{pageSize}
+    </select>
+
+    <select id="getMetadataById" parameterType="java.lang.Long" resultMap="MetadataResultMap">
+        SELECT
+        	id, meta_key, 
+        	description, 
+        	deploy_model, 
+        	up_chain, 
+        	down_chain, 
+        	create_time
+        FROM metadata
+        WHERE id = #{metadataId}
+    </select>
+
+    <select id="getMetadataCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM metadata
+    </select>
+
+    <delete id="deleteMetadatas" parameterType="java.util.List">
+        delete from metadata where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="addMetadata" parameterType="Metadata" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <choose>
+            <when test="deployModel != null and upChain != null and downChain != null">
+                metadata(meta_key, description, create_time, deploy_model, up_chain, down_chain)
+                VALUES (#{metaKey}, #{description}, #{createTime}, #{deployModel}, #{upChain}, #{downChain})
+            </when>
+            <otherwise>
+                metadata(meta_key, description, create_time)
+                VALUES (#{metaKey}, #{description}, #{createTime})
+            </otherwise>
+        </choose>
+    </insert>
+
+    <select id="isExistMetadata" parameterType="Metadata" resultType="java.lang.Integer">
+        SELECT count(*) FROM metadata WHERE meta_key = #{metaKey} OR description = #{description}
+    </select>
+
+    <update id="updateMetadataChain" parameterType="Metadata">
+        UPDATE metadata set deploy_model = #{deployModel}, up_chain = #{upChain}, down_chain = #{downChain} WHERE id = #{id}
+    </update>
+</mapper>

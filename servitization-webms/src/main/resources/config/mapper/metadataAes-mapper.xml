@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.servitization.webms.mapper.MetadataAesMapper">
+	<select id="getAesWhitelist" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		select ips from
+			metadata_aes_whitelist
+		where
+			metadata_id = #{metadata_id}
+	</select>
+	
+	<insert id="addAesWhitelist" parameterType="java.util.Map"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+			metadata_aes_whitelist(
+				metadata_id,
+				ips,
+				create_time
+			)
+		VALUES (#{metadata_id},
+		 		#{ips},
+		 		#{createTime}
+		 		)
+	</insert>
+	
+	<update id="updateAesWhitelist" parameterType="java.util.Map">
+		UPDATE
+			metadata_aes_whitelist
+		SET
+			ips = #{ips}
+		WHERE metadata_id = #{metadata_id}
+	</update>
+	
+	<delete id="deleteAesWhitelist" parameterType="java.util.List">
+		delete from metadata_aes_whitelist where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

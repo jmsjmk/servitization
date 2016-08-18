@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.servitization.webms.mapper.MetadataDefineMapper">
+
+	<resultMap type="MetadataDefine" id="MetadataDefineResultMap">
+		<id property="id" column="id" />
+		<result property="metadataId" column="metadata_id" />
+		<result property="proxyId" column="proxy_id" />
+		<result property="sourceUrl" column="source_url" />
+		<result property="timeUnit" column="time_unit" />
+		<result property="times" column="times" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<select id="getMetadataDefineList" parameterType="java.util.Map"
+		resultMap="MetadataDefineResultMap">
+		SELECT
+			d.id,
+			d.metadata_id,
+			d.proxy_id,
+			p.source_url,
+			d.time_unit,
+			d.times,
+			d.create_time
+		FROM metadata_defence d,
+			 metadata_proxy p
+		WHERE
+			d.metadata_id = #{metadataId}
+		AND d.proxy_id = p.id
+		<if test="sourceUrl != null and sourceUrl != ''">
+			AND p.source_url LIKE
+			CONCAT(CONCAT('%', #{sourceUrl}),'%')
+		</if>
+		ORDER BY create_time DESC
+		limit #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="getMetadataDefineListByMetaIdAndProxyId" resultMap="MetadataDefineResultMap">
+		SELECT
+		d.id, d.metadata_id, d.proxy_id, p.source_url, d.time_unit,
+		d.times,
+		d.create_time
+		FROM metadata_defence d, metadata_proxy p
+		WHERE
+		d.metadata_id = #{metadataId} AND d.proxy_id = #{proxyId} AND p.id =
+		#{proxyId}
+	</select>
+
+	<select id="getMetadataDefineCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM metadata_defence d, metadata_proxy p
+		WHERE
+		d.proxy_id = p.id AND d.metadata_id = #{metadataId}
+		<if test="sourceUrl != null and sourceUrl != ''">
+			AND p.source_url LIKE CONCAT(CONCAT('%',
+			#{sourceUrl}),'%')
+		</if>
+	</select>
+
+	<delete id="deleteMetadataDefines" parameterType="java.util.List">
+		delete from metadata_defence where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<delete id="deleteDefineByMetadaId" parameterType="java.util.List">
+		delete from metadata_defence where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<insert id="addMetadataDefine" parameterType="MetadataDefine"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		metadata_defence(metadata_id, proxy_id, time_unit, times,
+		create_time)
+		VALUES (#{metadataId}, #{proxyId}, #{timeUnit}, #{times},
+		#{createTime})
+	</insert>
+
+	<select id="getDefineById" resultMap="MetadataDefineResultMap">
+		SELECT
+		d.id, d.metadata_id,
+		d.proxy_id, p.source_url, d.time_unit, d.times,
+		d.create_time
+		FROM
+		metadata_defence d, metadata_proxy p
+		WHERE d.id = #{defineId} AND
+		d.proxy_id = p.id
+	</select>
+
+	<update id="updateMetadataDefine" parameterType="MetadataDefine">
+		UPDATE
+		metadata_defence
+		SET proxy_id = #{proxyId}, time_unit = #{timeUnit},
+		times = #{times}
+		WHERE id = #{id}
+	</update>
+	<select id="vertifyDefine" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) from
+			metadata_defence
+		where metadata_id = #{metadata_id}
+		and proxy_id = #{proxy_id}
+	</select>
+	
+	
+	<select id="getDefineWhitelist" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		select
+			ips
+		from
+			metadata_defence_whitelist
+		where
+			metadata_id = #{metadata_id}
+	</select>
+	
+	<insert id="addDefineWhitelist" parameterType="java.util.Map"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		metadata_defence_whitelist(metadata_id, ips, create_time)
+		VALUES (#{metadata_id}, #{ips}, #{createTime})
+	</insert>
+	
+	<update id="updateDefineWhitelist" parameterType="java.util.Map">
+		UPDATE
+		metadata_defence_whitelist
+		SET ips = #{ips}
+		WHERE metadata_id = #{metadata_id}
+	</update>
+	
+	<delete id="deleteDefineWhitelist" parameterType="java.util.List">
+		delete from metadata_defence_whitelist where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+</mapper>

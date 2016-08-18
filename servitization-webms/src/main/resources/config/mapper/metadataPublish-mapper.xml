@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.servitization.webms.mapper.MetadataPublishMapper">
+
+	<resultMap type="MetadataPublish" id="MetadataPublishResultMap">
+		<id property="id" column="id" />
+		<result property="nodeRelationId" column="node_relation_id" />
+		<result property="metadataVersionId" column="metadata_version_id" />
+		<result property="status" column="status" />
+		<result property="createTime" column="create_time" />
+		<result property="versionDesc" column="description" />
+		<result property="versionId" column="versionId" />
+	</resultMap>
+
+
+
+	<insert id="addPublish" parameterType="MetadataPublish"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO metadata_publish (node_relation_id, metadata_version_id, status,
+		create_time)
+		VALUES
+		(#{nodeRelationId}, #{metadataVersionId}, #{status}, #{createTime})
+	</insert>
+
+	<select id="getPublishedVersionIdByRelationId" parameterType="java.lang.Long"
+		resultType="java.lang.Integer">
+		SELECT 
+			metadata_version_id 
+		FROM 
+			metadata_publish 
+		WHERE node_relation_id = #{nodeRelationId}
+		      ORDER BY create_time DESC LIMIT 1
+	</select>
+
+	<select id="getPublishingJob" resultMap="MetadataPublishResultMap">
+		SELECT
+			id,
+			node_relation_id,
+			metadata_version_id,
+			status,
+			create_time
+		FROM
+			metadata_publish
+		WHERE status = 0
+		ORDER BY create_time DESC LIMIT 1
+	</select>
+
+	<update id="updatePublishStatus" parameterType="MetadataPublish">
+		UPDATE
+		metadata_publish
+		SET status = #{status}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getPublishHistoryByNodeRelationId" parameterType="java.util.Map"
+		resultMap="MetadataPublishResultMap">
+		SELECT
+			p.id,
+			p.node_relation_id,
+			p.metadata_version_id,
+			p.status,
+			p.create_time,
+			v.id versionId,
+			v.description
+		FROM metadata_publish p,
+			 metadata_version v
+		WHERE
+			p.metadata_version_id= v.id
+		AND p.node_relation_id = #{metadataId}
+		ORDER BY create_time
+		DESC
+		limit #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="getPublishHistoryCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM metadata_publish p,metadata_version v
+		WHERE p.metadata_version_id =
+		v.id AND p.node_relation_id = #{nodeRelationId}
+	</select>
+
+	<delete id="deletePublicData">
+		DELETE from metadata_publish WHERE NOT EXISTS (select 1 from
+		metadata_node_relation WHERE
+		metadata_publish.node_relation_id=metadata_node_relation.id );
+	</delete>
+</mapper>

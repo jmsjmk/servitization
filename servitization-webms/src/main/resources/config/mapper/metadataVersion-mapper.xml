@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.servitization.webms.mapper.MetadataVersionMapper">
+
+	<resultMap type="MetadataVersion" id="MetadataVersionResultMap">
+		<id property="id" column="id" />
+		<result property="metadataId" column="metadata_id" />
+		<result property="metadataXml" column="metadata_xml" />
+		<result property="description" column="description" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<select id="getMetadataVersionList" parameterType="java.util.Map"
+		resultMap="MetadataVersionResultMap">
+		SELECT mv.id, 
+			   mv.metadata_id, 
+			   mx.metadata_xml,
+			   mv.description,
+		       mv.create_time
+		FROM metadata_version mv, 
+		     metadata_xml mx
+		WHERE mv.metadata_id = #{metadataId}
+		AND mv.id = mx.metadata_version_id
+		ORDER BY mv.create_time DESC
+		      limit #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="getMetadataVersionCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM metadata_version
+		WHERE metadata_id =
+		#{metadataId}
+	</select>
+
+	<insert id="addVersion" parameterType="MetadataVersion"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO metadata_version
+			   (metadata_id, description, create_time)
+		VALUES (#{metadataId}, #{description}, #{createTime})
+	</insert>
+
+	<select id="getMetadataVersionById" parameterType="java.lang.Long"
+		resultMap="MetadataVersionResultMap">
+		SELECT mv.id, 
+			   mv.metadata_id, 
+			   mx.metadata_xml,
+			   mv.description,
+		       mv.create_time
+		FROM metadata_version mv, 
+		     metadata_xml mx
+		WHERE mv.id = #{id} and 
+		      mx.metadata_version_id = #{id}
+	</select>
+
+	<select id="getLatestMetadataVersionByMetadataId" parameterType="java.lang.Long"
+		resultMap="MetadataVersionResultMap">
+		SELECT mv.id, 
+			   mv.metadata_id,
+			   mx.metadata_xml,
+		       mv.description, 
+		       mv.create_time
+		FROM metadata_version mv,
+		     metadata_xml mx
+		WHERE mv.metadata_id = #{metadataId} AND 
+			  mv.id = mx.metadata_version_id
+		ORDER BY create_time DESC limit 1
+	</select>
+
+	<select id="getMetadataVersionListByPage" resultMap="MetadataVersionResultMap">
+		SELECT
+			  mv.id, mv.metadata_id, 
+			  mx.metadata_xml, 
+			  mv.description,
+			  mv.create_time
+		FROM metadata_version mv,
+			 metadata_xml mx
+		WHERE mv.metadata_id = #{metadataId}
+		AND   mv.id = mx.metadata_version_id
+		ORDER BY create_time DESC
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+
+	<resultMap type="MetadataXml" id="MetadataXmlResultMap">
+		<id property="id" column="id" />
+		<result property="versionId" column="metadata_version_id" />
+		<result property="metadataXml" column="metadata_xml" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="addMetadataXml" parameterType="MetadataXml"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO metadata_xml
+			(metadata_version_id, metadata_xml)
+		VALUES (#{versionId}, #{metadataXml})
+	</insert>
+
+	<select id="getMetadataXmlByVersionId" parameterType="java.lang.Long"
+		resultMap="MetadataXmlResultMap">
+		SELECT id, versionId, metadata_xml
+		FROM metadata_xml
+		WHERE
+		metadata_version_id = #{id}
+	</select>
+
+	<select id="getMetadataXmlStrByVersionId" parameterType="java.lang.Long"
+		resultType="java.lang.String">
+		SELECT CAST(metadata_xml as CHAR)
+		FROM metadata_xml
+		WHERE
+		metadata_version_id = #{id}
+	</select>
+
+	<delete id="deleteVersionByMetadataid" parameterType="java.util.List">
+		delete from metadata_version where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<delete id="deleteXmlVersion">
+		DELETE from metadata_xml WHERE NOT EXISTS (select
+		0
+		from metadata_version WHERE
+		metadata_xml.metadata_version_id=metadata_version.id )
+	</delete>
+</mapper>

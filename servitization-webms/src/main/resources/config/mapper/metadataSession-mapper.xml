@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.servitization.webms.mapper.MetadataSessionMapper">
+
+	<resultMap type="MetadataSession" id="MetadataSessionResultMap">
+		<id property="id" column="id" />
+		<result property="metadataId" column="metadata_id" />
+		<result property="proxyId" column="proxy_id" />
+		<result property="sourceUrl" column="source_url" />
+		<result property="strategy" column="strategy" />
+		<result property="createTime" column="create_time" />
+		
+		<result property="reqType" column="reqtype" />
+		<result property="validateurl" column="validateurl" />
+		<result property="validateMethod" column="validateMethod" />
+	</resultMap>
+
+	<select id="getMetadataSessionList" parameterType="java.util.Map"
+		resultMap="MetadataSessionResultMap">
+		SELECT
+			d.id, 
+			d.metadata_id, 
+			d.proxy_id, 
+			p.source_url, 
+			d.strategy,
+			d.reqtype,
+			d.validateurl,
+			d.validateMethod,
+			d.create_time
+		FROM metadata_session d, 
+			 metadata_proxy p
+		WHERE
+			d.metadata_id = #{metadataId}
+		AND
+			d.proxy_id = p.id
+		<if test="sourceUrl != null and sourceUrl != ''">
+			AND p.source_url LIKE CONCAT(CONCAT('%',
+			#{sourceUrl}),'%')
+		</if>
+		ORDER BY create_time DESC
+		limit #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="getMetadataSessionListByMetaIdAndProxyId" resultMap="MetadataSessionResultMap">
+		SELECT
+		d.id, d.metadata_id, d.proxy_id, p.source_url, d.strategy,
+		d.create_time
+		FROM metadata_session d, metadata_proxy p
+		WHERE
+		d.metadata_id = #{metadataId} AND d.proxy_id = #{proxyId} AND p.id =
+		#{proxyId}
+	</select>
+
+	<select id="getMetadataSessionCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM metadata_session d, metadata_proxy p
+		WHERE
+		d.proxy_id = p.id AND d.metadata_id = #{metadataId}
+		<if test="sourceUrl != null and sourceUrl != ''">
+			AND p.source_url LIKE CONCAT(CONCAT('%',
+			#{sourceUrl}),'%')
+		</if>
+	</select>
+
+	<delete id="deleteMetadataSessions" parameterType="java.util.List">
+		delete from metadata_session where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<delete id="deleteSessionByMetadataid">
+		delete from metadata_session where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<insert id="addMetadataSession" parameterType="MetadataSession">
+		INSERT INTO metadata_session
+			(metadata_id, 
+			 proxy_id, 
+			 strategy, 
+			 reqtype,
+			 validateurl,
+			 validateMethod,
+			create_time)
+		VALUES
+			(#{metadataId}, 
+			#{proxyId}, 
+			#{strategy},
+			#{reqType},
+			#{validateurl},
+			#{validateMethod},
+			#{createTime})
+	</insert>
+
+	<select id="getSessionById" resultMap="MetadataSessionResultMap">
+		SELECT
+		d.id, d.metadata_id,
+		d.proxy_id, 
+		p.source_url, 
+		d.strategy, 
+		d.reqtype,
+		d.validateurl,
+		d.validateMethod,
+		d.create_time
+		FROM
+		metadata_session d, metadata_proxy p
+		WHERE d.id = #{sessionId} AND
+		d.proxy_id = p.id
+	</select>
+	<select id="vertifySession" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*)
+		from metadata_session 
+		where proxy_id = #{proxyId} and 
+		      metadata_id = #{metadataId}
+	</select>
+	<update id="updateMetadataSession" parameterType="MetadataSession">
+		UPDATE
+		metadata_session
+		SET 
+			proxy_id = #{proxyId}, 
+			strategy = #{strategy},
+			reqtype = #{reqType},
+			validateurl = #{validateurl},
+			validateMethod = #{validateMethod}
+		WHERE id = #{id}
+	</update>
+</mapper>

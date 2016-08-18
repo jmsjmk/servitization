@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:aop="http://www.springframework.org/schema/aop"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+    <context:annotation-config/>
+    <aop:aspectj-autoproxy/>
+
+    <context:property-placeholder location="classpath:config/jdbc.properties" ignore-unresolvable="true"/>
+
+    <beans:bean id="parentDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+                destroy-method="close">
+
+        <beans:property name="initialSize" value="${webms.parent.initialSize}"></beans:property>
+        <beans:property name="maxActive" value="${webms.parent.maxActive}"></beans:property>
+        <beans:property name="maxIdle" value="${webms.parent.maxIdle}"></beans:property>
+        <beans:property name="minIdle" value="${webms.parent.minIdle}"></beans:property>
+        <beans:property name="logAbandoned" value="${webms.parent.logAbandoned}"></beans:property>
+        <beans:property name="removeAbandoned" value="${webms.parent.removeAbandoned}"></beans:property>
+        <beans:property name="removeAbandonedTimeout" value="${webms.parent.removeAbandonedTimeout}"></beans:property>
+        <beans:property name="maxWait" value="${webms.parent.maxWait}"></beans:property>
+        <beans:property name="validationQuery" value="${webms.parent.validationQuery}"></beans:property>
+        <beans:property name="testOnBorrow" value="${webms.parent.testOnBorrow}"></beans:property>
+        <beans:property name="testWhileIdle" value="${webms.parent.testWhileIdle}"></beans:property>
+        <beans:property name="timeBetweenEvictionRunsMillis"
+                        value="${webms.parent.timeBetweenEvictionRunsMillis}"></beans:property>
+        <beans:property name="minEvictableIdleTimeMillis"
+                        value="${webms.parent.minEvictableIdleTimeMillis}"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="webmsWriteDataSource" parent="parentDataSource">
+        <beans:property name="driverClassName" value="${webms.parent.driverClassName}"/>
+        <beans:property name="url" value="${webms.write.jdbcUrl}"></beans:property>
+        <beans:property name="username" value="${webms.write.user}"></beans:property>
+        <beans:property name="password" value="${webms.write.pass}"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="webmsReadDataSource" parent="parentDataSource">
+        <beans:property name="driverClassName" value="${webms.parent.driverClassName}"/>
+        <beans:property name="url" value="${webms.read.jdbcUrl}"></beans:property>
+        <beans:property name="username" value="${webms.read.user}"></beans:property>
+        <beans:property name="password" value="${webms.read.pass}"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="dataSource" class="com.servitization.commons.db.ManyDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <!-- write -->
+                <entry key="master" value-ref="webmsWriteDataSource"/>
+                <!-- read -->
+                <entry key="slave" value-ref="webmsReadDataSource"/>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="webmsWriteDataSource"/>
+    </beans:bean>
+
+    <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="configLocation" value="classpath:config/mybatis-config.xml"/>
+    </beans:bean>
+
+    <!-- 事务管理相关 -->
+    <!--
+    <beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <beans:property name="dataSource" ref="dataSource" />
+    </beans:bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    -->
+
+    <!-- 加载配置文件 -->
+    <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <beans:property name="basePackage" value="com.servitization.webms.mapper"/>
+    </beans:bean>
+
+    <!-- 配置数据库注解aop -->
+    <beans:bean id="manyDataSourceAspect" class="com.servitization.commons.db.ManyDataSourceAspect"/>
+
+    <!-- 配置功能过滤 -->
+    <aop:config>
+        <aop:aspect id="c" ref="manyDataSourceAspect">
+            <aop:pointcut id="tx" expression="execution(* com.servitization.webms.mapper.*.*(..))"/>
+            <aop:before pointcut-ref="tx" method="before"/>
+        </aop:aspect>
+    </aop:config>
+
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="webmsWriteDataSource"/>
+    </bean>
+
+</beans:beans>

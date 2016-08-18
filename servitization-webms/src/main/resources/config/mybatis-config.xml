@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE configuration 
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="false" />  
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="25000" />
+		<setting name="safeRowBoundsEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="false" />
+		<setting name="localCacheScope" value="SESSION" />
+		<setting name="jdbcTypeForNull" value="OTHER" />
+		<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="com.servitization.webms.entity.Metadata" alias="Metadata"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataModule" alias="MetadataModule"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataGroup" alias="MetadataGroup"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataProxy" alias="MetadataProxy"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataDefine" alias="MetadataDefine"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataSession" alias="MetadataSession" />
+		<typeAlias type="com.servitization.webms.entity.MetadataVersion" alias="MetadataVersion"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataXml" alias="MetadataXml"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataNode" alias="MetadataNode"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataPublish" alias="MetadataPublish"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataPublishIp" alias="MetadataPublishIp"/>
+		<typeAlias type="com.servitization.webms.entity.MetadataMachine" alias="MetadataMachine"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="config/mapper/metadata-mapper.xml"/>
+		<mapper resource="config/mapper/metadataModule-mapper.xml"/>
+		<mapper resource="config/mapper/metadataGroup-mapper.xml"/>
+		<mapper resource="config/mapper/metadataProxy-mapper.xml"/>
+		<mapper resource="config/mapper/metadataDefine-mapper.xml"/>
+		<mapper resource="config/mapper/metadataSession-mapper.xml"/>
+		<mapper resource="config/mapper/metadataVersion-mapper.xml"/>
+		<mapper resource="config/mapper/metadataNode-mapper.xml"/>
+		<mapper resource="config/mapper/metadataPublish-mapper.xml"/>
+		<mapper resource="config/mapper/metadataPublishIp-mapper.xml"/>
+		<mapper resource="config/mapper/metadataServicePool-mapper.xml"/>
+		<mapper resource="config/mapper/metadataPvUv-mapper.xml"/>
+		<mapper resource="config/mapper/metadataAes-mapper.xml"/>
+		<mapper resource="config/mapper/metadataMachine-mapper.xml"/>
+	</mappers>
+</configuration> 

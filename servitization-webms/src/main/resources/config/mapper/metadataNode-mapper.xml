@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.servitization.webms.mapper.MetadataNodeMapper">
+
+	<resultMap type="MetadataNode" id="MetadataNodeResultMap">
+		<id property="id" column="id" />
+		<result property="metadataId" column="metadata_id" />
+		<result property="nodeId" column="aos_node_id" />
+		<result property="nodeName" column="aos_node_name" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<select id="getMetadataNodeList" parameterType="java.util.Map"
+		resultMap="MetadataNodeResultMap">
+		SELECT id, metadata_id, 
+			   aos_node_id, aos_node_name,
+			   create_time
+		FROM metadata_node_relation
+		WHERE metadata_id = #{metadataId}
+		ORDER BY create_time DESC
+		limit #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="getMetadataNodeCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM metadata_node_relation
+		WHERE metadata_id
+		= #{metadataId}
+	</select>
+
+	<delete id="delNode" parameterType="java.lang.Long">
+		DELETE FROM
+		metadata_node_relation WHERE id = #{id}
+	</delete>
+
+	<insert id="addNodes" parameterType="java.util.List">
+		INSERT INTO metadata_node_relation (metadata_id, aos_node_id,
+		aos_node_name, create_time)
+		VALUES
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.metadataId}, #{item.nodeId}, #{item.nodeName},
+			#{item.createTime})
+		</foreach>
+	</insert>
+
+	<insert id="addNode" parameterType="MetadataNode">
+		INSERT INTO
+		metadata_node_relation (metadata_id, aos_node_id, aos_node_name,
+		create_time)
+		VALUES (#{metadataId}, #{nodeId}, #{nodeName},
+		#{createTime})
+	</insert>
+
+	<select id="existNode" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
+		metadata_node_relation
+		WHERE aos_node_id = #{1}
+	</select>
+
+	<select id="getMetadataIdByNodeId" resultMap="MetadataNodeResultMap">
+		SELECT 
+			id,
+			metadata_id, 
+			aos_node_id, 
+			aos_node_name, 
+			create_time
+		FROM
+			metadata_node_relation
+		WHERE aos_node_id = #{0}
+	</select>
+	<delete id="deleteNodeRelationByMetadataid" parameterType="java.util.List">
+		delete from metadata_node_relation where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

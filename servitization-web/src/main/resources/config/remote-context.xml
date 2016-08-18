@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+    <beans:bean id="ucenterPool"
+                class="com.servitization.commons.socket.client.pool.ConnectPool">
+        <beans:constructor-arg name="poolName" value="ucenterPool"/>
+        <beans:constructor-arg name="url" value="127.0.0.1:8080"/>
+        <beans:constructor-arg name="coefficient" value="0.5"/>
+        <beans:constructor-arg name="forceCloseChannel" value="true"/>
+        <beans:constructor-arg name="forceCloseTimeMillis" value="120000"/>
+    </beans:bean>
+    <beans:bean id="remoteClient" class="com.servitization.commons.socket.client.RemoteClient">
+        <beans:property name="connectPools">
+            <beans:map>
+                <beans:entry key="ucenter" value-ref="ucenterPool"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    <beans:bean class="com.servitization.commons.socket.spring.RemoteScannerConfigurer">
+        <beans:property name="basePackage"
+                        value="com.servitization.commons.user.remote.helper"/>
+        <beans:property name="remoteClient" ref="remoteClient"/>
+    </beans:bean>
+</beans:beans>

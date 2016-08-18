@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.servitization.webms.mapper.MetadataServicePoolMapper">
+	<insert id="insertPool"
+		parameterType="com.servitization.webms.entity.MetadataServicePool">
+		insert into metadata_service_pool (
+		service_pool_name,
+		url,
+		create_time,
+		service_type,
+		coefficient,
+		force_close_channel,
+		force_close_time_millis,
+		connect_timeout,
+		metadata_id
+		)
+		values(
+		#{servicePoolName},
+		#{url},
+		#{createTime},
+		#{serviceType},
+		#{coefficient},
+		#{forceCloseChannel},
+		#{forceCloseTimeMillis},
+		#{connectTimeout},
+		#{metadataId}
+		)
+	</insert>
+
+	<select id="selectPools" parameterType="long"
+		resultType="com.servitization.webms.entity.MetadataServicePool">
+		select
+			id id,
+			service_pool_name servicePoolName,
+			url url,
+			create_time createTime,
+			service_type serviceType,
+			coefficient coefficient,
+			force_close_channel forceCloseChannel,
+			force_close_time_millis forceCloseTimeMillis,
+			connect_timeout connectTimeout,
+			metadata_id metadataId
+		from
+			metadata_service_pool
+		where
+			metadata_id = #{metadataId}
+			order by create_time desc
+	</select>
+
+	<update id="updatePoolByName"
+		parameterType="com.servitization.webms.entity.MetadataServicePool">
+		update
+		metadata_service_pool
+		set
+		service_pool_name = #{servicePoolName},
+		url = #{url},
+		service_type = #{serviceType},
+		coefficient = #{coefficient},
+		force_close_channel = #{forceCloseChannel},
+		force_close_time_millis = #{forceCloseTimeMillis},
+		connect_timeout = #{connectTimeout},
+		metadata_id = #{metadataId}
+		where
+		service_pool_name = #{oldServicePoolName} and
+		metadata_id = #{metadataId}
+	</update>
+
+	<delete id="deletePoolByName" parameterType="java.lang.String">
+		delete from
+		metadata_service_pool
+		where
+		service_pool_name = #{servicePoolName}
+	</delete>
+
+	<select id="selectPoolByName" parameterType="map"
+		resultType="com.servitization.webms.entity.MetadataServicePool">
+		select
+		id id,
+		service_pool_name servicePoolName,
+		url url,
+		create_time createTime,
+		service_type serviceType,
+		coefficient coefficient,
+		force_close_channel forceCloseChannel,
+		force_close_time_millis forceCloseTimeMillis,
+		connect_timeout connectTimeout,
+		metadata_id metadataId
+		from
+		metadata_service_pool
+		where
+		service_pool_name = #{servicePoolName}
+		metadata_id = #{metadataId}
+	</select>
+	<delete id="deleteServicePoolByMetadataid" parameterType="java.util.List">
+		delete from metadata_service_pool where metadata_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

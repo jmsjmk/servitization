@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.servitization.webms.mapper.MetadataModuleMapper">
+    <resultMap type="MetadataModule" id="MetadataModuleResultMap">
+        <id property="id" column="id"/>
+        <result property="name" column="name" />
+        <result property="handlerName" column="handler_name"/>
+        <result property="handlerClazz" column="handler_clazz"/>
+        <result property="chain" column="chain"/>
+        <result property="validStatus" column="valid_status"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="getModuleList" parameterType="java.util.Map" resultMap="MetadataModuleResultMap">
+        SELECT
+          id,
+          name,
+          handler_name,
+          handler_clazz,
+          chain,
+          valid_status,
+          create_time
+        from metadata_module
+        ORDER BY create_time DESC
+        limit #{pageIndex}, #{pageSize}
+    </select>
+
+    <select id="getAllModuleList" resultMap="MetadataModuleResultMap">
+        SELECT
+        id, name,handler_name, handler_clazz, chain, valid_status, create_time
+        from metadata_module
+    </select>
+
+    <select id="getModuleCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM metadata_module
+    </select>
+
+    <delete id="deleteModule" parameterType="java.lang.Long">
+        delete from metadata_module where id = #{id}
+    </delete>
+
+    <insert id="addModule" parameterType="MetadataModule">
+        INSERT INTO metadata_module(name, handler_name, handler_clazz, chain, valid_status, create_time) VALUES (#{name}, #{handlerName}, #{handlerClazz},#{chain}, #{validStatus}, #{createTime})
+    </insert>
+
+    <update id="updateModule" parameterType="MetadataModule">
+    	UPDATE metadata_module
+    	set name=#{name},
+    	    handler_name = #{handlerName} ,
+    	    handler_clazz = #{handlerClazz},
+    	    chain = #{chain},
+    	    valid_status =#{validStatus}
+    	where id = #{id}
+    </update>
+
+    <select id="getModulesByIds" parameterType="java.util.List" resultMap="MetadataModuleResultMap">
+        SELECT id,
+               name,
+        	   handler_name, 
+        	   handler_clazz, 
+        	   chain,
+               valid_status,
+        	   create_time
+        FROM metadata_module
+        WHERE id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="vertifyModule" resultType="java.lang.Integer" parameterType="java.util.Map">
+       select count(*) from metadata_module where
+         handler_name = #{handlerName} or handler_clazz = #{handlerClazz}
+    </select>
+    
+</mapper>
