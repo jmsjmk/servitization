@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:/config/cyp-root-context.xml</param-value>
+        <param-value>classpath:/config/spring-root-context.xml</param-value>
     </context-param>
     <context-param>
         <param-name>log4jConfigLocation</param-name>
@@ -19,16 +19,16 @@
     </listener>
     <!-- spring mvc控制类 -->
     <servlet>
-        <servlet-name>guidemvc</servlet-name>
+        <servlet-name>SpringMvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:/config/cyp-mvc-context.xml</param-value>
+            <param-value>classpath:/config/spring-mvc-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>guidemvc</servlet-name>
+        <servlet-name>SpringMvc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <!-- 过滤字符集 -->

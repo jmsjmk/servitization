@@ -3,13 +3,13 @@ package com.servitization.commons.log;
 
 public class LoggerImpl implements Logger {
 
-    private static final org.apache.log4j.Logger BIG_LOG = org.apache.log4j.Logger.getLogger("cyp_commons_log");
+    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger("commons_log");
 
     @Override
     public void info(Log message) {
-        if (BIG_LOG == null) {
+        if (LOGGER == null) {
             return;
         }
-        BIG_LOG.info(message);
+        LOGGER.info(message);
     }
 }

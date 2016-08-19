@@ -4,8 +4,8 @@
              xmlns:beans="http://www.springframework.org/schema/beans"
              xsi:schemaLocation=" http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
-    <import resource="classpath:config/cyp-mvc-context.xml"/>
-    <import resource="classpath:config/cyp-resource-context.xml"/>
-    <import resource="classpath:config/cyp-remote-context.xml"/>
-    <import resource="classpath:config/cyp-bean-permission.xml"/>
+    <import resource="classpath:config/spring-mvc-context.xml"/>
+    <import resource="classpath:config/spring-resource-context.xml"/>
+    <import resource="classpath:config/spring-remote-context.xml"/>
+    <import resource="classpath:config/spring-bean-permission.xml"/>
 </beans:beans>

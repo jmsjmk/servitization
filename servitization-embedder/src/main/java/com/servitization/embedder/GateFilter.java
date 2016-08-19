@@ -6,7 +6,7 @@ import com.servitization.embedder.immobile.ImmobileRequest;
 import com.servitization.embedder.immobile.ImmobileResponse;
 import com.servitization.embedder.immobile.impl.ImmobileRequestHttpImpl;
 import com.servitization.embedder.immobile.impl.ImmobileResponseHttpImpl;
-import com.cyp.log.snooper.PerformanceSnooper;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,26 +19,22 @@ import java.io.IOException;
  */
 public class GateFilter implements Filter {
 
-	private Embedder embedder = EmbedderImpl.getInstance();
+    private Embedder embedder = EmbedderImpl.getInstance();
 
-	public void init(FilterConfig filterConfig) throws ServletException {
-		embedder.init();
-	}
+    public void init(FilterConfig filterConfig) throws ServletException {
+        embedder.init();
+    }
 
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
-		if (!RequestValidator.isValidatorRequest(request, response))
-			return;
-		String servicePath = ((HttpServletRequest) request).getServletPath();
-		PerformanceSnooper ps = new PerformanceSnooper(servicePath);
-		ps.start();
-		ImmobileRequest imRequest = new ImmobileRequestHttpImpl((HttpServletRequest) request);
-		ImmobileResponse imResponse = new ImmobileResponseHttpImpl((HttpServletResponse) response);
-		embedder.process(imRequest, imResponse, chain);
-		ps.stop();
-	}
+    public void doFilter(ServletRequest request, ServletResponse response,
+                         FilterChain chain) throws IOException, ServletException {
+        if (!RequestValidator.isValidatorRequest(request, response))
+            return;
+        ImmobileRequest imRequest = new ImmobileRequestHttpImpl((HttpServletRequest) request);
+        ImmobileResponse imResponse = new ImmobileResponseHttpImpl((HttpServletResponse) response);
+        embedder.process(imRequest, imResponse, chain);
+    }
 
-	public void destroy() {
-		embedder.destroy();
-	}
+    public void destroy() {
+        embedder.destroy();
+    }
 }

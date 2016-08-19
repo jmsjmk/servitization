@@ -13,23 +13,13 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>com.cyp.log</groupId>
-            <artifactId>cyp-log-snooper</artifactId>
-            <version>0.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.servitization</groupId>
             <artifactId>servitization-metadata</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.servitization.commons</groupId>

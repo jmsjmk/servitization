@@ -16,7 +16,6 @@ public enum CustomHeaderEnum {
     SESSIONKEY("sessionkey"),
     ACCEPTENCODING("accept-encoding"),
     ENCRYPTRESP("encryptresp"),
-    // -----------------------CYP-------------------
     COOKIE("cookie"),
     APP("app"),
     IMEI("imei"),
@@ -52,5 +51,4 @@ public enum CustomHeaderEnum {
     public String headerName() {
         return headerName;
     }
-
 }

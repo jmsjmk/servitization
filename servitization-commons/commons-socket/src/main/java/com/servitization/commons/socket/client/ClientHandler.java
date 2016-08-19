@@ -26,7 +26,7 @@ import java.io.IOException;
 public class ClientHandler extends SimpleChannelHandler {
 
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ClientHandler.class);
-    private static final Logger CYP_LOGGER = LogFactory.getLogger();
+    private static final Logger BASE_LOGGER = LogFactory.getLogger();
     private final IConnectPool connectPool;
 
     public ClientHandler(final IConnectPool connectPool) {
@@ -55,7 +55,7 @@ public class ClientHandler extends SimpleChannelHandler {
         log.setExtend1(e.getChannel().toString());
         log.setResponseCode(status.name());
 
-        CYP_LOGGER.info(log);
+        BASE_LOGGER.info(log);
         if (!StringUtils.equals(status.name(), SocketResponse.Response.Status.SUCCESS.name())) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("ClientHandler.messageReceived response status is " + status.name() + ",marking:" + marking);

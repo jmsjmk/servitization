@@ -16,17 +16,17 @@ import java.util.Date;
 public class RpcLogUtil {
 
     private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger("URLMonitorLogger");
+    private static final Logger BASE_LOGGER = LogFactory.getLogger();
+
     private static final String nullChar = "null";
 
     public static void writeLog(RpcLogObject rpcLogObject) {
         StringBuilder builder = new StringBuilder();
         Object traceId = MDC.get("marking");
         Date date = new Date();
-
         builder.append("null\t");//id
         builder.append(traceId == null ? nullChar : traceId);//traceid
         builder.append("\tnull\tOnlineWeb\tmobile\t");//\t sessionid \t productline \t appname \t
-
         builder.append(rpcLogObject.getMethodName());//methodname
         builder.append("\t");
         //系统信息返回码
@@ -34,7 +34,6 @@ public class RpcLogUtil {
         //服务器名称
         builder.append("\t");
         builder.append(OSUtil.linuxLocalName());//servername
-
         builder.append("\t");
         //服务器IP
         builder.append(OSUtil.linuxLocalIp());//serverip
@@ -58,7 +57,6 @@ public class RpcLogUtil {
         builder.append("\t");
         builder.append(nullChar);//referurl
         builder.append("\t");
-        //bussinesserrorcode
         //业务信息返回码，非0表示异常  extend1
         builder.append(StringUtils.isNotBlank(rpcLogObject.getBizError()) ? rpcLogObject.getBizError() : 0);
         builder.append("\t");
@@ -69,8 +67,6 @@ public class RpcLogUtil {
         builder.append(nullChar);
         LOG.info(builder.toString());
     }
-
-    private static final Logger CYP_LOGGER = LogFactory.getLogger();
 
     public static void writeLogBefore(RpcLogObject rpcLogObject) {
         Log log = new Log();
@@ -90,7 +86,7 @@ public class RpcLogUtil {
         if (LOG.isDebugEnabled()) {
             log.setRequestBody(rpcLogObject.getRequest() == null ? nullChar : rpcLogObject.getRequest().toString());
         }
-        CYP_LOGGER.info(log);
+        BASE_LOGGER.info(log);
     }
 
     public static void writeLogAfter(RpcLogObject rpcLogObject) {
@@ -113,11 +109,10 @@ public class RpcLogUtil {
         log.setException(rpcLogObject.getThrowable());
         log.setExceptionMsg(rpcLogObject.getErrorMsg());
         log.setElapsedTime(String.valueOf(date.getTime() - rpcLogObject.getStartTime()));
-
         if (LOG.isDebugEnabled()) {
             log.setRequestBody(rpcLogObject.getRequest() == null ? nullChar : rpcLogObject.getRequest().toString());
             log.setResponseBody(rpcLogObject.getResult() == null ? nullChar : rpcLogObject.getResult().toString());
         }
-        CYP_LOGGER.info(log);
+        BASE_LOGGER.info(log);
     }
 }
