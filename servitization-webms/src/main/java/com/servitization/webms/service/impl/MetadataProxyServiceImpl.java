@@ -37,7 +37,6 @@ public class MetadataProxyServiceImpl implements IMetadataProxyService {
 
     @Override
     public int deleteMetadataProxys(List<String> ids) {
-        System.out.println(MetadataProxyServiceImpl.class.toString() + ":" + ids);
         return metadataProxyMapper.deleteMetadataProxys(ids);
     }
 

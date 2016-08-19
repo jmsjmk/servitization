@@ -23,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Controller
@@ -36,7 +35,7 @@ public class ProxyController extends BaseObserver {
     private IMetadataServicePoolService metadataServicePoolService;
 
     @RequestMapping(value = "getProxyPage", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView getModulePage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getModulePage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("proxy");
@@ -82,38 +81,31 @@ public class ProxyController extends BaseObserver {
      * 删除转发列表
      *
      * @param request
-     * @param response
      */
     @Permission(name = "update")
     @RequestMapping(value = "deleteMetadataProxys", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> deleteMetadataProxys(HttpServletRequest request,
-                                                       HttpServletResponse response) {
+    public ResponseEntity<byte[]> deleteMetadataProxys(HttpServletRequest request) {
         String ids = request.getParameter("ids");
-        System.out.println("deleteMetadataProxys ids " + ids);
         List<String> list = JSONArray.parseArray(ids, String.class);
         System.out.println("list " + list);
         List<String> idList = getIdList(list);
         System.out.println("idList:" + idList);
-        // fuck 传递32__192.168.100.172:8090_HTTP 尽然给我删除了。。。
         int count = proxyService.deleteMetadataProxys(list);
-        // int  count = proxyService.deleteMetadataProxys(idList);
-        System.out.println("deleteMetadataProxys count:" + count);
         if (count > 0) {
             ConcreteSubject concreteSubject = ConcreteSubject.instances();
             concreteSubject.deleteProxy(list);
         }
         String msg = count == list.size() ? "删除成功" : "部分记录删除失败：没找到相应的记录";
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
 
     public List<String> getIdList(List<String> list) {
-        List<String> idList = new ArrayList<String>();
+        List<String> idList = new ArrayList<>();
         for (String s : list) {
             String[] array = s.split("_");
             idList.add(array[0]);
         }
-
         return idList;
     }
 
@@ -122,12 +114,11 @@ public class ProxyController extends BaseObserver {
      * 获取添加页面
      *
      * @param request
-     * @param response
      * @return
      */
     @Permission(name = "update")
     @RequestMapping(value = "getAddProxyPage", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView getProxyAddPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getProxyAddPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("proxy_add");
         Map<String, Object> modelMap = new HashMap<>();
@@ -141,8 +132,7 @@ public class ProxyController extends BaseObserver {
     }
 
     @RequestMapping(value = "addOrUpdateProxy", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> addOrUpdateProxy(HttpServletRequest request,
-                                                   HttpServletResponse response) {
+    public ResponseEntity<byte[]> addOrUpdateProxy(HttpServletRequest request) {
         String proxyId = request.getParameter("proxyId");
         String metadataId = request.getParameter("metadataId");
         String sourceUrl = request.getParameter("sourceUrl");
@@ -174,7 +164,7 @@ public class ProxyController extends BaseObserver {
         metadataProxy.setServiceName(convertNull2Empty(serviceName));
         metadataProxy.setServiceVersion(convertNull2Empty(serviceVersion));
         metadataProxy.setServicePoolName(convertNull2Empty(servicePoolName));
-        String msg = "成功";
+        String msg;
         if (StringUtils.isNotBlank(proxyId)) {
             metadataProxy.setId(Long.parseLong(proxyId));
             int count = proxyService.updateMetadataProxy(metadataProxy);
@@ -183,13 +173,12 @@ public class ProxyController extends BaseObserver {
             int count = proxyService.addMetadataProxy(metadataProxy);
             msg = count > 0 ? "添加成功" : "添加失败";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "selectServiceNameByServicePoolName", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> selectServiceNameByServicePoolName(HttpServletRequest request,
-                                                                     HttpServletResponse response) {
-        Map<String, Object> param = new HashMap<String, Object>();
+    public ResponseEntity<byte[]> selectServiceNameByServicePoolName(HttpServletRequest request) {
+        Map<String, Object> param = new HashMap<>();
         param.put("servicePoolName", request.getParameter("servicePoolName"));
         param.put("metadataId", Long.parseLong(request.getParameter("metadataId")));
         List<String> result = proxyService.selectServiceNameByServicePoolName(param);
@@ -198,7 +187,7 @@ public class ProxyController extends BaseObserver {
             msg = "There are some proxys using this pool: " + result.toString()
                     + " please delete them first";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     /**
@@ -211,7 +200,7 @@ public class ProxyController extends BaseObserver {
     public String isAgain(HttpServletRequest request) {
         String metadataId = request.getParameter("metadataId");
         String sourceUrl = request.getParameter("sourceUrl");
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("sourceUrl", sourceUrl);
         return String.valueOf(proxyService.sourcesUrlIsAgain(params));
@@ -275,21 +264,16 @@ public class ProxyController extends BaseObserver {
      */
     public ProxyDefineImpl handleProxyDefine(long metadataId) {
         ProxyDefineImpl proxyDefine = new ProxyDefineImpl();
-        // 1.
         List<MetadataProxy> list = proxyService.getMetadataProxyList(metadataId);
         List<ServiceModule> serviceModuleList = new ArrayList<>();
-        ServiceModule serviceModule = null;
-        SourceService source = null;
-        TargetService target = null;
-
-        // 2.
+        ServiceModule serviceModule;
+        SourceService source;
+        TargetService target;
         for (MetadataProxy proxy : list) {
             serviceModule = new ServiceModule();
             source = new SourceService();
             source.setPath(proxy.getSourceUrl());
             source.setHttpMethod(proxy.getSourceMethod());
-
-
             target = new TargetService();
             target.setSocketTimeout(proxy.getSocketTimeout());
             target.setThreshold(proxy.getThreshold());
@@ -307,14 +291,11 @@ public class ProxyController extends BaseObserver {
             serviceModule.setTargetService(target);
             serviceModule.setConvert(proxy.getConvert());
             serviceModuleList.add(serviceModule);
-
         }
         proxyDefine.setServiceModuleList(serviceModuleList);
-
-        // 3.
         List<MetadataServicePool> pools = metadataServicePoolService.selectPools(metadataId);
         if (pools != null && pools.size() > 0) {
-            List<ServicePool> sPools = new ArrayList<ServicePool>(pools.size());
+            List<ServicePool> sPools = new ArrayList<>(pools.size());
             for (int i = 0; i < pools.size(); i++) {
                 ServicePool sPool = new ServicePool();
                 MetadataServicePool mPool = pools.get(i);
