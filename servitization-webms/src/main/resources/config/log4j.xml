@@ -31,7 +31,7 @@
 		</layout>
 	</appender>
 	<logger name="com.servitization.webms">
-		<level value="DEBUG" />
+		<level value="INFO" />
 	</logger>
 	<logger name="org.springframework">
 		<level value="ERROR" />
