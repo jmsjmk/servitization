@@ -39,7 +39,6 @@ public class ErrorLogLayout extends PatternLayout {
             sBuffer.append(nullString).append('\t');
         }
         sBuffer.append(logEnd).append('\n');
-
         return sBuffer.toString();
     }
 

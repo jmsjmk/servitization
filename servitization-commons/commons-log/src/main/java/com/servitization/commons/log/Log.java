@@ -41,6 +41,7 @@ import java.io.StringWriter;
  * 我们会通过“BusinessLine”字段来区分各业务系统的日志
  */
 public class Log {
+
     private static final String TAB = "\t";
     private static final String ENTER = "\n";
     private static final String NULL_STR = "null";
@@ -195,12 +196,6 @@ public class Log {
         this.logTimeStamp = logTimeStamp;
     }
 
-    //	public String getLogVersion() {
-//		return logVersion;
-//	}
-//	public void setLogVersion(String logVersion) {
-//		this.logVersion = logVersion;
-//	}
     public String getLogTime() {
         return logTime;
     }
@@ -417,14 +412,11 @@ public class Log {
             exceptionString = sw.toString();
             pw.close();
             exceptionString = exceptionString.replaceAll("\n", "#");
-            sw = null;
-            pw = null;
         }
         builder.append(replaceTabAndEnter(exceptionString)).append(TAB);
         builder.append(replaceTabAndEnter(this.exceptionMsg)).append(TAB);
         builder.append(replaceTabAndEnter(this.extend1)).append(TAB);
         builder.append(replaceTabAndEnter(this.extend2)).append(ENTER);
-
         return builder.toString();
     }
 }

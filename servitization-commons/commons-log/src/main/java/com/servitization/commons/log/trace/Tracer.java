@@ -25,18 +25,12 @@ public class Tracer {
 
     public Spanner startRootTrace(String traceHead, SpanTypeEnum spanTypeEnum) {
         String traceId = traceHead + "-" + NotifyId.getInstance().getUniqIDHashString();
-        return startTrace(traceId, traceId + "-" + ROOT_SPAN, ROOT_SPAN,
-                spanTypeEnum, true);
-
+        return startTrace(traceId, traceId + "-" + ROOT_SPAN, ROOT_SPAN, spanTypeEnum, true);
     }
 
-    /**
-     * @param spanTypeEnum
-     */
     public Spanner startRootTrace(SpanTypeEnum spanTypeEnum) {
         String traceId = NotifyId.getInstance().getUniqIDHashString();
-        return startTrace(traceId, traceId + "-" + ROOT_SPAN, ROOT_SPAN,
-                spanTypeEnum, true);
+        return startTrace(traceId, traceId + "-" + ROOT_SPAN, ROOT_SPAN, spanTypeEnum, true);
     }
 
     public Spanner startRootTrace(String traceId, String rpcId,
@@ -44,9 +38,6 @@ public class Tracer {
         return startTrace(traceId, rpcId, location, spanTypeEnum, true);
     }
 
-    /**
-     * @param spanTypeEnum
-     */
     public Spanner startTrace(SpanTypeEnum spanTypeEnum) {
         Spanner span = spanThreadLocal.get();
         if (span == null) {
@@ -67,29 +58,29 @@ public class Tracer {
     }
 
     public Spanner startTrace(String traceId, String rpcId, String location,
-                              SpanTypeEnum spantype, boolean isTopSpan) {
+                              SpanTypeEnum spanType, boolean isTopSpan) {
         Spanner span = spanThreadLocal.get();
         if (span == null && isTopSpan == true) {
-            Spanner rootSpan = new Spanner(traceId, rpcId, location, spantype,
+            Spanner rootSpan = new Spanner(traceId, rpcId, location, spanType,
                     isTopSpan, null);
             spanThreadLocal.set(rootSpan);
             span = rootSpan;
         } else {
-            span = createChildSpan(span, spantype, isTopSpan);
+            span = createChildSpan(span, spanType, isTopSpan);
         }
         return span;
     }
 
     public Spanner startRpcTrace(String traceId, String rpcId, String location,
-                                 SpanTypeEnum spantype, boolean isTopSpan) {
+                                 SpanTypeEnum spanType, boolean isTopSpan) {
         Spanner span = spanThreadLocal.get();
         if (span == null && isTopSpan == true) {
-            Spanner rootSpan = new Spanner(traceId, rpcId, location, spantype,
+            Spanner rootSpan = new Spanner(traceId, rpcId, location, spanType,
                     isTopSpan, null);
             span = rootSpan;
             spanThreadLocal.set(rootSpan);
         } else {
-            span = createChildSpan(span, spantype, isTopSpan);
+            span = createChildSpan(span, spanType, isTopSpan);
         }
         return span;
     }

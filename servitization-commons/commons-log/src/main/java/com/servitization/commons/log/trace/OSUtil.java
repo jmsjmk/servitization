@@ -18,20 +18,18 @@ public class OSUtil {
 
     static {
         if (isWindows()) {
-            InetAddress addr = null;
+            InetAddress address;
             try {
-                addr = InetAddress.getLocalHost();
-                localIp = addr.getHostAddress().toString();//获得本机IP　　
-                localName = addr.getHostName().toString();//获得本机名称
+                address = InetAddress.getLocalHost();
+                localIp = address.getHostAddress().toString();//获得本机IP　　
+                localName = address.getHostName().toString();//获得本机名称
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else {
             localIp = getLinuxLocalIp();
             localName = getLinuxName();
         }
-
     }
 
     public static String linuxLocalIp() {
@@ -48,8 +46,8 @@ public class OSUtil {
      * @return
      */
     private static String getLinuxLocalIp() {
-        Process p = null;
-        String line = null;
+        Process p;
+        String line;
         try {
             p = Runtime
                     .getRuntime()
@@ -61,19 +59,14 @@ public class OSUtil {
             LineNumberReader input = new LineNumberReader(
                     new InputStreamReader(fis));
             line = input.readLine();
-
             p.waitFor();
             return line;
         } catch (IOException e) {
-
             LOGGER.error("get local ip error", e);
-            return "";
         } catch (InterruptedException e) {
             LOGGER.error("get local ip error", e);
-            return "";
         }
-
-
+        return StringUtils.EMPTY;
     }
 
     /**
@@ -82,26 +75,22 @@ public class OSUtil {
      * @return
      */
     private static String getLinuxName() {
-        String line = null;
+        String line;
         try {
             Process p = Runtime.getRuntime().exec(
                     new String[]{"/bin/sh", "-c", "uname -n"});
-
             InputStream fis = p.getInputStream();
             LineNumberReader input = new LineNumberReader(
                     new InputStreamReader(fis));
             line = input.readLine();
-
             p.waitFor();
             return line;
         } catch (IOException e) {
             LOGGER.error("get linux name error", e);
-            return StringUtils.EMPTY;
         } catch (InterruptedException e) {
             LOGGER.error("get linux name error", e);
-            return StringUtils.EMPTY;
         }
-
+        return StringUtils.EMPTY;
     }
 
 
@@ -110,5 +99,4 @@ public class OSUtil {
         String os = StringUtils.lowerCase(prop.getProperty("os.name"));
         return os.startsWith("win");
     }
-
 }
