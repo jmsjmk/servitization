@@ -20,6 +20,4 @@ public class ManyDataSourceSwitch {
     public static void clearDataSourceType() {
         contextHolder.remove();
     }
-
-
 }

@@ -48,9 +48,8 @@ public class ManyDataSourceAspect {
                 return;
             }
         }
-
         // 拿到类级别的注解
-        DataSource can = (DataSource) clazz.getAnnotation(DataSource.class);
+        DataSource can = clazz.getAnnotation(DataSource.class);
         if (can != null && StringUtils.isNotBlank(can.value())) {
             ManyDataSourceSwitch.setDataSourceType(can.value());
             return;

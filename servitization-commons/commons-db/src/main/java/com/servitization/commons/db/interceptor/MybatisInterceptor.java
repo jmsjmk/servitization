@@ -29,7 +29,6 @@ public class MybatisInterceptor implements Interceptor {
         MappedStatement mappedStatement = (MappedStatement) invocation
                 .getArgs()[0];
         String sqlId = mappedStatement.getId();
-
         writeBeforeLog(sqlId);
         try {
             returnValue = invocation.proceed();
@@ -38,7 +37,6 @@ public class MybatisInterceptor implements Interceptor {
             writeAfterLog(sqlId, start, e);
             throw e;
         }
-
         return returnValue;
     }
 
@@ -144,6 +142,5 @@ public class MybatisInterceptor implements Interceptor {
 
     @Override
     public void setProperties(Properties arg0) {
-
     }
 }
