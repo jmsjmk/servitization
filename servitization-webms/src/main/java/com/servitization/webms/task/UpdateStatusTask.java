@@ -58,7 +58,6 @@ public class UpdateStatusTask implements Runnable {
                 ZooKeeper zk = ZKConnection.zk();
                 int allCount = publishIps.size();
                 int unCount = 0;
-                int inCount = 0;
                 int successCount = 0;
                 int failCount = 0;
                 int timeOutCount = 0;
@@ -83,7 +82,6 @@ public class UpdateStatusTask implements Runnable {
                         } else if (StringUtils.equals(ackString, PushState.IN_SYNCHRONOUS.toString())) {
                             if (times < 10) {
                                 publishIp.setStatus(1);
-                                inCount++;
                             } else {
                                 publishIp.setStatus(4);
                                 timeOutCount++;
@@ -110,7 +108,7 @@ public class UpdateStatusTask implements Runnable {
                 } else if ((unCount == 0 && failCount > 0) || ((unCount == 0 && timeOutCount > 0))) {
                     //没有未同步 有失败机器
                     publishingJob.setStatus(2);
-                    // add by jiamingku 只要有一台机器发生了错误认为机器更新错误。直接推出。
+                    // 只要有一台机器发生了错误认为机器更新错误。直接推出。
                     times = 11;
                 } else if (failCount > 0) {
                     publishingJob.setStatus(2);

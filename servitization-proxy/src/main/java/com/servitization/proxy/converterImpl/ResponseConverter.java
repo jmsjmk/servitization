@@ -10,15 +10,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by jiamingku on 16/7/15.
- */
 public class ResponseConverter implements IResponseConvert {
 
     @Override
     public void convertResponseContext(ImmobileResponse response, String servicePath) throws IOException {
         String originalContent = new String(response.getContent());
-
         String newContent = ContextConverter.convert(originalContent, servicePath);
         if (newContent == null || newContent.length() == 0) {
             return;
@@ -58,7 +54,6 @@ public class ResponseConverter implements IResponseConvert {
             return obj;
         }
 
-
         public static JSONObject getDataJsonObject(JSONObject jo1, JSONObject jo2) {
             if (jo1 == null || jo2 == null) {
                 return new JSONObject();
@@ -74,7 +69,6 @@ public class ResponseConverter implements IResponseConvert {
             }
             return false;
         }
-
 
         /**
          * 转换规则描述:
@@ -97,7 +91,6 @@ public class ResponseConverter implements IResponseConvert {
 
                 Map<String, Object> resMap = new HashMap<String, Object>();
                 Map<String, Object> dataMap;
-
                 if (content.equalsIgnoreCase("-10010")) {
                     resMap.put(DEST_CODE, Integer.valueOf("-10010"));
                     resMap.put(DEST_DESCRIPTION, "");
@@ -153,7 +146,7 @@ public class ResponseConverter implements IResponseConvert {
                         resMap.put(DEST_DESCRIPTION, ResMsg);
                         Object destObj = null;
                         if (dataObject instanceof JSONObject) {
-                            destObj = getDataJsonObject(jobj, (JSONObject)dataObject);
+                            destObj = getDataJsonObject(jobj, (JSONObject) dataObject);
                         } else {
                             destObj = dataObject;
                         }

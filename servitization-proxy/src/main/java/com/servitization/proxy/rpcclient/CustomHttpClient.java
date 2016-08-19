@@ -3,7 +3,6 @@ package com.servitization.proxy.rpcclient;
 import com.servitization.proxy.CommonLogger;
 import org.apache.http.Consts;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -33,33 +32,26 @@ public class CustomHttpClient implements IApacheHttpClient {
         Registry<ConnectionSocketFactory> socketFactory = RegistryBuilder
                 .<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
-                .register(
-                        "https",
-                        new SSLConnectionSocketFactory(SSLContexts
+                .register("https", new SSLConnectionSocketFactory(SSLContexts
                                 .createSystemDefault())).build();
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(
                 socketFactory);
-
         SocketConfig socketConfig = SocketConfig.custom().setTcpNoDelay(true)
                 .setSoKeepAlive(true).build();
         connManager.setDefaultSocketConfig(socketConfig);
-
         ConnectionConfig connectionConfig = ConnectionConfig.custom()
                 .setCharset(Consts.UTF_8)
                 .setMalformedInputAction(CodingErrorAction.IGNORE)
                 .setUnmappableInputAction(CodingErrorAction.IGNORE).build();
         connManager.setDefaultConnectionConfig(connectionConfig);
-
         connManager.setMaxTotal(65535);
         connManager.setDefaultMaxPerRoute(65535);
-
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(1000).setSocketTimeout(3000)
                 .setConnectionRequestTimeout(5000)
                 .setCookieSpec(CookieSpecs.IGNORE_COOKIES).build();
         httpClient = HttpClients.custom().setConnectionManager(connManager)
                 .setDefaultRequestConfig(requestConfig).build();
-
         String info = new StringBuilder().append("socketFactory:")
                 .append(socketFactory.toString()).append("socketConfig:")
                 .append(socketConfig.toString()).append('\t')
@@ -72,14 +64,14 @@ public class CustomHttpClient implements IApacheHttpClient {
     }
 
     public CloseableHttpResponse sendRequest(HttpUriRequest request)
-            throws ClientProtocolException, IOException {
-        CloseableHttpResponse response = null;
+            throws IOException {
+        CloseableHttpResponse response;
         response = httpClient.execute(request);
         return response;
     }
 
     public byte[] sendRequestGetEntityBytes(HttpUriRequest request)
-            throws ClientProtocolException, IOException, NullPointerException {
+            throws IOException, NullPointerException {
         CloseableHttpResponse response = null;
         byte[] bytes = null;
         try {
@@ -111,7 +103,7 @@ public class CustomHttpClient implements IApacheHttpClient {
     }
 
     public int sendRequest(HttpUriRequest request, OutputStream outputStream)
-            throws ClientProtocolException, IOException, NullPointerException {
+            throws IOException, NullPointerException {
         int resultCode = HttpStatus.SC_OK;
         CloseableHttpResponse response = null;
         try {
@@ -122,7 +114,6 @@ public class CustomHttpClient implements IApacheHttpClient {
             resultCode = response.getStatusLine().getStatusCode();
             if (response.getEntity() != null) {
                 if (resultCode == HttpStatus.SC_OK || resultCode == HttpStatus.SC_NOT_MODIFIED) {
-                    // add by jiamingku //  debug
                     CommonLogger.getLogger().info(
                             String.format(
                                     "http result path[%s]. code[%s]. contentType[%s]. length[%d]",
@@ -174,5 +165,4 @@ public class CustomHttpClient implements IApacheHttpClient {
         }
         return resultCode;
     }
-
 }

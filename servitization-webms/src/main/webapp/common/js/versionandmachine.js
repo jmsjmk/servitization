@@ -14,7 +14,7 @@ function home() {
 /**
  * 显示版本管理页面
  */
-function showVersionPage(pageIndex, pageSize){
+function showVersionPage(pageIndex, pageSize) {
     var url = getRootPath() + "/webms/version/getVersionPage";
 
     var pageIndex = pageIndex || 0;
@@ -41,11 +41,11 @@ function showVersionPage(pageIndex, pageSize){
 
 /**
  * 显示AOS节点管理页面
- * 
- * add by jiamingku 修改 原始  var url = getRootPath() + "/webms/node/getNodePage";
- * 
+ *
+ * 修改 原始var url = getRootPath() + "/webms/node/getNodePage";
+ *
  */
-function showNodePage(pageIndex, pageSize){
+function showNodePage(pageIndex, pageSize) {
     var url = getRootPath() + "/webms/node/getNodePageNew";
 
     var pageIndex = pageIndex || 0;
@@ -73,7 +73,7 @@ function showNodePage(pageIndex, pageSize){
 /**
  * 展示生效机器列表页面
  */
-function showEffectiveMachinePage(){
+function showEffectiveMachinePage() {
     var url = getRootPath() + "/webms/machine/getEffectiveMachinePage";
     var params = {
         metadataId: METADATAOBJECT.id
@@ -95,7 +95,7 @@ function showEffectiveMachinePage(){
 /**
  * 展示生效机器列表页面
  */
-function showHistoryVersion(){
+function showHistoryVersion() {
     var url = getRootPath() + "/webms/publish/getPublishHistory";
     var params = {
         metadataId: METADATAOBJECT.id

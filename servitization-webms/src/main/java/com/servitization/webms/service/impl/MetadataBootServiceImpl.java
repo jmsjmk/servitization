@@ -49,8 +49,6 @@ public class MetadataBootServiceImpl implements IMetadataBootService {
      // 建立zk树结构（如果没有的话）
      int result = 0;
      try {
-     // add by jiamingku
-     // System.out.println("............: "+aosAgent.getClass());
      ZKBaseStructureBuilder.buildBaseStructure();
      ZooKeeper zk = ZKConnection.zk();
      List<String> hostsList = zk.getChildren(Constants.boot, false);
@@ -186,7 +184,6 @@ public class MetadataBootServiceImpl implements IMetadataBootService {
     }
 
     /**
-     * add by jiamingku 2016-5-12
      * 原始逻辑：元数据与节点有关系(metadata,node) <br/>
      * 元数据与发布的关系(metadata_publish)<br/>
      * <p>

@@ -5,9 +5,6 @@ import com.servitization.metadata.define.proxy.ServiceModule;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by jiamingku on 16/7/14.
- */
 public class ServiceModuleUtil {
 
     private static final String CONVERT = "yes";
@@ -22,5 +19,4 @@ public class ServiceModuleUtil {
         }
         return false;
     }
-
 }

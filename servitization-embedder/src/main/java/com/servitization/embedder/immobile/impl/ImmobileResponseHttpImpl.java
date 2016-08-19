@@ -32,7 +32,7 @@ public class ImmobileResponseHttpImpl implements ImmobileResponse {
     }
 
     public void flushContent() throws IOException {
-        // add by jiamingku 响应头默认设置成为json格式
+        // 响应头默认设置成为json格式
         originalResponse.setContentType("application/json;charset=UTF-8");
         if (originalResponse != null)
             byteArray.writeTo(originalResponse.getOutputStream());
@@ -41,7 +41,6 @@ public class ImmobileResponseHttpImpl implements ImmobileResponse {
     public void setCharacterEncoding(String charset) {
         if (originalResponse != null)
             originalResponse.setCharacterEncoding(charset);
-
     }
 
     @Override
@@ -63,7 +62,5 @@ public class ImmobileResponseHttpImpl implements ImmobileResponse {
         public void write(byte b[], int off, int len) {
             byteArray.write(b, off, len);
         }
-
     }
-
 }

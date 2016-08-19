@@ -11,7 +11,6 @@ import com.servitization.metadata.define.proxy.TargetService;
 import com.servitization.proxy.*;
 import com.servitization.proxy.converterImpl.ResponseConverter;
 import com.servitization.proxy.sourceImpl.ServiceDefinitionContainer;
-import org.apache.http.client.ClientProtocolException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -25,7 +24,6 @@ public class ServiceProxyIntercepter implements IServiceProxy {
 
     private IResponseConvert responseConvert;
 
-
     public ServiceProxyIntercepter(ProxyDefine pd, GlobalContext context) {
         serviceMapping = new ServiceDefinitionContainer(pd, context);
         responseConvert = new ResponseConverter();
@@ -35,11 +33,9 @@ public class ServiceProxyIntercepter implements IServiceProxy {
     public void loadProxy(int max_index) {
         IServiceProxy[] temp = new IServiceProxy[max_index];
         this.serviceProxies = temp;
-
         temp[0] = new HttpServiceProxy(serviceMapping);
         temp[1] = new EmcfServiceProxy(serviceMapping.getRemoteClient());
         temp[2] = new AsynHttpServiceProxy(serviceMapping);
-
         StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < max_index; i++) {
             buffer.append("index:")
@@ -54,7 +50,6 @@ public class ServiceProxyIntercepter implements IServiceProxy {
     }
 
     /**
-     * add by jiamingku <br/>
      * <p>
      * 1.根据请求获取目标服务 path 查找 TargetService  <br/>
      * <p>
@@ -62,12 +57,12 @@ public class ServiceProxyIntercepter implements IServiceProxy {
      * <p>
      * 3.通过TargetService 获取池的信息 ,通过 servicePoolName <br/>
      * <p>
-     * 4.根据池的 serviceType 决定用什么代理 0 一期写死 按照htt代理来进行处理
+     * 4.根据池的 serviceType 决定用什么代理 0 一期写死 按照http代理来进行处理
      */
     @Override
     public Object doService(ImmobileRequest request,
                             ImmobileResponse response, TargetService pass_null,
-                            RequestContext context) throws ClientProtocolException,
+                            RequestContext context) throws
             NullPointerException, IllegalAccessException, IOException,
             URISyntaxException, InterruptedException, ExecutionException {
         TargetService targetService = serviceMapping.getTargetService(request);
@@ -76,9 +71,8 @@ public class ServiceProxyIntercepter implements IServiceProxy {
             throw new IllegalAccessException("there is no service mapping#"
                     + request.getServiceName());
         }
-
         IValveController valve = serviceMapping.getValve(targetService);
-        // add by jiamingku 拒绝多少的流量 
+        // 拒绝多少的流量
         if (valve != null) {
             switch (valve.type()) {
                 case BYPERCENTAGE:
@@ -95,8 +89,8 @@ public class ServiceProxyIntercepter implements IServiceProxy {
                     break;
             }
         }
-        Object obj = 200;
-        // add by jiamingku 一期项目直接按照http代理方式进行 发送后期修改  <br/>
+        Object obj;
+        // 一期项目直接按照http代理方式进行 发送后期修改
         ServicePool servicePool = serviceMapping
                 .getServicePoolInfo(targetService.getServicePoolName());
         int serviceType = servicePool.getServiceType();

@@ -27,23 +27,15 @@ public class GateFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		// 1.
 		if (!RequestValidator.isValidatorRequest(request, response))
 			return;
-
-		// add by jiamingku begin
 		String servicePath = ((HttpServletRequest) request).getServletPath();
 		PerformanceSnooper ps = new PerformanceSnooper(servicePath);
 		ps.start();
-		// add by jiamingku end;
-
 		ImmobileRequest imRequest = new ImmobileRequestHttpImpl((HttpServletRequest) request);
 		ImmobileResponse imResponse = new ImmobileResponseHttpImpl((HttpServletResponse) response);
 		embedder.process(imRequest, imResponse, chain);
-
-		// add by jiamingku begin
 		ps.stop();
-		// add by jiamingku end
 	}
 
 	public void destroy() {
