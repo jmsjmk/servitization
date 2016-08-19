@@ -93,13 +93,11 @@ public class ServiceDefineImpl implements ServiceDefine {
 		String dlyModel = self.attributeValue("deployModel");
 		if (dlyModel != null)
 			this.deployModel = DeployModel.valueOf(dlyModel);
-
 		Element child1 = self.element("upChainList");
 		if (child1 != null) {
-			@SuppressWarnings("unchecked")
 			List<Element> e_upChainList = child1.elements();
 			if (e_upChainList != null && e_upChainList.size() > 0) {
-				upChainList = new ArrayList<ChainElementDefine>();
+				upChainList = new ArrayList<>();
 				for (Element e : e_upChainList) {
 					Class<?> clazz;
 					ChainElementDefine ced;
@@ -114,13 +112,11 @@ public class ServiceDefineImpl implements ServiceDefine {
 				}
 			}
 		}
-
 		Element child2 = self.element("downChainList");
 		if (child2 != null) {
-			@SuppressWarnings("unchecked")
 			List<Element> e_downChainList = child2.elements();
 			if (e_downChainList != null && e_downChainList.size() > 0) {
-				downChainList = new ArrayList<ChainElementDefine>();
+				downChainList = new ArrayList<>();
 				for (Element e : e_downChainList) {
 					Class<?> clazz;
 					ChainElementDefine ced;
