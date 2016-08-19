@@ -48,7 +48,7 @@ public class RequestContextImpl {
 
         private RequestContextImplNarrow(GlobalContext globalContext) {
             this.globalContext = globalContext;
-            errorList = new LinkedList<ErrorEntity>();
+            errorList = new LinkedList<>();
         }
 
         @Override
