@@ -15,7 +15,6 @@ public class RpcConfig {
     private RpcConfig() {
     }
 
-    @SuppressWarnings("rawtypes")
     private RpcConfig(Properties properties) {
         if (properties != null) {
             Enumeration e = properties.propertyNames();
@@ -24,7 +23,6 @@ public class RpcConfig {
                 String value = (String) properties.get(key);
                 configs.put(key, value);
             }
-
         }
     }
 
@@ -35,7 +33,6 @@ public class RpcConfig {
                 if (rpcConfig == null) {
                     rpcConfig = new RpcConfig(properties);
                 }
-
                 return rpcConfig;
             } finally {
                 lock.unlock();
@@ -45,9 +42,7 @@ public class RpcConfig {
         }
     }
 
-
     public String get(String key) {
         return configs.get(key);
     }
-
 }

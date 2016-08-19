@@ -164,13 +164,11 @@ public class HttpClientAgentUtils {
             buffer.append("?");
         }
         buffer.append(paramsStr);
-
         URL urlObject;
         HttpGet httpGet;
         try {
             urlObject = new URL(buffer.toString());
             URI uri = new URI(urlObject.getProtocol(), null, urlObject.getHost(), urlObject.getPort(), urlObject.getPath(), urlObject.getQuery(), null);
-
             httpGet = new HttpGet(uri);
         } catch (MalformedURLException e) {
             logger.error("getHttpGet MalformedURLException", e);
@@ -182,7 +180,6 @@ public class HttpClientAgentUtils {
         if (httpGet == null) {
             httpGet = new HttpGet(buffer.toString());
         }
-
         return httpGet;
     }
 
@@ -296,7 +293,7 @@ public class HttpClientAgentUtils {
 
     public List<Header> getHeaders() {
         if (headers == null) {
-            headers = new ArrayList<Header>();
+            headers = new ArrayList<>();
         }
         return headers;
     }
@@ -373,5 +370,4 @@ public class HttpClientAgentUtils {
             this.statusCode = statusCode;
         }
     }
-
 }

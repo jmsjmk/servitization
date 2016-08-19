@@ -13,7 +13,6 @@ public class RpcObject {
     private Object[] args;
     private RpcConfig rpcConfig;
 
-
     public AgentService getAgengService() {
         return agengService;
     }

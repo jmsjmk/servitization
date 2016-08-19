@@ -18,10 +18,7 @@ public class AgentSupport {
      * @param agentInterface
      * @return
      */
-
-    @SuppressWarnings("unchecked")
     public <T> T createBean(Class<T> agentInterface) {
-
         ClassLoader classLoader = agentInterface.getClassLoader();
         Class<?>[] interfaces = new Class[]{agentInterface};
         AgentProxy proxy = new AgentProxy();

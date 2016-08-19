@@ -25,5 +25,4 @@ public class AgentFactroyBean<T> extends AgentSupport implements FactoryBean<T> 
     public boolean isSingleton() {
         return true;
     }
-
 }

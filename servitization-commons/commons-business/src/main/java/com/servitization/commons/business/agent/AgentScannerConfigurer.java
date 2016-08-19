@@ -35,11 +35,9 @@ public class AgentScannerConfigurer implements
     private String beanName;
     private ApplicationContext applicationContext;
     private Class<? extends Annotation> annotationClass;
-
     private Class<?> markerInterface;
     private boolean processPropertyPlaceHolders;
     private Properties properties;
-
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
@@ -47,11 +45,9 @@ public class AgentScannerConfigurer implements
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-
         if (this.processPropertyPlaceHolders) {
             processPropertyPlaceHolders();
         }
-
         ClassPathRestFulScanner scanner = new ClassPathRestFulScanner(registry);
         scanner.setAnnotationClass(this.annotationClass);
         scanner.setMarkerInterface(this.markerInterface);
@@ -62,39 +58,31 @@ public class AgentScannerConfigurer implements
                 ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
     }
 
-
     private void processPropertyPlaceHolders() {
         Map<String, PropertyResourceConfigurer> prcs = applicationContext.getBeansOfType(PropertyResourceConfigurer.class);
 
         if (!prcs.isEmpty() && applicationContext instanceof GenericApplicationContext) {
             BeanDefinition mapperScannerBean = ((GenericApplicationContext) applicationContext)
                     .getBeanFactory().getBeanDefinition(beanName);
-
             // PropertyResourceConfigurer does not expose any methods to explicitly perform
             // property placeholder substitution. Instead, create a BeanFactory that just
             // contains this mapper scanner and post process the factory.
             DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
             factory.registerBeanDefinition(beanName, mapperScannerBean);
-
             for (PropertyResourceConfigurer prc : prcs.values()) {
                 prc.postProcessBeanFactory(factory);
             }
-
             PropertyValues values = mapperScannerBean.getPropertyValues();
-
             this.basePackage = updatePropertyValue("basePackage", values);
         }
     }
 
     private String updatePropertyValue(String propertyName, PropertyValues values) {
         PropertyValue property = values.getPropertyValue(propertyName);
-
         if (property == null) {
             return null;
         }
-
         Object value = property.getValue();
-
         if (value == null) {
             return null;
         } else if (value instanceof String) {
@@ -125,11 +113,7 @@ public class AgentScannerConfigurer implements
         } catch (IOException e) {
             throw new RuntimeException("Load properties failed");
         }
-//        if (this.annotationClass == null) {
-//			this.annotationClass = RestFul.class;
-//		}
     }
-
 
     public void setBasePackage(String basePackage) {
         this.basePackage = basePackage;

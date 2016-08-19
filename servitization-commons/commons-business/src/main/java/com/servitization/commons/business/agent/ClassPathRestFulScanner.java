@@ -45,7 +45,6 @@ public class ClassPathRestFulScanner extends ClassPathBeanDefinitionScanner {
         super(registry, false);
     }
 
-
     /**
      * Configures parent scanner to search for the right interfaces. It can search
      * for all interfaces or just for those that extends a markerInterface or/and
@@ -53,13 +52,11 @@ public class ClassPathRestFulScanner extends ClassPathBeanDefinitionScanner {
      */
     public void registerFilters() {
         boolean acceptAllInterfaces = true;
-
         // if specified, use the given annotation and / or marker interface
         if (this.annotationClass != null) {
             addIncludeFilter(new AnnotationTypeFilter(this.annotationClass));
             acceptAllInterfaces = false;
         }
-
         // override AssignableTypeFilter to ignore matches on the actual marker interface
         if (this.markerInterface != null) {
             addIncludeFilter(new AssignableTypeFilter(this.markerInterface) {
@@ -70,7 +67,6 @@ public class ClassPathRestFulScanner extends ClassPathBeanDefinitionScanner {
             });
             acceptAllInterfaces = false;
         }
-
         if (acceptAllInterfaces) {
             // default include filter that accepts all classes
             addIncludeFilter(new TypeFilter() {
@@ -79,7 +75,6 @@ public class ClassPathRestFulScanner extends ClassPathBeanDefinitionScanner {
                 }
             });
         }
-
         // exclude package-info.java
         addExcludeFilter(new TypeFilter() {
             public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
@@ -97,32 +92,26 @@ public class ClassPathRestFulScanner extends ClassPathBeanDefinitionScanner {
     @Override
     public Set<BeanDefinitionHolder> doScan(String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
-
         if (beanDefinitions.isEmpty()) {
             logger.warn("No RestFulService service was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
         } else {
             for (BeanDefinitionHolder holder : beanDefinitions) {
                 GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
-
                 if (logger.isDebugEnabled()) {
                     logger.debug("Creating RestFulFactoryBean with name '" + holder.getBeanName()
                             + "' and '" + definition.getBeanClassName() + "' mapperInterface");
                 }
-
                 // the mapper interface is the original class of the bean
                 // but, the actual class of the bean is MapperFactoryBean
                 definition.getPropertyValues().add("agentInterface", definition.getBeanClassName());
                 definition.getPropertyValues().add("properties", properties);
                 definition.setBeanClass(AgentFactroyBean.class);
-
-
                 if (logger.isDebugEnabled()) {
                     logger.debug("Enabling autowire by type for MapperFactoryBean with name '" + holder.getBeanName() + "'.");
                 }
                 definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             }
         }
-
         return beanDefinitions;
     }
 
