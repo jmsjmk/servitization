@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author jiamingku
- * 
  *	mobileapi(/mobileapi-根节点,内容: "NONE")
  *	│
  *	├──1.servitization(/servitization-二级节点，内容:"NONE")

@@ -59,7 +59,6 @@ public class GroupController extends BaseObserver {
      * @param request
      * @param response
      * @return
-     * @author Chao.Mu
      */
     @Permission(name = "update")
     @RequestMapping(value = "getAddGroupPage", method = RequestMethod.GET)

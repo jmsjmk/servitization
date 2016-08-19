@@ -2,8 +2,6 @@ package com.servitization.web.define.embedder;
 
 /**
  * 池化政策
- *
- * @author lei.fang
  */
 public enum GroupPolicy {
 

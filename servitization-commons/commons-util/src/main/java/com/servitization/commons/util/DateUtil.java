@@ -534,7 +534,6 @@ public class DateUtil {
      * 和系统时间相比，是否同一天
      *
      * @param dateStr "yyyy-MM-dd"
-     * @author haibo.tang 2012-2-28
      */
     public static boolean isToday(String dateStr) {
         if (StringUtils.isBlank(dateStr)) {
@@ -551,7 +550,6 @@ public class DateUtil {
      * 和系统时间相比，是否昨天
      *
      * @param dateStr "yyyy-MM-dd"
-     * @author haibo.tang 2012-2-28
      */
     public static boolean isYesterday(String dateStr) {
         if (StringUtils.isBlank(dateStr)) {

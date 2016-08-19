@@ -63,13 +63,11 @@ public class RedisManager {
     }
 
     // ************************作为接口暴露的方法***********************//
-
     public void del(ICacheKey key) {
         proxy.getCurrJedis().del(key.getKey());
     }
 
     // ************************以下针对单字符串的操作***********************//
-
     public long expire(ICacheKey key) {
         ShardedJedis jedis = proxy.getCurrJedis();
         if (key.getExpirationTime() > 0) {
@@ -90,12 +88,11 @@ public class RedisManager {
         ShardedJedis jedis = proxy.getCurrJedis();
         jedis.set(key.getKey().getBytes(), object);
         if (key.getExpirationTime() != -1) {
-            jedis.expire(key.getKey().getBytes(), jedis.ttl(key.getKey())
-                    .intValue());
+            jedis.expire(key.getKey().getBytes(), jedis.ttl(key.getKey()).intValue());
         }
     }
 
-    //返回还有多长时间失效 bin.liang
+    //返回还有多长时间失效
     public long getTTL(ICacheKey key) {
         return proxy.getCurrJedis().ttl(key.getKey());
     }
@@ -117,7 +114,6 @@ public class RedisManager {
     }
 
     // *********************以下针对list的push,pop操作********************//
-
     public void push(ICacheKey listKeyName, String object) {
         push(listKeyName, object.getBytes());
     }
@@ -126,15 +122,13 @@ public class RedisManager {
         ShardedJedis jedis = proxy.getCurrJedis();
         jedis.rpush(listKeyName.getKey().getBytes(), objects);
         if (listKeyName.getExpirationTime() != -1) {
-            jedis.expire(listKeyName.getKey().getBytes(),
-                    listKeyName.getExpirationTime());
+            jedis.expire(listKeyName.getKey().getBytes(), listKeyName.getExpirationTime());
         }
     }
 
     public List<String> pull(ICacheKey listKeyName) {
         ShardedJedis jedis = proxy.getCurrJedis();
-        return jedis.lrange(listKeyName.getKey(), 0,
-                jedis.llen(listKeyName.getKey()));
+        return jedis.lrange(listKeyName.getKey(), 0, jedis.llen(listKeyName.getKey()));
     }
 
     public List<String> pull(ICacheKey listKeyName, int fromIndex, int lastIndex) {
@@ -155,8 +149,7 @@ public class RedisManager {
     public byte[] popByte(ICacheKey listKeyName) {
         ShardedJedis jedis = proxy.getCurrJedis();
         if (listKeyName.getExpirationTime() != -1) {
-            jedis.expire(listKeyName.getKey().getBytes(),
-                    listKeyName.getExpirationTime());
+            jedis.expire(listKeyName.getKey().getBytes(), listKeyName.getExpirationTime());
         }
         return jedis.lpop(listKeyName.getKey().getBytes());
     }
@@ -187,8 +180,7 @@ public class RedisManager {
         ShardedJedis jedis = proxy.getCurrJedis();
         jedis.hset(hashKeyName.getKey().getBytes(), key.getBytes(), value);
         if (hashKeyName.getExpirationTime() != -1) {
-            jedis.expire(hashKeyName.getKey().getBytes(),
-                    hashKeyName.getExpirationTime());
+            jedis.expire(hashKeyName.getKey().getBytes(), hashKeyName.getExpirationTime());
         }
     }
 
@@ -197,8 +189,7 @@ public class RedisManager {
     }
 
     public byte[] hashByteGet(ICacheKey hashKeyName, String key) {
-        return proxy.getCurrJedis().hget(hashKeyName.getKey().getBytes(),
-                key.getBytes());
+        return proxy.getCurrJedis().hget(hashKeyName.getKey().getBytes(), key.getBytes());
     }
 
     /**
@@ -229,8 +220,7 @@ public class RedisManager {
         jedis.set(key.getKey(), toJsonStr);
         if (key.getExpirationTime() != -1) {
             jedis.expire(key.getKey(),
-                    (expirationTime == -1 || expirationTime == -2) ? key.getExpirationTime()
-                            : expirationTime);
+                    (expirationTime == -1 || expirationTime == -2) ? key.getExpirationTime() : expirationTime);
         }
     }
 
@@ -278,7 +268,7 @@ public class RedisManager {
      */
     public <K, V> Map<K, V> getMap(ICacheKey key, TypeReference<Map<K, V>> clazz) {
         String cacheValue = proxy.getCurrJedis().get(key.getKey());
-        Map<K, V> map = (Map<K, V>) JSON.parseObject(cacheValue, clazz);
+        Map<K, V> map = JSON.parseObject(cacheValue, clazz);
         return map;
     }
 
@@ -301,16 +291,15 @@ public class RedisManager {
      * @param keyList 所有KEY的list集合
      * @param clazz   缓存对象类型
      * @return 返回一个缓存对象List集合
-     * @author Chao.Mu
      */
     public <T> List<T> mgetObjList(List<ICacheKey> keyList, Class<T> clazz) {
         List<T> resultList = null;
-        List<String> resultStringList = null;
-        List<String> clientInfoList = null;
+        List<String> resultStringList;
+        List<String> clientInfoList;
         if (keyList != null && keyList.size() > 0) {
-            resultStringList = new ArrayList<String>();
-            resultList = new ArrayList<T>();
-            clientInfoList = new ArrayList<String>();
+            resultStringList = new ArrayList<>();
+            resultList = new ArrayList<>();
+            clientInfoList = new ArrayList<>();
             String keys[] = new String[keyList.size()];
             for (int i = 0; i < keyList.size(); i++) {
                 keys[i] = keyList.get(i).getKey();
@@ -351,18 +340,17 @@ public class RedisManager {
      * @param keyList 所有KEY的list集合
      * @param clazz   缓存对象类型
      * @return 返回一个缓存对象Map
-     * @author Chao.Mu
      */
     public <T> Map<String, T> mgetObjMap(List<ICacheKey> keyList, Class<T> clazz) {
-        List<String> clientInfoList = null;
-        List<Jedis> jedisList = null;
-        Map<String, List<String>> groupKeysMap = null;
+        List<String> clientInfoList;
+        List<Jedis> jedisList;
+        Map<String, List<String>> groupKeysMap;
         Map<String, T> resultMap = null;
         if (keyList != null && keyList.size() > 0) {
-            resultMap = new HashMap<String, T>();
-            clientInfoList = new ArrayList<String>();
-            jedisList = new ArrayList<Jedis>();
-            groupKeysMap = new HashMap<String, List<String>>();
+            resultMap = new HashMap<>();
+            clientInfoList = new ArrayList<>();
+            jedisList = new ArrayList<>();
+            groupKeysMap = new HashMap<>();
             // 把KEY先分组
             String keys[] = new String[keyList.size()];
             for (int i = 0; i < keyList.size(); i++) {
@@ -414,18 +402,17 @@ public class RedisManager {
      *
      * @param keyList 所有KEY的list集合
      * @return 返回一个缓存对象List集合
-     * @author Chao.Mu
      */
     public Map<String, String> mgetStrMap(List<ICacheKey> keyList) {
-        List<String> clientInfoList = null;
-        List<Jedis> jedisList = null;
-        Map<String, List<String>> groupKeysMap = null;
+        List<String> clientInfoList;
+        List<Jedis> jedisList;
+        Map<String, List<String>> groupKeysMap;
         Map<String, String> resultMap = null;
         if (keyList != null && keyList.size() > 0) {
-            resultMap = new HashMap<String, String>();
-            clientInfoList = new ArrayList<String>();
-            jedisList = new ArrayList<Jedis>();
-            groupKeysMap = new HashMap<String, List<String>>();
+            resultMap = new HashMap<>();
+            clientInfoList = new ArrayList<>();
+            jedisList = new ArrayList<>();
+            groupKeysMap = new HashMap<>();
             // 把KEY先分组
             String keys[] = new String[keyList.size()];
             for (int i = 0; i < keyList.size(); i++) {
@@ -439,7 +426,7 @@ public class RedisManager {
                 // 判断是否有该分组，如果没有，创建新list存入，如果有则添加对应位置的KEY
                 List<String> subKeyList = groupKeysMap.get(clientInfo);
                 if (subKeyList == null) {
-                    subKeyList = new ArrayList<String>();
+                    subKeyList = new ArrayList<>();
                 }
                 subKeyList.add(keys[i]);
                 groupKeysMap.put(clientInfo, subKeyList);

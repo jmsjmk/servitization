@@ -35,8 +35,6 @@ public class RequestContextImpl {
 
     /**
      * narrow interface for handler
-     *
-     * @author lei.fang
      */
     private class RequestContextImplNarrow implements RequestContext {
 

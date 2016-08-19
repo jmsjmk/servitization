@@ -20,8 +20,6 @@ public interface IEffectiveMachineService {
 
     /**
      * 检查各version下是否有机器
-     *
-     * @author zhao.wang
      */
     boolean[] getEffectiveMachineExistence(List<MetadataVersion> versions);
 

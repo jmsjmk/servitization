@@ -18,8 +18,6 @@ import java.util.Map.Entry;
  * 运行期链条类
  * <p>
  * 控制流转方向
- *
- * @author lei.fang
  */
 public class Chain {
 

@@ -22,17 +22,14 @@ public class RedisManagerProxy implements MethodInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(RedisManagerProxy.class);
 
     private RedisClientPool jedisPool;
-    private static final ThreadLocal<ShardedJedis> currJedis = new ThreadLocal<ShardedJedis>();
+    private static final ThreadLocal<ShardedJedis> currJedis = new ThreadLocal<>();
     private Properties resources = null;
-
     private boolean singleShard = false;
-
     private Random random = new Random();
-
     private AtomicLong hit = new AtomicLong();
     private AtomicLong miss = new AtomicLong();
 
-    private static final Map<String, OP> methodNameMap = new HashMap<String, OP>();
+    private static final Map<String, OP> methodNameMap = new HashMap<>();
 
     static {
         methodNameMap.put("del", OP.WRITE);
@@ -88,12 +85,10 @@ public class RedisManagerProxy implements MethodInterceptor {
         }
         logger.info(ips);
         String[] ip = ips.split(",");
-
         int cmdTimeout = 2000;
         if (resources != null && resources.get("redis.cmdtimeout") != null) {
             cmdTimeout = Integer.parseInt((String) resources.get("redis.cmdtimeout"));
         }
-
         List<JedisShardInfo> masterList = new LinkedList<>();
         List<JedisShardInfo> slaveList = new LinkedList<>();
         JedisShardInfo jedisInfo;
@@ -239,19 +234,17 @@ public class RedisManagerProxy implements MethodInterceptor {
 
     public Config loadPoolConfig() {
         Config config = new Config();
-        Map<String, String> prop = new HashMap<String, String>();
+        Map<String, String> prop = new HashMap<>();
         try {
             if (resources != null) {
                 Enumeration<?> en = resources.propertyNames();
                 while (en.hasMoreElements()) {
                     String name = (String) en.nextElement();
                     if (name.startsWith("redis.pool.")) {
-                        prop.put(name.substring(11),
-                                resources.getProperty(name));
+                        prop.put(name.substring(11), resources.getProperty(name));
                     }
                 }
             }
-
             // 设置默认
             config.maxActive = prop.get("maxActive") == null ? 50 : Integer
                     .valueOf(prop.get("maxActive"));
@@ -261,7 +254,6 @@ public class RedisManagerProxy implements MethodInterceptor {
                     .valueOf(prop.get("maxWait"));
             config.testOnBorrow = prop.get("testOnBorrow") == null ? true
                     : Boolean.valueOf(prop.get("testOnBorrow"));
-
         } catch (Exception e) {
             e.printStackTrace();
         }

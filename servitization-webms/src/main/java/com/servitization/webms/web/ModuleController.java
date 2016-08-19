@@ -160,8 +160,6 @@ public class ModuleController {
      *
      * @param request
      * @param response
-     * @return
-     * @author Chao.Mu
      */
     @Permission(name = "update")
     @RequestMapping(value = "delModule", method = RequestMethod.POST)

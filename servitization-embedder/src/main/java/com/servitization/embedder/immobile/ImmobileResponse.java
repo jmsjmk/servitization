@@ -5,8 +5,6 @@ import java.io.OutputStream;
 
 /**
  * 请求过程中，不变的response对象 可写，改变内容
- *
- * @author lei.fang
  */
 public interface ImmobileResponse {
 

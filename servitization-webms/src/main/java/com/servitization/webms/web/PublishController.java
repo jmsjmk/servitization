@@ -45,8 +45,6 @@ public class PublishController {
      *
      * @param request
      * @param response
-     * @return
-     * @author Chao.Mu
      */
     @Permission(name = "push")
     @RequestMapping(value = "publishMetadataSelectVersion", method = RequestMethod.GET)
@@ -100,8 +98,6 @@ public class PublishController {
      *
      * @param request
      * @param response
-     * @return
-     * @author Chao.Mu
      */
     @RequestMapping(value = "publish", method = RequestMethod.GET)
     public ResponseEntity<byte[]> publish(HttpServletRequest request, HttpServletResponse response) {

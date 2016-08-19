@@ -24,7 +24,6 @@ public class BootController {
      * @param request
      * @param response
      * @return
-     * @author Chao.Mu
      */
     @RequestMapping(value = "bootScan", method = RequestMethod.GET)
     public ResponseEntity<byte[]> bootScan(HttpServletRequest request, HttpServletResponse response) {
