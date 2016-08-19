@@ -6,7 +6,7 @@
                                                                           handlerClazz="com.servitization.proxy.chain.ServicePorxyChainHandler">
                 <serviceModuleList>
                     <ServiceModule>
-                        <SourceService path="/test/test" httpMethod="GET,POST"/>
+                        <SourceService path="/test" httpMethod="GET,POST"/>
                         <TargetService servicePoolName="http://127.0.0.1:8080_HTTP" method="GET"
                                        serviceName="/test/test" serviceVersion="" socketTimeout="12000"
                                        thresholdType="BYPERCENTAGE" threshold="0"/>
