@@ -26,7 +26,7 @@ public class DefenceBusiness {
 
     private UserBusiness userBusiness;
 
-    private Map<String, DefenceStrategy> strategyMap = new ConcurrentHashMap<String, DefenceStrategy>();
+    private Map<String, DefenceStrategy> strategyMap = new ConcurrentHashMap<>();
 
     public void init(DefenceDefine dd, GlobalContext context) {
         updateStrategy(dd);
@@ -39,22 +39,19 @@ public class DefenceBusiness {
                     || StringUtils.isBlank(req.getPath())
                     || StringUtils.isBlank(req.getDeviceId())) {
                 resp.setErrorCodeEnum(ErrorCodeEnum.Defence_Info_blanck);
-                LOGGER.error("Defence_Info_blanck " + JSON.toJSONString(req));
+                LOGGER.error("Defence_Info_blank " + JSON.toJSONString(req));
                 return resp;
             }
-
             DefenceStrategy strategy = getStrategy(req.getPath());
             if (strategy == null) {
                 return resp;
             }
-
             DefenceBlackIpCachekey bk = new DefenceBlackIpCachekey(req.getIp(),
                     req.getPath());
             DefenceCountCacheKey dck = new DefenceCountCacheKey(req.getIp(),
                     req.getPath());
             BlackIpInfo blackIpInfo = RedisManager.getInstance().getMap(bk,
                     BlackIpInfo.class);
-
             if (blackIpInfo == null) {
                 // 没在黑名单 +1操作
                 long value = redis().incr(dck);
@@ -93,7 +90,6 @@ public class DefenceBusiness {
         } catch (Exception e) {
             LOGGER.error("defence core error", e);
         }
-
         return resp;
     }
 
@@ -139,5 +135,4 @@ public class DefenceBusiness {
         userBusiness.destory();
         userBusiness = null;
     }
-
 }

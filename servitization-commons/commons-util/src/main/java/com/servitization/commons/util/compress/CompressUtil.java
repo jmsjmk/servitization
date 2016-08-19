@@ -2,6 +2,9 @@ package com.servitization.commons.util.compress;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 压缩工具类
+ */
 public class CompressUtil {
 
     public static byte[] compress(byte[] data, CompressType compressType) throws Exception {
@@ -11,14 +14,11 @@ public class CompressUtil {
         switch (compressType) {
             case LZSS:
                 return LzssUtil.compress(data);
-
             case ZLIB:
                 return ZLibUtils.compress(data);
-
             case GZP:
                 return GZipUtil.compress(data);
             default:
-
                 break;
         }
         return data;
@@ -33,7 +33,7 @@ public class CompressUtil {
     }
 
 
-    public static enum CompressType {
+    public enum CompressType {
         LZSS("lzss"), ZLIB("zlib"), GZP("gzip");
 
         CompressType(String type) {

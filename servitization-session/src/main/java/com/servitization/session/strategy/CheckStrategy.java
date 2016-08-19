@@ -7,10 +7,8 @@ import com.servitization.metadata.define.session.StrategyEntry;
 
 public interface CheckStrategy {
 
-    public AuthResult checkSession(ImmobileRequest request,
-                                   ImmobileResponse response, RequestContext context);
-    
-    
-    public void setStrategyEntry(StrategyEntry se);
+    AuthResult checkSession(ImmobileRequest request,
+                            ImmobileResponse response, RequestContext context);
 
+    void setStrategyEntry(StrategyEntry se);
 }

@@ -16,6 +16,9 @@ import com.servitization.metadata.define.embedder.ChainElementDefine;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 防攻击服务
+ */
 public class DefenceServiceChainHandler implements ChainHandler {
 
     private final String checkUrl_key = "checkUrl";
@@ -24,12 +27,10 @@ public class DefenceServiceChainHandler implements ChainHandler {
 
     public void init(ChainElementDefine eleDefine, GlobalContext context) {
         DefenceDefine dDefine = (DefenceDefine) eleDefine;
-
         DefenceBusiness bussiness = new DefenceBusiness();
         UserBusiness userBusiness = new UserBusiness();
         bussiness.setUserBusiness(userBusiness);
         bussiness.init(dDefine, context);
-
         turtleDefenceService = new TurtleDefenceService();
         turtleDefenceService.setDefenceBusiness(bussiness);
         turtleDefenceService.setWhiteList(dDefine.getIPWhiteList());
@@ -41,7 +42,7 @@ public class DefenceServiceChainHandler implements ChainHandler {
         DefenceRemoteResp resp = turtleDefenceService.validate(request);
         if (resp != null && resp.getIsError()) {
             result = HandleResult.STOP;
-            Map<String, String> customErrorEntity = new HashMap<String, String>();
+            Map<String, String> customErrorEntity = new HashMap<>();
             customErrorEntity.put(checkUrl_key, resp.getCheckUrl());
             context.addError(resp.getErrorCode(), resp.getErrorMessage(),
                     customErrorEntity);

@@ -17,7 +17,10 @@ import com.servitization.proxy.log.ServitizationLogUtil;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ServicePorxyChainHandler implements ChainHandler {
+/**
+ * 请求转发
+ */
+public class ServiceProxyChainHandler implements ChainHandler {
 
     private static final int SC_OK = 200;
 

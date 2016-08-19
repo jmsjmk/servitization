@@ -12,6 +12,9 @@ import com.servitization.metadata.define.embedder.ChainElementDefine;
 import com.servitization.request.service.MobileChannelService;
 import com.servitization.request.service.RequestCheckService;
 
+/**
+ * 请求合法性检查
+ */
 public class RequestServiceChainHandler implements ChainHandler {
 
     private RequestCheckService checkService;

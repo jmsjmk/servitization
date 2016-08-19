@@ -12,6 +12,9 @@ import com.servitization.metadata.define.embedder.ChainElementDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 压缩服务
+ */
 public class CompressChainHandler implements ChainHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(CompressChainHandler.class);
@@ -29,14 +32,12 @@ public class CompressChainHandler implements ChainHandler {
     public HandleResult handle(ImmobileRequest request, ImmobileResponse response, RequestContext context) {
         String cus_isCompress = request.getHeader(headerName);
         String another_isCompress = request.getHeader(another_header);
-
         CompressUtil.CompressType ct = null;
         if ((cus_isCompress != null && cus_isCompress.toLowerCase().indexOf(CompressUtil.CompressType.GZP.type()) != -1)
                 || (another_isCompress != null && another_isCompress.toLowerCase().equals("true")))
             ct = CompressUtil.CompressType.GZP;
         if (cus_isCompress != null && cus_isCompress.toLowerCase().indexOf(CompressUtil.CompressType.LZSS.type()) != -1)
             ct = CompressUtil.CompressType.LZSS;
-
         if (ct != null) {
             byte[] data = response.getContent();
             if (data != null && data.length > 0) {
@@ -56,5 +57,4 @@ public class CompressChainHandler implements ChainHandler {
     public void destroy(GlobalContext context) {
         LOG.info("Compress Chain Handler has been destoryed.");
     }
-
 }

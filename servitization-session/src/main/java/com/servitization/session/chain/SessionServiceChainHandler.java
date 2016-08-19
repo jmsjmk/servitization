@@ -15,6 +15,9 @@ import com.servitization.session.strategy.CheckStrategy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Session验证服务
+ */
 public class SessionServiceChainHandler implements ChainHandler {
 
     Map<String, CheckStrategy> strategys = null;
@@ -39,7 +42,6 @@ public class SessionServiceChainHandler implements ChainHandler {
      * SessionAuthHelper.class));
      * }
      */
-
     public void init(ChainElementDefine eleDefine, GlobalContext context) {
         SessionDefine sd = (SessionDefine) eleDefine;
         strategys = new ConcurrentHashMap<>();
@@ -61,7 +63,6 @@ public class SessionServiceChainHandler implements ChainHandler {
         }
     }
 
-
     public HandleResult handle(ImmobileRequest request,
                                ImmobileResponse response, RequestContext context) {
         String path = request.getServiceName();
@@ -75,7 +76,6 @@ public class SessionServiceChainHandler implements ChainHandler {
             context.addError(result.getErrorCode(), result.getErrorMessage());
             return HandleResult.STOP;
         }
-
         return HandleResult.CONTINUE;
     }
 

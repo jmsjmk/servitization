@@ -24,16 +24,13 @@ public class TurtleDefenceService {
         if (!isPathDefenceOpen(path)) {
             return null;
         }
-
         DefenceRemoteReq req = new DefenceRemoteReq();
         req.setCode(request.getHeader(CustomHeaderEnum.CHECKCODE.headerName()));
         req.setDeviceId(request.getHeader(CustomHeaderEnum.DEVICEID
                 .headerName()));
         req.setIp(clientIP);
         req.setPath(path);
-
         DefenceRemoteResp resp = defenceBusiness.validate(req);
-
         return resp;
     }
 

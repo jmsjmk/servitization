@@ -3,7 +3,7 @@
     <ServiceDefineImpl name="html5" deployModel="STANDALONE">
         <upChainList>
             <com.servitization.metadata.define.proxy.impl.ProxyDefineImpl name="servicePorxyHandler"
-                                                                          handlerClazz="com.servitization.proxy.chain.ServicePorxyChainHandler">
+                                                                          handlerClazz="com.servitization.proxy.chain.ServiceProxyChainHandler">
                 <serviceModuleList>
                     <ServiceModule>
                         <SourceService path="/test" httpMethod="GET,POST"/>

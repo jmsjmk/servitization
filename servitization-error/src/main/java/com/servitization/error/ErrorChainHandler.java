@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * 异常处理
+ */
 public class ErrorChainHandler implements ChainHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ErrorChainHandler.class);
