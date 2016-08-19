@@ -61,7 +61,6 @@ public class EmbedderImpl implements Embedder {
 	public void init() {
 		LOG.info("Begin to init the Embedder...");
 		initEnvironment(); // 全局一次
-
 		// --------------启动过程开始--------------
 		// --------------1.从启动节点读取元数据装载--------------
 		boolean updateSuccess = false;
@@ -101,7 +100,7 @@ public class EmbedderImpl implements Embedder {
 		}
 		// --------------3.建立本地元数据备份--------------
 		LOG.info("Begin to backup the sd...");
-		LocalBackupManager.backupFormate(sd);
+		LocalBackupManager.backupFormat(sd);
 		// --------------4.绑定zk通信--------------
 		LOG.info("Begin to bind the zk...");
 		bindZK(sd);
@@ -121,11 +120,11 @@ public class EmbedderImpl implements Embedder {
 	private Worker generateWorker(ServiceDefine sd) {
 		LOG.info("Begin to generate the worker...");
 		long L1 = System.currentTimeMillis();
-		Worker newworker = new WorkerImpl();
-		newworker.init(new GlobalContextImpl(sd, emcfContext));
+		Worker newWorker = new WorkerImpl();
+		newWorker.init(new GlobalContextImpl(sd, emcfContext));
 		long L2 = System.currentTimeMillis();
 		LOG.info("Finsh to generate the worker...time[" + (L2 - L1) + "]ms");
-		return newworker;
+		return newWorker;
 	}
 
 	private void bindZK(ServiceDefine sd) {
@@ -168,23 +167,23 @@ public class EmbedderImpl implements Embedder {
 						ZKCommunicator.pushState(PushState.IN_SYNCHRONOUS);
 						// --------------1.从PUSH节点读取元数据,准备装载--------------
 						LOG.info("Begin to reload the service define...");
-						Worker oldworker = EmbedderImpl.this.worker;
-						Worker newworker = generateWorker(sd);
+						Worker oldWorker = EmbedderImpl.this.worker;
+						Worker newWorker = generateWorker(sd);
 
 						// --------------2.新产生TPS timer--------------
 						runtimeLock.writeLock().lock();
 						try {
-							EmbedderImpl.this.worker = newworker;
+							EmbedderImpl.this.worker = newWorker;
 						} finally {
 							runtimeLock.writeLock().unlock();
 						}
 
 						LOG.info("Begin to destory the old worker...");
-						oldworker.destory();
+						oldWorker.destory();
 						LOG.info("Finish to reload the worker and timer...");
 						// --------------3.建立本地元数据备份--------------
 						// LocalBackupManager.backup(sd);
-						LocalBackupManager.backupFormate(sd);
+						LocalBackupManager.backupFormat(sd);
 						LOG.info("Finish to backup to the local xml...");
 						// --------------4.更新zk status节点--------------
 						if (!ZKCommunicator.reportStatus(
@@ -206,7 +205,6 @@ public class EmbedderImpl implements Embedder {
 						LOG.error("Failed to watch the push to the zk!");
 					else
 						LOG.info("Finish to bind to the zk...");
-
 				}
 			}
 		}

@@ -79,9 +79,7 @@ public class ZKConnection {
 
     private static volatile ExpiredListener listener = null;
 
-    public static interface ExpiredListener {
-
-        public void reset();
-
+    public interface ExpiredListener {
+        void reset();
     }
 }

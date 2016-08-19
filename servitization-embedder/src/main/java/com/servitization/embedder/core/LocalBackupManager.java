@@ -26,7 +26,6 @@ public class LocalBackupManager {
 			os = new FileOutputStream(file, false); // 非追加模式
 			String xml = XmlSerializer.serialize(sd);
 			System.out.println("noformat:" + xml);
-
 			os.write(xml.getBytes());
 		} catch (Exception e) {
 			LOG.error(sd.getName() + "#Failed to backup the sd to local!", e);
@@ -40,7 +39,7 @@ public class LocalBackupManager {
 		}
 	}
 
-	public static void backupFormate(ServiceDefine sd) {
+	public static void backupFormat(ServiceDefine sd) {
 		XMLWriter xmlWriter = null;
 		FileWriter fileWriter = null;
 		try {
@@ -56,7 +55,6 @@ public class LocalBackupManager {
 			fileWriter = new FileWriter(file, false);
 			xmlWriter = new XMLWriter(fileWriter, format);
 			xmlWriter.write(document);
-
 		} catch (Exception e) {
 			LOG.error(sd.getName() + "#Failed to backup the sd to local!", e);
 		} finally {

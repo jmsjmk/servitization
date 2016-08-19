@@ -15,5 +15,4 @@ public interface ServiceDefine extends XmlSerializable {
     List<ChainElementDefine> getUpChainList();
 
     List<ChainElementDefine> getDownChainList();
-
 }
