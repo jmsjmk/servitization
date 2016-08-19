@@ -16,7 +16,6 @@
         <module>commons-util</module>
         <module>commons-cache</module>
         <module>commons-socket</module>
-        <module>commons-test</module>
         <module>commons-log</module>
         <module>commons-db</module>
         <module>commons-business</module>
