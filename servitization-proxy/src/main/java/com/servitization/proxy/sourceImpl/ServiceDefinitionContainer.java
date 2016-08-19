@@ -65,7 +65,7 @@ public class ServiceDefinitionContainer implements IServiceMapping {
 
         // 初始化module
         List<ServiceModule> serviceModules = proxyDefine.getServiceModuleList();
-        Map<String, ServiceModule> tempServiceMap = new ConcurrentHashMap<String, ServiceModule>();
+        Map<String, ServiceModule> tempServiceMap = new ConcurrentHashMap<>();
         for (ServiceModule serviceModule : serviceModules) {
             SourceService srcServ = serviceModule.getSourceService();
             TargetService tagServ = serviceModule.getTargetService();
