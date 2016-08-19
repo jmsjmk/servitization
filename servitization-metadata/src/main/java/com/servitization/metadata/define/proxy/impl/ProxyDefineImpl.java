@@ -70,7 +70,6 @@ public class ProxyDefineImpl extends ChainHandlerDefineImpl implements
         if (e_serviceModuleList != null) {
             serviceModuleList = new ArrayList<>();
             resConvertServiceNames = new HashSet<>();
-            @SuppressWarnings("unchecked")
             List<Element> entries = e_serviceModuleList.elements();
             if (entries != null && entries.size() > 0) {
                 for (Element e_entry : entries) {
@@ -86,7 +85,6 @@ public class ProxyDefineImpl extends ChainHandlerDefineImpl implements
         Element e_servicePoolList = self.element("servicePoolList");
         if (e_servicePoolList != null) {
             servicePoolList = new ArrayList<>();
-            @SuppressWarnings("unchecked")
             List<Element> entries = e_servicePoolList.elements();
             if (entries != null && entries.size() > 0) {
                 for (Element e_entry : entries) {

@@ -3,21 +3,7 @@
     <ServiceDefineImpl name="html5" deployModel="STANDALONE">
         <upChainList>
             <com.servitization.metadata.define.proxy.impl.ProxyDefineImpl name="servicePorxyHandler"
-                                                                          handlerClazz="com.servitization.proxy.chain.ServicePorxyChainHandler">
-                <serviceModuleList>
-                    <ServiceModule>
-                        <SourceService path="/test" httpMethod="GET,POST"/>
-                        <TargetService servicePoolName="http://127.0.0.1:8080_HTTP" method="GET"
-                                       serviceName="/test/test" serviceVersion="" socketTimeout="12000"
-                                       thresholdType="BYPERCENTAGE" threshold="0"/>
-                    </ServiceModule>
-                </serviceModuleList>
-                <servicePoolList>
-                    <ServicePool servicePoolName="127.0.0.1:8080_HTTP" url="127.0.0.1:8080"
-                                 serviceType="0" coefficient="0.0" forceCloseChannel="false" forceCloseTimeMillis="0"
-                                 connectTimeout="0"/>
-                </servicePoolList>
-            </com.servitization.metadata.define.proxy.impl.ProxyDefineImpl>
+                                                                          handlerClazz="com.servitization.proxy.chain.ServicePorxyChainHandler"/>
         </upChainList>
         <downChainList>
             <com.servitization.metadata.define.embedder.impl.ChainHandlerDefineImpl name="errorChainHandler"

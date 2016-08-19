@@ -9,9 +9,8 @@ public class TargetService implements XmlSerializable {
 
     private String servicePoolName = ""; // 对应servicePoolName
     private ThresholdType thresholdType;
-    private int threshold; 			// 流量控制百分比阀值
-
-    private int socketTimeout; 		// 请求超时时间
+    private int threshold;            // 流量控制百分比阀值
+    private int socketTimeout;        // 请求超时时间
     private String serviceName = "";     // 服务方法
 
     /**

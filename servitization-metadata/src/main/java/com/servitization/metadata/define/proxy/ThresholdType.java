@@ -4,7 +4,7 @@ public enum ThresholdType {
     BYPERCENTAGE("BYPERCENTAGE"),
     BYUSER("BYUSER");
 
-    private ThresholdType(String str) {
+    ThresholdType(String str) {
         des = str;
     }
 

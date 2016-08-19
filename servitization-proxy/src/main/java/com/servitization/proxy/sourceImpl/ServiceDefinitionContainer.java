@@ -12,6 +12,7 @@ import com.servitization.proxy.IValveController;
 import com.servitization.proxy.check.ProxyCheck;
 import com.servitization.proxy.valve.SimpleValve;
 import com.servitization.proxy.valve.UserValve;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ public class ServiceDefinitionContainer implements IServiceMapping {
             Map<String, ServicePool> tempServicePoolMap = new ConcurrentHashMap<>();
             Map<String, IConnectPool> connectPools = new HashMap<>();
             for (ServicePool sp : proxyDefine.getServicePoolList()) {
+                if (StringUtils.isBlank(sp.getServicePoolName())) continue;
                 // 仅 emcf 需初始化连接池
                 // 一期项目只做http的代理 end
                 if (sp.getServiceType() == 1) {
@@ -66,18 +68,21 @@ public class ServiceDefinitionContainer implements IServiceMapping {
         // 初始化module
         List<ServiceModule> serviceModules = proxyDefine.getServiceModuleList();
         Map<String, ServiceModule> tempServiceMap = new ConcurrentHashMap<>();
-        for (ServiceModule serviceModule : serviceModules) {
-            SourceService srcServ = serviceModule.getSourceService();
-            TargetService tagServ = serviceModule.getTargetService();
-            // ---- 为目标服务(TargetService)建立 流量阀(Valve) 对象 ---- //
-            if (tagServ.getThresholdType() == ThresholdType.BYPERCENTAGE) {
-                valves.put(tagServ, new SimpleValve(tagServ.getThreshold()));
-            } else if (tagServ.getThresholdType() == ThresholdType.BYUSER) {
-                valves.put(tagServ, new UserValve(tagServ.getThreshold()));
+        if (serviceModules != null && !serviceModules.isEmpty()) {
+            for (ServiceModule serviceModule : serviceModules) {
+                SourceService srcServ = serviceModule.getSourceService();
+                if (StringUtils.isBlank(srcServ.getPath())) continue;
+                TargetService tagServ = serviceModule.getTargetService();
+                // ---- 为目标服务(TargetService)建立 流量阀(Valve) 对象 ---- //
+                if (tagServ.getThresholdType() == ThresholdType.BYPERCENTAGE) {
+                    valves.put(tagServ, new SimpleValve(tagServ.getThreshold()));
+                } else if (tagServ.getThresholdType() == ThresholdType.BYUSER) {
+                    valves.put(tagServ, new UserValve(tagServ.getThreshold()));
+                }
+                tempServiceMap.put(
+                        ProxyCheck.sourceServicePathCheck(srcServ.getPath()),
+                        serviceModule);
             }
-            tempServiceMap.put(
-                    ProxyCheck.sourceServicePathCheck(srcServ.getPath()),
-                    serviceModule);
         }
         this.serviceMap = tempServiceMap;
         CommonLogger.getLogger().info("ServiceDefinitionContainer load serviceMapping");

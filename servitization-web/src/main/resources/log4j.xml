@@ -52,6 +52,9 @@
         <appender-ref ref="sync_commons_log"/>
     </logger>
 
+    <logger name="com.servitization">
+        <level value="INFO"/>
+    </logger>
     <logger name="org.springframework">
         <level value="INFO"/>
     </logger>
