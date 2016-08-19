@@ -11,7 +11,6 @@ import com.servitization.proxy.IServiceMapping;
 import com.servitization.proxy.IServiceProxy;
 import com.servitization.proxy.converterImpl.RequestConverter;
 import com.servitization.proxy.rpcclient.HttpClientFactory;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import java.io.IOException;
@@ -33,8 +32,7 @@ public class AsynHttpServiceProxy implements IServiceProxy {
 
     public Object doService(ImmobileRequest request,
                             ImmobileResponse response, TargetService targetService,
-                            RequestContext context) throws ClientProtocolException,
-            NullPointerException, IOException, IllegalAccessException,
+                            RequestContext context) throws NullPointerException, IOException, IllegalAccessException,
             URISyntaxException, InterruptedException, ExecutionException {
         ServicePool servicePool = serviceMapper.getServicePoolInfo(targetService.getServicePoolName());
         HttpUriRequest httpRequest = requestConvert.convert2HttpUriRequest(
@@ -49,5 +47,4 @@ public class AsynHttpServiceProxy implements IServiceProxy {
         httpClientFactory = null;
         requestConvert = null;
     }
-
 }

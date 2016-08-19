@@ -11,7 +11,6 @@ import com.servitization.proxy.IServiceMapping;
 import com.servitization.proxy.IServiceProxy;
 import com.servitization.proxy.converterImpl.RequestConverter;
 import com.servitization.proxy.rpcclient.HttpClientFactory;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import java.io.IOException;
@@ -28,13 +27,13 @@ public class HttpServiceProxy implements IServiceProxy {
         this.httpClientFactory = new HttpClientFactory();
         this.requestConvert = new RequestConverter();
         this.serviceMapper = serviceMapper;
-        CommonLogger.getLogger().info("HttpServiceProxy inited");
+        CommonLogger.getLogger().info("HttpServiceProxy init");
     }
 
     @Override
     public Object doService(ImmobileRequest request, ImmobileResponse response,
                             TargetService targetService, RequestContext context)
-            throws ClientProtocolException, NullPointerException, IOException,
+            throws NullPointerException, IOException,
             IllegalAccessException, URISyntaxException, InterruptedException,
             ExecutionException {
         ServicePool servicePool = serviceMapper
@@ -51,5 +50,4 @@ public class HttpServiceProxy implements IServiceProxy {
         httpClientFactory = null;
         requestConvert = null;
     }
-
 }

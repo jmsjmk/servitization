@@ -1,6 +1,5 @@
 package com.servitization.proxy.rpcclient;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 
@@ -10,14 +9,14 @@ import java.util.concurrent.ExecutionException;
 
 public interface IApacheHttpClient {
 
-    public CloseableHttpResponse sendRequest(HttpUriRequest request)
-            throws ClientProtocolException, IOException;
+    CloseableHttpResponse sendRequest(HttpUriRequest request)
+            throws IOException;
 
-    public byte[] sendRequestGetEntityBytes(HttpUriRequest request)
-            throws ClientProtocolException, IOException, NullPointerException,
+    byte[] sendRequestGetEntityBytes(HttpUriRequest request)
+            throws IOException, NullPointerException,
             InterruptedException, ExecutionException;
 
-    public int sendRequest(HttpUriRequest request, OutputStream outputStream)
-            throws ClientProtocolException, IOException, NullPointerException,
+    int sendRequest(HttpUriRequest request, OutputStream outputStream)
+            throws IOException, NullPointerException,
             InterruptedException, ExecutionException;
 }

@@ -5,7 +5,6 @@ import org.apache.http.Consts;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -45,56 +44,41 @@ public class AsynHttpClient implements IApacheHttpClient {
     public AsynHttpClient() {
         NHttpConnectionFactory<ManagedNHttpClientConnection> connFactory = new ManagedNHttpClientConnectionFactory();
 
-        // X509HostnameVerifier hostnameVerifier = new
-
         Registry<SchemeIOSessionStrategy> seRegistry = RegistryBuilder
                 .<SchemeIOSessionStrategy>create()
                 .register("http", NoopIOSessionStrategy.INSTANCE)
-                .register(
-                        "https",
-                        new SSLIOSessionStrategy(SSLContexts
-                                .createSystemDefault())).build();
-
+                .register("https", new SSLIOSessionStrategy(SSLContexts.createSystemDefault())).build();
         IOReactorConfig ioReactorConfig = IOReactorConfig.custom()
                 .setSoKeepAlive(true).setConnectTimeout(1000)
                 .setSoTimeout(5000).setTcpNoDelay(true).setSelectInterval(500)
                 .build();
-
         ConnectingIOReactor ioReactor = null;
         try {
             ioReactor = new DefaultConnectingIOReactor(ioReactorConfig);
         } catch (IOReactorException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
         PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(
                 ioReactor, connFactory, seRegistry);
-
         MessageConstraints messageConstraints = MessageConstraints.custom()
                 .setMaxHeaderCount(200).build();
-
         ConnectionConfig connectionConfig = ConnectionConfig.custom()
                 .setMalformedInputAction(CodingErrorAction.IGNORE)
                 .setUnmappableInputAction(CodingErrorAction.IGNORE)
                 .setCharset(Consts.UTF_8)
                 .setMessageConstraints(messageConstraints).build();
-
         connManager.setDefaultConnectionConfig(connectionConfig);
         connManager.setConnectionConfig(new HttpHost("somehost", 80),
                 ConnectionConfig.DEFAULT);
-
         // Configure total max or per route limits for persistent connections
         // that can be kept in the pool or leased by the connection manager.
         connManager.setMaxTotal(65535);
         connManager.setDefaultMaxPerRoute(65535);
-
         // Create global request configuration
         RequestConfig defaultRequestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
                 .setConnectTimeout(1000).setSocketTimeout(3000)
                 .setConnectionRequestTimeout(4000).build();
-
         CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom()
                 .setConnectionManager(connManager)
                 .setDefaultRequestConfig(defaultRequestConfig).build();
@@ -114,9 +98,8 @@ public class AsynHttpClient implements IApacheHttpClient {
 
     @Override
     public CloseableHttpResponse sendRequest(HttpUriRequest request)
-            throws ClientProtocolException, IOException {
-        this.closeableHttpAsyncClient.execute(request, new ResultCallBack(
-                request));
+            throws IOException {
+        this.closeableHttpAsyncClient.execute(request, new ResultCallBack(request));
         return null;
     }
 
@@ -126,7 +109,7 @@ public class AsynHttpClient implements IApacheHttpClient {
     }
 
     public HttpResponse sendRequest4Wait(HttpUriRequest request)
-            throws ClientProtocolException, IOException, InterruptedException,
+            throws IOException, InterruptedException,
             ExecutionException {
         Future<HttpResponse> future = this.closeableHttpAsyncClient.execute(
                 request, new ResultCallBack(request));
@@ -135,7 +118,7 @@ public class AsynHttpClient implements IApacheHttpClient {
 
     @Override
     public byte[] sendRequestGetEntityBytes(HttpUriRequest request)
-            throws ClientProtocolException, IOException, NullPointerException,
+            throws IOException, NullPointerException,
             InterruptedException, ExecutionException {
         byte[] bytes = null;
         HttpResponse response = sendRequest4Wait(request);
@@ -162,7 +145,7 @@ public class AsynHttpClient implements IApacheHttpClient {
 
     @Override
     public int sendRequest(HttpUriRequest request, OutputStream outputStream)
-            throws ClientProtocolException, IOException, NullPointerException,
+            throws IOException, NullPointerException,
             InterruptedException, ExecutionException {
         HttpResponse response = sendRequest4Wait(request);
         if (response == null) {
@@ -207,7 +190,6 @@ public class AsynHttpClient implements IApacheHttpClient {
 
         @Override
         public void completed(HttpResponse result) {
-            // / System.out.println("success");
             CommonLogger.getLogger().debug("http request success" + uri);
             if (!req.isAborted()) {
                 req.abort();
@@ -216,7 +198,6 @@ public class AsynHttpClient implements IApacheHttpClient {
 
         @Override
         public void failed(Exception ex) {
-            // / System.out.println("http request falied#"+uri);
             CommonLogger.getLogger().debug("http request falied#" + uri, ex);
             if (!req.isAborted()) {
                 req.abort();
@@ -225,13 +206,10 @@ public class AsynHttpClient implements IApacheHttpClient {
 
         @Override
         public void cancelled() {
-            // / System.out.println("cancelled");
             CommonLogger.getLogger().debug(uri + "cancelled");
             if (!req.isAborted()) {
                 req.abort();
             }
         }
-
     }
-
 }

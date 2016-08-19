@@ -12,7 +12,6 @@ import com.servitization.metadata.common.CustomHeaderEnum;
 import com.servitization.metadata.define.embedder.ChainElementDefine;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -64,16 +63,16 @@ public class AESRsaChainHandler implements ChainHandler {
                 .headerName());
         if (encryptResp != null && encryptResp.length() > 0
                 && encryptResp.indexOf(encryptRespValue) != -1) {
-            String sessionkey = request.getHeader(CustomHeaderEnum.SESSIONKEY
+            String sessionKey = request.getHeader(CustomHeaderEnum.SESSIONKEY
                     .headerName());
-            if (sessionkey != null && sessionkey.length() > 0) {
-                String aeskey = null;
+            if (sessionKey != null && sessionKey.length() > 0) {
+                String aesKey = null;
                 try {
-                    aeskey = sendHttpAesQuery(sessionkey);
+                    aesKey = sendHttpAesQuery(sessionKey);
                 } catch (Exception e) {
                     context.addError(e);
                 }
-                if (aeskey == null || aeskey.length() == 0) {
+                if (aesKey == null || aesKey.length() == 0) {
                     context.addError("799", "密钥已过期，请重新协商！");
                     return HandleResult.STOP;
                 }
@@ -81,7 +80,7 @@ public class AESRsaChainHandler implements ChainHandler {
                 if (data != null && data.length > 0) {
                     try {
                         String encryptContent = AesEncryUtil.encryptByKey(
-                                new String(data), aeskey);
+                                new String(data), aesKey);
                         response.resetContent();
                         response.getOutputStream().write(
                                 encryptContent.getBytes());
@@ -140,7 +139,7 @@ public class AESRsaChainHandler implements ChainHandler {
     }
 
     private String sendHttpAesQuery(String sessionkey)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair(CustomHeaderEnum.SESSIONKEY
                 .headerName(), sessionkey));

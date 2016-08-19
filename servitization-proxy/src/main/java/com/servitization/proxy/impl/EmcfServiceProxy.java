@@ -14,7 +14,6 @@ import com.servitization.metadata.define.proxy.TargetService;
 import com.servitization.proxy.CommonLogger;
 import com.servitization.proxy.IServiceProxy;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,20 +34,16 @@ public class EmcfServiceProxy implements IServiceProxy {
     @Override
     public Object doService(ImmobileRequest request,
                             ImmobileResponse response, TargetService targetService,
-                            RequestContext context) throws ClientProtocolException,
-            NullPointerException, IOException, IllegalAccessException,
+                            RequestContext context) throws NullPointerException, IOException, IllegalAccessException,
             URISyntaxException, InterruptedException, ExecutionException {
-
         QuantizeParameter qp = new QuantizeParameter();
         qp.setServiceName(targetService.getServiceName());
         qp.setServiceType(targetService.getServicePoolName());
         qp.setServiceVersion(targetService.getServiceVersion());
         qp.setTimeOut(targetService.getSocketTimeout());
-
         String json = request.getParameter(Constants.REQ_PARAM_NAME);
         JSONObject jo = JSON.parseObject(json);
-
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         for (CustomHeaderEnum che : CustomHeaderEnum.values()) {
             if (che == CustomHeaderEnum.CLIENTIP) {
                 headers.put(CustomHeaderEnum.CLIENTIP.headerName(),
@@ -58,9 +53,8 @@ public class EmcfServiceProxy implements IServiceProxy {
                         request.getHeader(che.headerName()));
             }
         }
-
-        jo.put("global", headers); // RemoteRequest类有global成员变量，反序列化后，所有header会在global中
-
+        // RemoteRequest类有global成员变量，反序列化后，所有header会在global中
+        jo.put("global", headers);
         Object rst;
         try {
             rst = adapter.invoke(qp, new Object[]{jo.toJSONString()});

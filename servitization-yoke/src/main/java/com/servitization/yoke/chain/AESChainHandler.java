@@ -15,7 +15,6 @@ import com.servitization.yoke.dao.DBAccess;
 import com.servitization.yoke.service.AesService;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -69,26 +68,26 @@ public class AESChainHandler implements ChainHandler {
         if (whiteList != null && whiteList.contains(request.getRemoteIP()))
             return HandleResult.CONTINUE;
         String req = request.getParameter(Constants.REQ_PARAM_NAME);
-        String sessionkey = request.getHeader(CustomHeaderEnum.SESSIONKEY
+        String sessionKey = request.getHeader(CustomHeaderEnum.SESSIONKEY
                 .headerName());
-        if (sessionkey != null && sessionkey.length() > 0) {
-            String aeskey = null;
+        if (sessionKey != null && sessionKey.length() > 0) {
+            String aesKey = null;
             try {
-                aeskey = sendHttpAesQuery(sessionkey);
+                aesKey = sendHttpAesQuery(sessionKey);
             } catch (Exception e) {
                 context.addError(e);
             }
-            if (aeskey == null || aeskey.length() == 0) {
+            if (aesKey == null || aesKey.length() == 0) {
                 context.addError("799", "密钥已过期，请重新协商！");
                 return HandleResult.STOP;
             }
             try {
-                String value = aesService.decryptByKey(aeskey, req);
+                String value = aesService.decryptByKey(aesKey, req);
                 request.setParameter(Constants.REQ_PARAM_NAME, value);
             } catch (Exception e) {
                 Exception e1 = new Exception(new StringBuilder()
                         .append("AESChainHandler error#")
-                        .append("RSA:" + sessionkey).append(',').append(req)
+                        .append("RSA:" + sessionKey).append(',').append(req)
                         .toString(), e);
                 context.addError(e1);
                 return HandleResult.STOP;
@@ -161,8 +160,8 @@ public class AESChainHandler implements ChainHandler {
     }
 
     private String sendHttpAesQuery(String sessionkey)
-            throws URISyntaxException, ClientProtocolException, IOException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+            throws URISyntaxException, IOException {
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair(CustomHeaderEnum.SESSIONKEY
                 .headerName(), sessionkey));
         URI uri = new URI(String.format("%s?%s", baseUrl,
@@ -177,5 +176,4 @@ public class AESChainHandler implements ChainHandler {
         response.close();
         return new String(b);
     }
-
 }

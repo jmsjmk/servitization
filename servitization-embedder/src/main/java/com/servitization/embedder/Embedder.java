@@ -19,7 +19,7 @@ public interface Embedder {
     /**
      * 获取service定义 初始化一个worker
      */
-    public void init();
+    void init();
 
     /**
      * 检查是否有配置更新 转发给worker进行处理
@@ -27,11 +27,11 @@ public interface Embedder {
      * @param request
      * @param response
      */
-    public void process(ImmobileRequest request, ImmobileResponse response,
-                        FilterChain chain);
+    void process(ImmobileRequest request, ImmobileResponse response,
+                 FilterChain chain);
 
     /**
      * 最终释放一些资源
      */
-    public void destroy();
+    void destroy();
 }

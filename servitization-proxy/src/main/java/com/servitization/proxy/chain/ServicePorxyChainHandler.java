@@ -13,7 +13,6 @@ import com.servitization.proxy.IServiceProxy;
 import com.servitization.proxy.impl.ServiceProxyIntercepter;
 import com.servitization.proxy.log.ServitizationLogObj;
 import com.servitization.proxy.log.ServitizationLogUtil;
-import org.apache.http.client.ClientProtocolException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -44,8 +43,6 @@ public class ServicePorxyChainHandler implements ChainHandler {
         try {
             startTime = System.currentTimeMillis();
             code = (int) serviceProxy.doService(request, response, null, context);
-        } catch (ClientProtocolException e) {
-            t = e;
         } catch (NullPointerException e) {
             t = e;
         } catch (IllegalAccessException e) {
@@ -58,9 +55,8 @@ public class ServicePorxyChainHandler implements ChainHandler {
         } catch (Exception e) {
             t = e;
         }
-
         if (code == SC_NOT_FOUND) {
-            String msg = null;
+            String msg;
             if (t != null && t.getMessage() != null) {
                 msg = "接口不存在." + t.getMessage();
             } else {
@@ -73,10 +69,8 @@ public class ServicePorxyChainHandler implements ChainHandler {
             String msg = ServitizationLogUtil.getServitizationLogMsg(request, startTime, code + "");
             CommonLogger.getLogger().error(msg);
         }
-
         ServitizationLogUtil.writeServitizationLog(logObj,
                 context.getGlobalContext().getServiceDefine().getName(), response);
-
         ServitizationLogUtil.writeBigLog(logObj,
                 context.getGlobalContext().getServiceDefine().getName(), response);
         return result;
@@ -87,5 +81,4 @@ public class ServicePorxyChainHandler implements ChainHandler {
         serviceProxy.destory();
         serviceProxy = null;
     }
-
 }
