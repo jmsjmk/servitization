@@ -97,10 +97,9 @@ public class PublishController {
      * 2.
      *
      * @param request
-     * @param response
      */
     @RequestMapping(value = "publish", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> publish(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> publish(HttpServletRequest request) {
         String msg = StringUtils.EMPTY;
         String metadataId = request.getParameter("metadataId");
         String nodeRelationId = request.getParameter("nodeRelationId");
@@ -109,7 +108,7 @@ public class PublishController {
         if (StringUtils.isBlank(metadataId) && StringUtils.isBlank(nodeRelationId) && StringUtils.isBlank(versionId)
                 && StringUtils.isBlank(nodeId)) {
             msg = "参数不正确!";
-            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         }
         // 调用
         int result = metadataPublishService.publish(Integer.parseInt(nodeId), Integer.parseInt(nodeRelationId),
@@ -122,7 +121,7 @@ public class PublishController {
         } else if (result == 2) {
             msg = "推送失败";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     /**
@@ -141,11 +140,9 @@ public class PublishController {
         String metadataId = request.getParameter("metadataId");
         if (StringUtils.isBlank(versionId)) {
             msg = "参数不正确!versionId[" + versionId + "]";
-            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         }
-        // 1.
         int result = metadataPublishService.publishNew(versionId, metadataId);
-
         if (result == 0) {
             msg = "发布数据版本[" + versionId + "]成功";
             System.out.println("********" + msg);
@@ -159,7 +156,7 @@ public class PublishController {
         } else if (result == 3) {
             msg = "Metadata(Node) 没有对应的机器列表请先维护机器列表";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
 

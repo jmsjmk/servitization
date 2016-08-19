@@ -140,10 +140,8 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
      * @return
      */
     public int publishNew(String versionIdStr, String metadataIdStr) {
-        // 1
-        List<String> ipList = new ArrayList<>();
+        List<String> ipList;
         long versionId = Long.parseLong(versionIdStr);
-        // 2.
         MetadataVersion version = versionMapper.getMetadataVersionById(versionId);
         long metadataId = Long.valueOf(metadataIdStr);
 
@@ -160,7 +158,6 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
         publish.setStatus(0);
         publish.setCreateTime(new Date());
         publishMapper.addPublish(publish);
-
         try {
             // 建立zk树结构（如果没有的话）
             ZKBaseStructureBuilder.buildBaseStructure();
@@ -175,7 +172,7 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
                 metadataPublishIp.setPublishId(publish.getId());
                 // 在ZK上寻找节点 并设置推送内容及状态
                 if (zk.exists(Constants.push + "/" + ip, false) != null) {
-                    Map<String, String> map = new HashMap<String, String>();
+                    Map<String, String> map = new HashMap<>();
                     map.put(Constants.push_meta, version.getMetadataXml());
                     map.put(Constants.push_ack, PushState.UN_SYNCHRONOUS.toString());
                     map.put(Constants.push_version, String.valueOf(version.getId()));

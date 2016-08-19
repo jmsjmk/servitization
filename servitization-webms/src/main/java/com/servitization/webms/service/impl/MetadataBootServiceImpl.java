@@ -174,8 +174,6 @@ public class MetadataBootServiceImpl implements IMetadataBootService {
             LOGGER.info(bootList);
             LOGGER.info(statusList);
             LOGGER.info(pushList);
-            //zk.getData();
-
         } catch (Exception e) {
             LOGGER.error("启动异常", e);
             result = 1;
