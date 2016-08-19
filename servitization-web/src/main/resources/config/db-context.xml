@@ -12,27 +12,24 @@
 
     <beans:bean id="parentDataSource" class="org.apache.commons.dbcp.BasicDataSource"
                 lazy-init="true" destroy-method="close">
-        <beans:property name="initialSize" value="${guide.parent.initialSize}"></beans:property>
-        <beans:property name="maxActive" value="${guide.parent.maxActive}"></beans:property>
-        <beans:property name="maxIdle" value="${guide.parent.maxIdle}"></beans:property>
-        <beans:property name="minIdle" value="${guide.parent.minIdle}"></beans:property>
-        <beans:property name="logAbandoned" value="${guide.parent.logAbandoned}"></beans:property>
-        <beans:property name="removeAbandoned" value="${guide.parent.removeAbandoned}"></beans:property>
-        <beans:property name="removeAbandonedTimeout" value="${guide.parent.removeAbandonedTimeout}"></beans:property>
-        <beans:property name="maxWait" value="${guide.parent.maxWait}"></beans:property>
-        <beans:property name="validationQuery" value="${guide.parent.validationQuery}"></beans:property>
-        <beans:property name="testOnBorrow" value="${guide.parent.testOnBorrow}"></beans:property>
-        <beans:property name="testWhileIdle" value="${guide.parent.testWhileIdle}"></beans:property>
-        <beans:property name="timeBetweenEvictionRunsMillis"
-                        value="${guide.parent.timeBetweenEvictionRunsMillis}"></beans:property>
-        <beans:property name="minEvictableIdleTimeMillis"
-                        value="${guide.parent.minEvictableIdleTimeMillis}"></beans:property>
+        <beans:property name="initialSize" value="${guide.parent.initialSize}"/>
+        <beans:property name="maxActive" value="${guide.parent.maxActive}"/>
+        <beans:property name="maxIdle" value="${guide.parent.maxIdle}"/>
+        <beans:property name="minIdle" value="${guide.parent.minIdle}"/>
+        <beans:property name="logAbandoned" value="${guide.parent.logAbandoned}"/>
+        <beans:property name="removeAbandoned" value="${guide.parent.removeAbandoned}"/>
+        <beans:property name="removeAbandonedTimeout" value="${guide.parent.removeAbandonedTimeout}"/>
+        <beans:property name="maxWait" value="${guide.parent.maxWait}"/>
+        <beans:property name="validationQuery" value="${guide.parent.validationQuery}"/>
+        <beans:property name="testOnBorrow" value="${guide.parent.testOnBorrow}"/>
+        <beans:property name="testWhileIdle" value="${guide.parent.testWhileIdle}"/>
+        <beans:property name="timeBetweenEvictionRunsMillis" value="${guide.parent.timeBetweenEvictionRunsMillis}"/>
+        <beans:property name="minEvictableIdleTimeMillis" value="${guide.parent.minEvictableIdleTimeMillis}"/>
     </beans:bean>
     <beans:bean id="EMBDataSource" parent="parentDataSource" lazy-init="true">
         <beans:property name="driverClassName" value="${guide.parent.driverClassName}"/>
         <beans:property name="url" value="${guide.read.jdbcUrl}"></beans:property>
-        <beans:property name="username" value="${guide.read.user}"></beans:property>
-        <beans:property name="password" value="${guide.read.pass}"></beans:property>
+        <beans:property name="username" value="${guide.read.user}"/>
+        <beans:property name="password" value="${guide.read.pass}"/>
     </beans:bean>
-
 </beans:beans>

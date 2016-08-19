@@ -17,36 +17,33 @@
 
     <beans:bean id="parentDataSource" class="org.apache.commons.dbcp.BasicDataSource"
                 destroy-method="close">
-
-        <beans:property name="initialSize" value="${webms.parent.initialSize}"></beans:property>
-        <beans:property name="maxActive" value="${webms.parent.maxActive}"></beans:property>
-        <beans:property name="maxIdle" value="${webms.parent.maxIdle}"></beans:property>
-        <beans:property name="minIdle" value="${webms.parent.minIdle}"></beans:property>
-        <beans:property name="logAbandoned" value="${webms.parent.logAbandoned}"></beans:property>
-        <beans:property name="removeAbandoned" value="${webms.parent.removeAbandoned}"></beans:property>
-        <beans:property name="removeAbandonedTimeout" value="${webms.parent.removeAbandonedTimeout}"></beans:property>
-        <beans:property name="maxWait" value="${webms.parent.maxWait}"></beans:property>
-        <beans:property name="validationQuery" value="${webms.parent.validationQuery}"></beans:property>
-        <beans:property name="testOnBorrow" value="${webms.parent.testOnBorrow}"></beans:property>
-        <beans:property name="testWhileIdle" value="${webms.parent.testWhileIdle}"></beans:property>
-        <beans:property name="timeBetweenEvictionRunsMillis"
-                        value="${webms.parent.timeBetweenEvictionRunsMillis}"></beans:property>
-        <beans:property name="minEvictableIdleTimeMillis"
-                        value="${webms.parent.minEvictableIdleTimeMillis}"></beans:property>
+        <beans:property name="initialSize" value="${webms.parent.initialSize}"/>
+        <beans:property name="maxActive" value="${webms.parent.maxActive}"/>
+        <beans:property name="maxIdle" value="${webms.parent.maxIdle}"/>
+        <beans:property name="minIdle" value="${webms.parent.minIdle}"/>
+        <beans:property name="logAbandoned" value="${webms.parent.logAbandoned}"/>
+        <beans:property name="removeAbandoned" value="${webms.parent.removeAbandoned}"/>
+        <beans:property name="removeAbandonedTimeout" value="${webms.parent.removeAbandonedTimeout}"/>
+        <beans:property name="maxWait" value="${webms.parent.maxWait}"/>
+        <beans:property name="validationQuery" value="${webms.parent.validationQuery}"/>
+        <beans:property name="testOnBorrow" value="${webms.parent.testOnBorrow}"/>
+        <beans:property name="testWhileIdle" value="${webms.parent.testWhileIdle}"/>
+        <beans:property name="timeBetweenEvictionRunsMillis" value="${webms.parent.timeBetweenEvictionRunsMillis}"/>
+        <beans:property name="minEvictableIdleTimeMillis" value="${webms.parent.minEvictableIdleTimeMillis}"/>
     </beans:bean>
 
     <beans:bean id="webmsWriteDataSource" parent="parentDataSource">
         <beans:property name="driverClassName" value="${webms.parent.driverClassName}"/>
-        <beans:property name="url" value="${webms.write.jdbcUrl}"></beans:property>
-        <beans:property name="username" value="${webms.write.user}"></beans:property>
-        <beans:property name="password" value="${webms.write.pass}"></beans:property>
+        <beans:property name="url" value="${webms.write.jdbcUrl}"/>
+        <beans:property name="username" value="${webms.write.user}"/>
+        <beans:property name="password" value="${webms.write.pass}"/>
     </beans:bean>
 
     <beans:bean id="webmsReadDataSource" parent="parentDataSource">
         <beans:property name="driverClassName" value="${webms.parent.driverClassName}"/>
-        <beans:property name="url" value="${webms.read.jdbcUrl}"></beans:property>
-        <beans:property name="username" value="${webms.read.user}"></beans:property>
-        <beans:property name="password" value="${webms.read.pass}"></beans:property>
+        <beans:property name="url" value="${webms.read.jdbcUrl}"/>
+        <beans:property name="username" value="${webms.read.user}"/>
+        <beans:property name="password" value="${webms.read.pass}"/>
     </beans:bean>
 
     <beans:bean id="dataSource" class="com.servitization.commons.db.ManyDataSource">
@@ -93,5 +90,4 @@
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="webmsWriteDataSource"/>
     </bean>
-
 </beans:beans>
