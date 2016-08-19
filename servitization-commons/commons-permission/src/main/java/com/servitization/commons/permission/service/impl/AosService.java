@@ -29,10 +29,8 @@ public class AosService implements IAosService {
 
     @Override
     public AosReturnDataEntity vertifyTokenToAosPlat(String token, String subSystem) {
-
         CustomizeParameterEntity entity = new CustomizeParameterEntity();
-
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, String> paramMap = new HashMap<>();
         paramMap.put("token", token);
         paramMap.put("subsystem", subSystem);
         String param = UrlUtil.getUrlParam(Constant.VERTIFY_TOKEN_URL, paramMap, entity, propertiesReader);
