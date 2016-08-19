@@ -7,26 +7,24 @@ public class ServicePool implements XmlSerializable {
 
     private static final long serialVersionUID = 1L;
 
-    // 目标服务类型: 0-http; 1-emcf; 2-asynhttp
+    // 目标服务类型: 0-http 1-emcf 2-asyn http
     private int serviceType;
 
-    // URL（包含端口） e.g: 10.1.1.2:8080
+    // URL（包含端口）
     private String url = "";
 
-    private String servicePoolName = ""; //serviceType_url
+    private String servicePoolName = "";
 
     // ************************** 动态字段 *************************** //
 
-    // **** emcf 连接池特有字段 **** //
-
+    // emcf 连接池特有字段
     private double coefficient;
 
     private boolean forceCloseChannel;
 
     private long forceCloseTimeMillis;
 
-    // **** http 连接池特有字段 **** //
-
+    // http 连接池特有字段
     private int connectTimeout;
 
     public int getServiceType() {
@@ -91,11 +89,9 @@ public class ServicePool implements XmlSerializable {
         me.addAttribute("servicePoolName", servicePoolName);
         me.addAttribute("url", url);
         me.addAttribute("serviceType", "" + serviceType);
-
         me.addAttribute("coefficient", "" + coefficient);
         me.addAttribute("forceCloseChannel", "" + forceCloseChannel);
         me.addAttribute("forceCloseTimeMillis", "" + forceCloseTimeMillis);
-
         me.addAttribute("connectTimeout", "" + connectTimeout);
     }
 
@@ -107,27 +103,22 @@ public class ServicePool implements XmlSerializable {
         }
         this.servicePoolName = self.attributeValue("servicePoolName");
         this.url = self.attributeValue("url");
-
         String coefficient_str = self.attributeValue("coefficient");
         if (coefficient_str != null) {
             this.coefficient = Double.valueOf(coefficient_str);
         }
-
         String forceCloseChannel_str = self.attributeValue("forceCloseChannel");
         if (forceCloseChannel_str != null) {
             this.forceCloseChannel = Boolean.valueOf(forceCloseChannel_str);
         }
-
         String forceCloseTimeMillis_str = self
                 .attributeValue("forceCloseTimeMillis");
         if (forceCloseTimeMillis_str != null) {
             this.forceCloseTimeMillis = Long.valueOf(forceCloseTimeMillis_str);
         }
-
         String connectTimeout_str = self.attributeValue("connectTimeout");
         if (connectTimeout_str != null) {
             this.connectTimeout = Integer.valueOf(connectTimeout_str);
         }
     }
-
 }

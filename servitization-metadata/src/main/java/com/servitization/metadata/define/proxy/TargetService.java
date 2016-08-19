@@ -90,7 +90,6 @@ public class TargetService implements XmlSerializable {
             me.addAttribute("serviceName", serviceName);
         if (serviceVersion != null)
             me.addAttribute("serviceVersion", serviceVersion);
-
         me.addAttribute("socketTimeout", "" + socketTimeout);
         me.addAttribute("thresholdType", thresholdType.name());
         me.addAttribute("threshold", "" + threshold);
@@ -103,7 +102,6 @@ public class TargetService implements XmlSerializable {
         serviceVersion = self.attributeValue("serviceVersion");
         servicePoolName = self.attributeValue("servicePoolName");
         method = self.attributeValue("method");
-
         String socketTimeout_str = self.attributeValue("socketTimeout");
         if (socketTimeout_str != null)
             socketTimeout = Integer.valueOf(socketTimeout_str);

@@ -16,21 +16,17 @@ public class ImmobileRequestHttpImpl implements ImmobileRequest {
     private String remoteIP = null;
     private String method = "";
 
-    private HttpServletRequest originalRequest = null;
-
     public ImmobileRequestHttpImpl(HttpServletRequest request) {
-        this.originalRequest = request;
         try {
             request.setCharacterEncoding("utf-8");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        customParameters = new HashMap<String, String[]>(request.getParameterMap().size());
+        customParameters = new HashMap<>(request.getParameterMap().size());
         customParameters.putAll(request.getParameterMap());
-
-        customHeaders = new HashMap<String, String>();
+        customHeaders = new HashMap<>();
         Enumeration<String> headerKey = request.getHeaderNames();
-        String key = null;
+        String key;
         while (headerKey.hasMoreElements()) {
             key = headerKey.nextElement();
             if (key != null)

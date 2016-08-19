@@ -12,5 +12,4 @@ public interface ProxyDefine extends ChainHandlerDefine {
     List<ServicePool> getServicePoolList();
 
     Set<String> getResConvertServiceNames();
-
 }
