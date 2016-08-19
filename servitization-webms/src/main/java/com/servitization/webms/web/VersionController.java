@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -43,53 +42,42 @@ public class VersionController extends BaseObserver {
      * 获取版本管理界面
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "getVersionPage", method = RequestMethod.GET)
-    public ModelAndView getVersionPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getVersionPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("version");
-
         String metadataId = request.getParameter("metadataId");
-
         if (StringUtils.isBlank(metadataId)) {
             return mav;
         }
-
         String pageIndexStr = request.getParameter("pageIndex");
         String pageSizeStr = request.getParameter("pageSize");
-
         int pageIndex = 0;
         int pageSize = 10;
-
         if (StringUtils.isNotBlank(pageIndexStr)) {
             pageIndex = Integer.parseInt(pageIndexStr);
         }
         if (StringUtils.isNotBlank(pageSizeStr)) {
             pageSize = Integer.parseInt(pageSizeStr);
         }
-
         Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("pageIndex", pageIndex * pageSize);
         params.put("pageSize", pageSize);
-
         List<MetadataVersion> metadataVersions = metadataVersionService.getMetadataVersionList(params);
         if (metadataVersions == null) {
             metadataVersions = new ArrayList<>();
         }
         int count = metadataVersionService.getMetadataVersionCount(params);
         int pageCount = count == 0 ? 0 : (count % pageSize == 0 ? count / pageSize : count / pageSize + 1);
-
         modelMap.put("pageIndex", pageIndex);
         modelMap.put("pageSize", pageSize);
         modelMap.put("pageCount", pageCount);
         modelMap.put("metadataVersions", metadataVersions);
-
         mav.addAllObjects(modelMap);
-
         return mav;
     }
 
@@ -110,56 +98,42 @@ public class VersionController extends BaseObserver {
      * 注意:metadata_xml 数据是空的 他在实现方法里面给添加到了<br/>
      *
      * @param request
-     * @param response
      * @return
      * @throws Exception
      */
     @Permission(name = "update")
     @RequestMapping(value = "addVersion", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<byte[]> addVersion(HttpServletRequest request, HttpServletResponse response)
+    public ResponseEntity<byte[]> addVersion(HttpServletRequest request)
             throws Exception {
         String msg = StringUtils.EMPTY;
-
-        // 1.
         String metadataIdStr = request.getParameter("metadataId");
         long metadataId = Long.parseLong(metadataIdStr);
         String description = request.getParameter("description");
-
-        // 2.
         Metadata metadata = metadataService.getMetadataById(metadataId);
         if (StringUtils.isBlank(metadata.getUpChain()) || StringUtils.isBlank(metadata.getDownChain())) {
             msg = "请先配置完整的上下行链条!";
-            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         }
-        // 3
         ConcreteSubject concreteSubject = ConcreteSubject.instances();
-        // 3.1
         List<ChainElementDefine> upDefine = metadataService.chainList(concreteSubject, metadataId,
                 metadata.getUpChain());
-        // 3.2
         List<ChainElementDefine> downDefine = metadataService.chainList(concreteSubject, metadataId,
                 metadata.getDownChain());
-
         ServiceDefineImpl serviceDefine = new ServiceDefineImpl();
-
         serviceDefine.setName(metadata.getMetaKey());
         serviceDefine.setUpChainList(upDefine);
         serviceDefine.setDownChainList(downDefine);
         serviceDefine.setDeployModel(DeployModel.valueOf(metadata.getDeployModel()));
-        // 3.3
         String xml = XmlSerializer.serialize(serviceDefine);
         if (StringUtils.isBlank(xml)) {
             msg = "生成xml出错,请稍后重试!";
-            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         }
-        // System.out.println("formatXml(xml):" + formatXml(xml));
-        // 4
         MetadataVersion version = new MetadataVersion();
         version.setMetadataId(metadataId);
         version.setDescription(description);
         version.setMetadataXml(formatXml(xml));
         version.setCreateTime(new Date());
-
         int count = 0;
         try {
             count = metadataVersionService.addVersion(version);
@@ -167,31 +141,25 @@ public class VersionController extends BaseObserver {
             msg = err.getMessage() + "\n";
         }
         msg = msg + (count > 0 ? "添加成功" : "添加失败");
-
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     /**
      * 获取格式化xml数据
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "previewVersion", method = RequestMethod.GET)
-    public ModelAndView previewVersion(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView previewVersion(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("previewversion");
-
         String id = request.getParameter("id");
         MetadataVersion version = metadataVersionService.getMetadataVersionById(Long.parseLong(id));
-
-        // String xml1 = version.getMetadataXml();
         String xml = formatXml(version.getMetadataXml());
         if (StringUtils.isBlank(xml)) {
             xml = "数据有问题!!!";
         }
-
         mav.addObject("xml", xml);
         return mav;
     }
@@ -208,8 +176,7 @@ public class VersionController extends BaseObserver {
      */
     public String formatXml(String str) {
         try {
-            Document document = null;
-            document = DocumentHelper.parseText(str);
+            Document document = DocumentHelper.parseText(str);
             // 格式化输出格式
             OutputFormat format = OutputFormat.createPrettyPrint();
             format.setEncoding("utf-8");
@@ -220,11 +187,10 @@ public class VersionController extends BaseObserver {
             xmlWriter.write(document);
             xmlWriter.close();
             return writer.toString();
-
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     @Override
