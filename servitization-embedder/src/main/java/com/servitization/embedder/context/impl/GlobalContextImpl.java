@@ -22,5 +22,4 @@ public class GlobalContextImpl implements GlobalContext {
     public ApplicationContext getEmcfContext() {
         return emcf;
     }
-
 }

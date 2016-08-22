@@ -33,12 +33,10 @@ public class ZKCommunicator {
         try {
             ZKBaseStructureBuilder.buildBaseStructure();
             ZooKeeper zk = ZKConnection.zk();
-            if (zk.exists(Constants.boot + "/" + IPProvider.hostname, false) == null)
-                zk.create(Constants.boot + "/" + IPProvider.hostname,
-                        Constants.NONE, Ids.OPEN_ACL_UNSAFE,
-                        CreateMode.EPHEMERAL);
-            zk.getData(Constants.boot + "/" + IPProvider.hostname,
-                    new BootWatcher(), null);
+            if (zk.exists(Constants.boot + "/" + IPProvider.hostname, false) == null) {
+                zk.create(Constants.boot + "/" + IPProvider.hostname, Constants.NONE, Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+            }
+            zk.getData(Constants.boot + "/" + IPProvider.hostname, new BootWatcher(), null);
             bootLatch.await(10, TimeUnit.SECONDS);
             // 删掉自身节点，表示不再接收xml数据
             ZKConnection.zk().delete(Constants.boot + "/" + IPProvider.hostname, -1);
@@ -55,8 +53,7 @@ public class ZKCommunicator {
         public void process(WatchedEvent event) {
             try {
                 if (event.getType() == EventType.NodeDataChanged) {
-                    byte[] data = ZKConnection.zk().getData(event.getPath(),
-                            false, null);
+                    byte[] data = ZKConnection.zk().getData(event.getPath(), false, null);
                     if (data != null && data.length > 0) {
                         String json = new String(data);
                         LOG.info("Boot watcher has get the json: " + json);
@@ -86,12 +83,11 @@ public class ZKCommunicator {
             ZooKeeper zk = ZKConnection.zk();
             if (zk == null)
                 return false;
-            if (zk.exists(Constants.status + "/" + info.getIp(), false) == null)
-                zk.create(Constants.status + "/" + info.getIp(), info
-                                .toString().getBytes(), Ids.OPEN_ACL_UNSAFE,
-                        CreateMode.EPHEMERAL);
-            else
+            if (zk.exists(Constants.status + "/" + info.getIp(), false) == null) {
+                zk.create(Constants.status + "/" + info.getIp(), info.toString().getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+            } else {
                 zk.setData(Constants.status + "/" + info.getIp(), info.toString().getBytes(), -1);
+            }
             return true;
         } catch (Exception e) {
             LOG.error(e.getMessage());
@@ -104,12 +100,11 @@ public class ZKCommunicator {
     public static boolean watchPush(Watcher w) {
         try {
             ZooKeeper zk = ZKConnection.zk();
-            if (zk == null)
+            if (zk == null) {
                 return false;
+            }
             if (zk.exists(Constants.push + "/" + IPProvider.ip, false) == null) {
-                zk.create(Constants.push + "/" + IPProvider.ip,
-                        Constants.NONE, Ids.OPEN_ACL_UNSAFE,
-                        CreateMode.EPHEMERAL);
+                zk.create(Constants.push + "/" + IPProvider.ip, Constants.NONE, Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
             }
             zk.getData(Constants.push + "/" + IPProvider.ip, w, null);
             return true;
@@ -126,8 +121,7 @@ public class ZKCommunicator {
             if (data != null && data.length > 0) {
                 String json = new String(data);
                 Map<String, String> m_v_ack = JSON.parseObject(json, Map.class);
-                sd = (ServiceDefineImpl) (XmlSerializer.deserialize(m_v_ack
-                        .get(Constants.push_meta)));
+                sd = (ServiceDefineImpl) (XmlSerializer.deserialize(m_v_ack.get(Constants.push_meta)));
                 sd.setVersion(m_v_ack.get(Constants.push_version));
             }
             return sd;
@@ -139,11 +133,10 @@ public class ZKCommunicator {
 
     public static void pushState(PushState state) {
         try {
-            Map<String, String> ack = new HashMap<String, String>();
+            Map<String, String> ack = new HashMap<>();
             ack.put(Constants.push_ack, state.name());
             String json = JSON.toJSONString(ack);
-            ZKConnection.zk().setData(Constants.push + "/" + IPProvider.ip,
-                    json.getBytes(), -1);
+            ZKConnection.zk().setData(Constants.push + "/" + IPProvider.ip, json.getBytes(), -1);
         } catch (Exception e) {
             LOG.error("Failed to push state", e.getMessage());
         }

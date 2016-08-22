@@ -20,9 +20,7 @@ public class ChainElementFactory {
                 Class<?> clazz = Class.forName(hDefine.getHandlerClazz());
                 Object obj = clazz.newInstance();
                 if (!(obj instanceof ChainHandler))
-                    throw new RuntimeException("Wrong clazz type for "
-                            + hDefine.getHandlerClazz()
-                            + ", it must be ChainHandler!");
+                    throw new RuntimeException("Wrong clazz type for " + hDefine.getHandlerClazz() + ", it must be ChainHandler!");
                 return (ChainHandler) obj;
             } catch (Exception e) {
                 throw new RuntimeException(e);

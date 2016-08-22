@@ -4,17 +4,19 @@ import com.servitization.metadata.common.CommonsUtil;
 
 public class Constants {
 
-    public final static String zk_url = CommonsUtil.CONFIG_PROVIDAR
-            .getProperty("zk.url");
-    
-    public final static String exclude_url = CommonsUtil.CONFIG_PROVIDAR
-            .getProperty("exclude_url");
+    /**
+     * ZK URL
+     */
+    public final static String zk_url = CommonsUtil.CONFIG_PROVIDAR.getProperty("zk.url");
 
-    public final static String zk_username = CommonsUtil.CONFIG_PROVIDAR
-            .getProperty("zk.username");
+    /**
+     * 过滤的URL
+     */
+    public final static String exclude_url = CommonsUtil.CONFIG_PROVIDAR.getProperty("exclude_url");
 
-    public final static String zk_password = CommonsUtil.CONFIG_PROVIDAR
-            .getProperty("zk.password");
+    public final static String zk_username = CommonsUtil.CONFIG_PROVIDAR.getProperty("zk.username");
+
+    public final static String zk_password = CommonsUtil.CONFIG_PROVIDAR.getProperty("zk.password");
 
     public static final String root = "/mobileapi";
 
@@ -42,5 +44,4 @@ public class Constants {
     public static final String push_ack = "ack";
 
     public static final byte[] NONE = "NONE".getBytes();
-
 }

@@ -15,43 +15,41 @@ public interface RequestContext {
      *
      * @return
      */
-    public GlobalContext getGlobalContext();
+    GlobalContext getGlobalContext();
 
     /**
      * 获得已产生的错误列表
      *
      * @return
      */
-    public List<ErrorEntity> getErrorList();
+    List<ErrorEntity> getErrorList();
 
     /**
      * 添加一个错误到上下文，没有具体异常栈，自动取当前handler名，默认errorCode和message
      */
-    public void addError();
+    void addError();
 
     /**
      * 添加一个错误到上下文，包含具体异常栈，自动取当前handler名
      *
      * @param e
      */
-    public void addError(Exception e);
+    void addError(Exception e);
 
     /**
      * 添加一个错误到上下文，没有具体异常栈，自动取当前handler名, 指定errorCode和message
      */
-    public void addError(String errorCode, String errorMsg);
+    void addError(String errorCode, String errorMsg);
 
     /**
      * 添加一个错误到上下文，没有具体异常栈，自动取当前handler名, 指定errorCode、message和customErrorEntity
      */
-    public void addError(String errorCode, String errorMsg,
-                         Map<String, String> customErrorEntity);
+    void addError(String errorCode, String errorMsg, Map<String, String> customErrorEntity);
 
     /**
      * 获得处理链上的索引
      *
      * @return
      */
-    public int getProcessIndex();
-
+    int getProcessIndex();
 }

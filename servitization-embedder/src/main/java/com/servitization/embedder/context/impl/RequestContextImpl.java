@@ -32,7 +32,6 @@ public class RequestContextImpl {
         this.narrow = (RequestContextImplNarrow) context;
     }
 
-
     /**
      * narrow interface for handler
      */

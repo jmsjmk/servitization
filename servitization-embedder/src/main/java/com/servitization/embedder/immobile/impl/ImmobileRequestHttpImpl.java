@@ -64,7 +64,6 @@ public class ImmobileRequestHttpImpl implements ImmobileRequest {
     private String buildValue(String[] array) {
         int length = array.length;
         StringBuilder builder = new StringBuilder();
-
         for (int i = 0; i < length; i++) {
             builder.append(array[i]);
             if (i != length - 1)

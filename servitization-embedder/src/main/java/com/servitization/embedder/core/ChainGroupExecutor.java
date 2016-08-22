@@ -19,8 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChainGroupExecutor implements ChainGroup {
 
-    private static final Logger LOG = LoggerFactory
-            .getLogger(ChainGroupExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChainGroupExecutor.class);
 
     private Chain chain = null;
 
@@ -34,31 +33,23 @@ public class ChainGroupExecutor implements ChainGroup {
 
     public void init(ChainElementDefine eleDefine, GlobalContext context) {
         ChainGroupDefine grpDefine = (ChainGroupDefine) eleDefine;
-        List<ChainElementDefine> elements = grpDefine
-                .getChainElementDefineList();
+        List<ChainElementDefine> elements = grpDefine.getChainElementDefineList();
         chain = new Chain();
         chain.init(elements, context);
-
         grpPolicy = grpDefine.getGroupPolicy();
-        LOG.info("Using 'size:" + grpDefine.getGroupSize()
-                + "' created a pool with " + grpPolicy.toString() + " Policy!");
-
-        queue = new LinkedBlockingQueue<Runnable>(grpDefine.getGroupSize());
+        LOG.info("Using 'size:" + grpDefine.getGroupSize() + "' created a pool with " + grpPolicy.toString() + " Policy!");
+        queue = new LinkedBlockingQueue<>(grpDefine.getGroupSize());
         // default is abort-reject handler
         service = new ThreadPoolExecutor(grpDefine.getGroupSize(),
                 grpDefine.getGroupSize(), 1, TimeUnit.MINUTES, queue,
                 new ChainGroupThreadFactory());
-
-        processTimeout = grpDefine.getGroupProcessTimeout() <= 0 ? 2
-                : grpDefine.getGroupProcessTimeout();
+        processTimeout = grpDefine.getGroupProcessTimeout() <= 0 ? 2 : grpDefine.getGroupProcessTimeout();
     }
 
-    public HandleResult handle(ImmobileRequest request,
-                               ImmobileResponse response, RequestContext reqContext) {
-        Future<HandleResult> future = null;
+    public HandleResult handle(ImmobileRequest request, ImmobileResponse response, RequestContext reqContext) {
+        Future<HandleResult> future;
         try {
-            future = service.submit(new GroupCallable(request, response,
-                    reqContext));
+            future = service.submit(new GroupCallable(request, response, reqContext));
         } catch (RejectedExecutionException rej) {
             if (grpPolicy == GroupPolicy.OPEN) {
                 LOG.debug("The OPEN pool is degrading the request. Because the pool is full!");
@@ -77,9 +68,7 @@ public class ChainGroupExecutor implements ChainGroup {
                 return HandleResult.CONTINUE;
             }
         } catch (Exception e) {
-            LOG.error(reqContext.getGlobalContext().getServiceDefine()
-                    .getName()
-                    + "#Error occurs when processing group callable task.", e);
+            LOG.error(reqContext.getGlobalContext().getServiceDefine().getName() + "#Error occurs when processing group callable task.", e);
         }
         return result;
     }
@@ -100,8 +89,7 @@ public class ChainGroupExecutor implements ChainGroup {
         private final ImmobileResponse response;
         private final RequestContext reqContext;
 
-        public GroupCallable(ImmobileRequest request,
-                             ImmobileResponse response, RequestContext reqContext) {
+        public GroupCallable(ImmobileRequest request, ImmobileResponse response, RequestContext reqContext) {
             this.request = request;
             this.response = response;
             this.reqContext = reqContext;
@@ -112,7 +100,6 @@ public class ChainGroupExecutor implements ChainGroup {
             reqContextWrapper.restoreRequestContext(reqContext);
             return chain.exec(request, response, reqContextWrapper);
         }
-
     }
 
     /**
@@ -126,15 +113,12 @@ public class ChainGroupExecutor implements ChainGroup {
 
         ChainGroupThreadFactory() {
             SecurityManager s = System.getSecurityManager();
-            group = (s != null) ? s.getThreadGroup() : Thread.currentThread()
-                    .getThreadGroup();
-            namePrefix = "chain group pool-" + poolNumber.getAndIncrement()
-                    + "-thread-";
+            group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            namePrefix = "chain group pool-" + poolNumber.getAndIncrement() + "-thread-";
         }
 
         public Thread newThread(Runnable r) {
-            Thread t = new Thread(group, r, namePrefix
-                    + threadNumber.getAndIncrement(), 0);
+            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
             if (t.isDaemon())
                 t.setDaemon(false);
             if (t.getPriority() != Thread.NORM_PRIORITY)
@@ -142,5 +126,4 @@ public class ChainGroupExecutor implements ChainGroup {
             return t;
         }
     }
-
 }

@@ -46,8 +46,7 @@ public class Chain {
                 // now handler and index
                 reqContext.setCurrentHandlerName(entry.getKey());
                 reqContext.incProcessIndex();
-                result = entry.getValue().handle(imHttpRequest, imHttpResponse,
-                        reqContext.getRequestContext());
+                result = entry.getValue().handle(imHttpRequest, imHttpResponse, reqContext.getRequestContext());
                 if (result == HandleResult.STOP) {
                     break;
                 }
@@ -65,5 +64,4 @@ public class Chain {
         }
         chainElements = null;
     }
-
 }

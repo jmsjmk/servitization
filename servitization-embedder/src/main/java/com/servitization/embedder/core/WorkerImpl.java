@@ -27,32 +27,25 @@ public class WorkerImpl implements Worker {
     public void init(GlobalContext context) {
         this.context = context;
         this.define = context.getServiceDefine();
-
         if (define == null)
             throw new RuntimeException("Can't find the service define from the resource context!");
-
         upChain = new Chain();
         upChain.init(define.getUpChainList(), context);
-
         downChain = new Chain();
         downChain.init(define.getDownChainList(), context);
     }
 
-    public void process(ImmobileRequest request, ImmobileResponse response,
-                        FilterChain chain) {
+    public void process(ImmobileRequest request, ImmobileResponse response, FilterChain chain) {
         RequestContextImpl reqContext = new RequestContextImpl();
         reqContext.createRequestContext(context);
-
         upChain.exec(request, response, reqContext);
         downChain.exec(request, response, reqContext);
-
         try {
             response.setCharacterEncoding("UTF-8");
             response.setHeader();
             response.flushContent();
         } catch (IOException e) {
-            LOG.error(reqContext.getRequestContext().getGlobalContext()
-                    .getServiceDefine().getName()
+            LOG.error(reqContext.getRequestContext().getGlobalContext().getServiceDefine().getName()
                     + "#Error occurs when writing response!");
         }
     }

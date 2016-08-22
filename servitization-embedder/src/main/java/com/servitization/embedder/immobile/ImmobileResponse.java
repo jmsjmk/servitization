@@ -14,33 +14,36 @@ public interface ImmobileResponse {
      * @return
      * @throws IOException
      */
-    public OutputStream getOutputStream() throws IOException;
+    OutputStream getOutputStream() throws IOException;
 
     /**
      * 获取已经写入的内容
      *
      * @return
      */
-    public byte[] getContent();
+    byte[] getContent();
 
     /**
      * 重置已经写入的内容
      */
-    public void resetContent();
+    void resetContent();
 
     /**
      * 输出已经写入的内容,内容将不能被修改
      *
      * @throws IOException
      */
-    public void flushContent() throws IOException;
+    void flushContent() throws IOException;
 
     /**
      * 设置输出的编码格式
      *
      * @param charset
      */
-    public void setCharacterEncoding(String charset);
+    void setCharacterEncoding(String charset);
 
+    /**
+     * 设置返回头
+     */
     void setHeader();
 }

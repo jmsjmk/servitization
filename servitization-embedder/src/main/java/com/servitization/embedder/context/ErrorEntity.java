@@ -49,5 +49,4 @@ public class ErrorEntity {
         this.exception = null;
         this.customErrorEntity = customErrorEntity;
     }
-
 }

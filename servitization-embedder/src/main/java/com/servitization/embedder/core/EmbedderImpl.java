@@ -25,9 +25,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class EmbedderImpl implements Embedder {
 
-	/**
-	 * 单例处理:--------------------begin-------------------------
-	 */
 	private EmbedderImpl() {
 	}
 
@@ -37,10 +34,6 @@ public class EmbedderImpl implements Embedder {
 		return self;
 	}
 
-	/**
-	 * 单例处理:--------------------end---------------------------
-	 */
-
 	private static final Logger LOG = LoggerFactory.getLogger(EmbedderImpl.class);
 
 	private Worker worker = null;
@@ -49,14 +42,7 @@ public class EmbedderImpl implements Embedder {
 
 	private volatile boolean initFinishedFlag = false; // 是否初始化完成
 
-	/**
-	 * Environment:--------------------begin-------------------------
-	 */
 	private ApplicationContext emcfContext = null; // EMCF context
-
-	/**
-	 * Environment:--------------------end---------------------------
-	 */
 
 	public void init() {
 		LOG.info("Begin to init the Embedder...");
@@ -81,7 +67,7 @@ public class EmbedderImpl implements Embedder {
 			long L1 = System.currentTimeMillis();
 			sd = LocalBackupManager.restore();
 			long L2 = System.currentTimeMillis();
-			LOG.info("Finsh to get the metadata from local...time[" + (L2 - L1) +"]ms");
+			LOG.info("Finish to get the metadata from local...time[" + (L2 - L1) +"]ms");
 			if (sd != null) {
 				try {
 					Worker worker = generateWorker(sd);
@@ -92,7 +78,6 @@ public class EmbedderImpl implements Embedder {
 				}
 			}
 		}
-
 		if (!updateSuccess) {
 			LOG.error("Can't load ServiceDefine from zk nor local, boot failed!");
 			this.destroy();
@@ -114,7 +99,7 @@ public class EmbedderImpl implements Embedder {
 	private void initEnvironment() {
 		LOG.info("Begin to init the spring environment...");
 		emcfContext = new GenericXmlApplicationContext(new String[] { "config/root-context.xml" });
-		LOG.info("Finsh to init the spring environment...");
+		LOG.info("Finish to init the spring environment...");
 	}
 
 	private Worker generateWorker(ServiceDefine sd) {
@@ -123,13 +108,12 @@ public class EmbedderImpl implements Embedder {
 		Worker newWorker = new WorkerImpl();
 		newWorker.init(new GlobalContextImpl(sd, emcfContext));
 		long L2 = System.currentTimeMillis();
-		LOG.info("Finsh to generate the worker...time[" + (L2 - L1) + "]ms");
+		LOG.info("Finish to generate the worker...time[" + (L2 - L1) + "]ms");
 		return newWorker;
 	}
 
 	private void bindZK(ServiceDefine sd) {
-		boolean reportSuccess = ZKCommunicator
-				.reportStatus(new StatusInfo(sd.getName(), sd.getVersion(), IPProvider.hostname, IPProvider.ip));
+		boolean reportSuccess = ZKCommunicator.reportStatus(new StatusInfo(sd.getName(), sd.getVersion(), IPProvider.hostname, IPProvider.ip));
 		if (!reportSuccess)
 			LOG.error("Failed to report the status to the zk!");
 		boolean watchSuccess = ZKCommunicator.watchPush(new PushWatcher());
@@ -169,7 +153,6 @@ public class EmbedderImpl implements Embedder {
 						LOG.info("Begin to reload the service define...");
 						Worker oldWorker = EmbedderImpl.this.worker;
 						Worker newWorker = generateWorker(sd);
-
 						// --------------2.新产生TPS timer--------------
 						runtimeLock.writeLock().lock();
 						try {
@@ -177,7 +160,6 @@ public class EmbedderImpl implements Embedder {
 						} finally {
 							runtimeLock.writeLock().unlock();
 						}
-
 						LOG.info("Begin to destory the old worker...");
 						oldWorker.destory();
 						LOG.info("Finish to reload the worker and timer...");

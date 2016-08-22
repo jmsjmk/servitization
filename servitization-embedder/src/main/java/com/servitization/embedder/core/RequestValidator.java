@@ -15,31 +15,26 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RequestValidator {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(RequestValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RequestValidator.class);
 
-	private static boolean isHttpRequest(ServletRequest request,
-			ServletResponse response) {
-		if (!(request instanceof HttpServletRequest)
-				|| !(response instanceof HttpServletResponse)) {
-			LOG.error("Can't accept non-http servlet request or response!");
-			return false;
-		}
-		return true;
-	}
+    private static boolean isHttpRequest(ServletRequest request, ServletResponse response) {
+        if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
+            LOG.error("Can't accept non-http servlet request or response!");
+            return false;
+        }
+        return true;
+    }
 
-	private static boolean isHeartBeat(HttpServletRequest request) {
-		String path = request.getServletPath();
-		if (path != null && path.equalsIgnoreCase(Constants.exclude_url))
-			return true;
-		return false;
-	}
+    private static boolean isHeartBeat(HttpServletRequest request) {
+        String path = request.getServletPath();
+        if (path != null && path.equalsIgnoreCase(Constants.exclude_url))
+            return true;
+        return false;
+    }
 
-	public static boolean isValidatorRequest(ServletRequest request,
-			ServletResponse response) {
-		if (!isHttpRequest(request, response)
-				|| isHeartBeat((HttpServletRequest) request))
-			return false;
-		return true;
-	}
+    public static boolean isValidatorRequest(ServletRequest request, ServletResponse response) {
+        if (!isHttpRequest(request, response) || isHeartBeat((HttpServletRequest) request))
+            return false;
+        return true;
+    }
 }
