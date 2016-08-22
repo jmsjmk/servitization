@@ -11,7 +11,6 @@
     <groupId>com.servitization</groupId>
     <artifactId>servitization-request</artifactId>
     <packaging>jar</packaging>
-
     <dependencies>
         <dependency>
             <groupId>com.servitization</groupId>

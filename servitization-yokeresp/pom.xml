@@ -8,7 +8,6 @@
         <version>1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.servitization</groupId>
     <artifactId>servitization-yokeresp</artifactId>
     <packaging>jar</packaging>
@@ -17,10 +16,6 @@
             <groupId>com.servitization</groupId>
             <artifactId>servitization-embedder</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
         </dependency>
     </dependencies>
 </project>

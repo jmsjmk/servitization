@@ -8,7 +8,6 @@
         <version>1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.servitization</groupId>
     <artifactId>servitization-pv</artifactId>
     <packaging>jar</packaging>

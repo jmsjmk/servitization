@@ -37,5 +37,4 @@ public interface ChainElement {
      * @param context
      */
     void destroy(GlobalContext context);
-
 }
