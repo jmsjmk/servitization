@@ -88,8 +88,7 @@ public class ResponseConverter implements IResponseConvert {
                     CommonLogger.getLogger().error("convert json error context is null! Path[" + servicePath + "]");
                     return jsonStr;
                 }
-
-                Map<String, Object> resMap = new HashMap<String, Object>();
+                Map<String, Object> resMap = new HashMap<>();
                 Map<String, Object> dataMap;
                 if (content.equalsIgnoreCase("-10010")) {
                     resMap.put(DEST_CODE, Integer.valueOf("-10010"));
@@ -144,7 +143,7 @@ public class ResponseConverter implements IResponseConvert {
                     } else {
                         resMap.put(DEST_CODE, Integer.valueOf(ResId) == 0 ? 10000 : Integer.valueOf(ResId));
                         resMap.put(DEST_DESCRIPTION, ResMsg);
-                        Object destObj = null;
+                        Object destObj;
                         if (dataObject instanceof JSONObject) {
                             destObj = getDataJsonObject(jobj, (JSONObject) dataObject);
                         } else {

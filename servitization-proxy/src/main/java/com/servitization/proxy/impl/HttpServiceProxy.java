@@ -31,11 +31,8 @@ public class HttpServiceProxy implements IServiceProxy {
     }
 
     @Override
-    public Object doService(ImmobileRequest request, ImmobileResponse response,
-                            TargetService targetService, RequestContext context)
-            throws NullPointerException, IOException,
-            IllegalAccessException, URISyntaxException, InterruptedException,
-            ExecutionException {
+    public Object doService(ImmobileRequest request, ImmobileResponse response, TargetService targetService, RequestContext context)
+            throws NullPointerException, IOException, IllegalAccessException, URISyntaxException, InterruptedException, ExecutionException {
         ServicePool servicePool = serviceMapper.getServicePoolInfo(targetService.getServicePoolName());
         HttpUriRequest httpRequest = requestConvert.convert2HttpUriRequest(request, targetService, servicePool);
         Integer code = httpClientFactory.customHttpClient().sendRequest(httpRequest, response.getOutputStream());

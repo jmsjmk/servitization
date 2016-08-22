@@ -28,7 +28,6 @@ public class FixedBasicDataSource extends BasicDataSource {
         return null;
     }
 
-
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         return null;

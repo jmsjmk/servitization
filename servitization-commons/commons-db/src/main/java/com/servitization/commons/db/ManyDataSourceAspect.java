@@ -24,12 +24,9 @@ public class ManyDataSourceAspect {
         if (clazzs != null && clazzs.length > 0) {
             clazz = clazzs[0];
         }
-
         if (clazz == null) {
-            //这个应该不可能出现
             throw new RuntimeException("not found Class.");
         }
-
         // 拿接口中的方法级别的注解
         Method m = clazz.getMethod(methodName, parameterTypes);
         if (m != null && m.isAnnotationPresent(DataSource.class)) {

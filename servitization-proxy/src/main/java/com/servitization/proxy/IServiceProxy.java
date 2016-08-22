@@ -11,8 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface IServiceProxy {
 
-    Object doService(ImmobileRequest request,
-                     ImmobileResponse response, TargetService targetService,
+    Object doService(ImmobileRequest request, ImmobileResponse response, TargetService targetService,
                      RequestContext context) throws NullPointerException, IOException, IllegalAccessException,
             URISyntaxException, InterruptedException, ExecutionException;
 
