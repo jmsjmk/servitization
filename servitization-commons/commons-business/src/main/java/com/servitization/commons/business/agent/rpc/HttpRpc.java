@@ -27,24 +27,20 @@ public class HttpRpc implements IRpc {
     public Object execute(RpcObject rpcObject) {
         HttpClientAgentUtils httpClient = new HttpClientAgentUtils();
         Method method = rpcObject.getMethod();
-        AgentService agentService = rpcObject.getAgengService();
+        AgentService agentService = rpcObject.getAgentService();
         Object[] args = rpcObject.getArgs();
         RpcConfig rpcConfig = rpcObject.getRpcConfig();
-
         Class<?> returnType = method.getReturnType();
         String name = agentService.name();
         String url;
         if (StringUtils.isBlank(name) || (url = rpcConfig.get(name + ".url")) == null) {
             throw new RuntimeException("Agent name and url can not be null");
         }
-
-
         //处理超时时间
         int timeOut = handleTimeOut(rpcConfig.get(name + ".timeOut"), agentService.timeOut(), 30000);
         int readTimeOut = handleTimeOut(rpcConfig.get(name + ".readTimeOut"), agentService.readTimeOut(), 200000);
         httpClient.setConnectionTimeOut(timeOut);
         httpClient.setSocketTimeOut(readTimeOut);
-
         // 使用自定义实体传递参数
         if (agentService.customizeParameter()) {
             if (args.length < 2) {
@@ -60,13 +56,11 @@ public class HttpRpc implements IRpc {
                 }
             }
         }
-
         MethodTypeEnum methodType = agentService.methodType();
-
         Object arg = args[0];
         DataTypeEnum reqType = agentService.reqType();
         String request = null;
-        Map<String, String> mrequest = null;
+        Map<String, String> mRequest = null;
         switch (reqType) {
             case STRING:
                 request = arg instanceof String ? (String) arg : form(arg);
@@ -75,12 +69,11 @@ public class HttpRpc implements IRpc {
                 request = JSON.toJSONString(arg);
                 break;
             case MAP:
-                mrequest = (Map<String, String>) arg;
+                mRequest = (Map<String, String>) arg;
                 break;
             default:
                 throw new RuntimeException("HttpRpc Only support JSON and String DataType. MethodName:" + method.getName());
         }
-
         Object result = null;
         //构造日志对象
         RpcLogObject rpcLogObject = new RpcLogObject();
@@ -91,7 +84,6 @@ public class HttpRpc implements IRpc {
         RpcLogUtil.writeLogBefore(rpcLogObject);
         Exception sysException = null;
         //发送前日志
-
         HttpClientAgentUtils.HttpResult httpResult;
         try {
             switch (methodType) {
@@ -105,7 +97,7 @@ public class HttpRpc implements IRpc {
                             httpResult = httpClient.post(url, request);
                             break;
                         case POST_KV:
-                            List<NameValuePair> params = new ArrayList<NameValuePair>();
+                            List<NameValuePair> params = new ArrayList<>();
                             String[] kvs = request.split("&");
                             for (String kv : kvs) {
                                 String[] sv = kv.split("=", 2);
@@ -117,12 +109,12 @@ public class HttpRpc implements IRpc {
                             httpResult = httpClient.post(url, params);
                             break;
                         case POST_MKV:
-                            List<NameValuePair> mparams = new ArrayList<NameValuePair>();
-                            for (Map.Entry<String, String> entry : mrequest.entrySet()) {
+                            List<NameValuePair> mParams = new ArrayList<>();
+                            for (Map.Entry<String, String> entry : mRequest.entrySet()) {
                                 NameValuePair nameValuePair = new BasicNameValuePair(entry.getKey(), entry.getValue());
-                                mparams.add(nameValuePair);
+                                mParams.add(nameValuePair);
                             }
-                            httpResult = httpClient.post(url, mparams);
+                            httpResult = httpClient.post(url, mParams);
                             break;
                         default:
                             throw new RuntimeException("HttpRpc not support ContentType. MethodName:" + method.getName());
@@ -141,7 +133,6 @@ public class HttpRpc implements IRpc {
                             httpResult = httpClient.get(url, request);
                             break;
                     }
-
                     break;
                 case PUT:
                     httpResult = httpClient.putJson(url, request);
@@ -152,7 +143,6 @@ public class HttpRpc implements IRpc {
                 default:
                     throw new RuntimeException("HttpRpc Only support POST and GET MethodType. MethodName:" + method.getName());
             }
-
             if (httpResult != null) {
                 DataTypeEnum resultType = agentService.resultType();
                 switch (resultType) {
@@ -172,14 +162,12 @@ public class HttpRpc implements IRpc {
                     rpcLogObject.setSysError(httpResult.getStatusCode() + "");
                 }
             }
-
         } catch (Exception e) {
             sysException = e;
         }
         rpcLogObject.setResult(result);
         rpcLogObject.setThrowable(sysException);
         RpcLogUtil.writeLogAfter(rpcLogObject);
-
         if (sysException != null) {
             throw new RuntimeException(sysException.getMessage());
         }
@@ -215,18 +203,13 @@ public class HttpRpc implements IRpc {
         try {
             for (int i = 0; i < fields.length; i++) {
                 agentField = fields[i].getAnnotation(AgentField.class);
-
                 String key = agentField != null && StringUtils.isNotBlank(agentField.name()) ? agentField.name() : fields[i].getName();
                 builder.append(key);
-
                 builder.append("=");
                 fields[i].setAccessible(true);
-
-
                 Object value = fields[i].get(entity);
                 value = value == null ? "" : fields[i].get(entity);
                 builder.append(value);
-
                 if (i < fields.length - 1) {
                     builder.append("&");
                 }
@@ -237,5 +220,4 @@ public class HttpRpc implements IRpc {
         }
         return result;
     }
-
 }

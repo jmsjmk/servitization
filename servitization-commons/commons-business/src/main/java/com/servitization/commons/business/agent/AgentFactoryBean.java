@@ -2,7 +2,7 @@ package com.servitization.commons.business.agent;
 
 import org.springframework.beans.factory.FactoryBean;
 
-public class AgentFactroyBean<T> extends AgentSupport implements FactoryBean<T> {
+public class AgentFactoryBean<T> extends AgentSupport implements FactoryBean<T> {
 
     private Class<T> agentInterface;
 
@@ -12,7 +12,6 @@ public class AgentFactroyBean<T> extends AgentSupport implements FactoryBean<T> 
 
     @Override
     public T getObject() throws Exception {
-
         return super.createBean(agentInterface);
     }
 

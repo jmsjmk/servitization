@@ -60,7 +60,6 @@ public class AgentScannerConfigurer implements
 
     private void processPropertyPlaceHolders() {
         Map<String, PropertyResourceConfigurer> prcs = applicationContext.getBeansOfType(PropertyResourceConfigurer.class);
-
         if (!prcs.isEmpty() && applicationContext instanceof GenericApplicationContext) {
             BeanDefinition mapperScannerBean = ((GenericApplicationContext) applicationContext)
                     .getBeanFactory().getBeanDefinition(beanName);

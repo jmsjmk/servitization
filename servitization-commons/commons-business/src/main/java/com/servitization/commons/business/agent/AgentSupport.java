@@ -14,8 +14,8 @@ public class AgentSupport {
     /**
      * 代理接口，接口无需写实现类.
      *
-     * @param <T>
      * @param agentInterface
+     * @param <T>
      * @return
      */
     public <T> T createBean(Class<T> agentInterface) {

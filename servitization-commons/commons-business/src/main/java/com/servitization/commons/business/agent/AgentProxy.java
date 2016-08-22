@@ -31,7 +31,7 @@ public class AgentProxy implements InvocationHandler {
             throw new RuntimeException("Agent RpcClient.getRpcInstance can not be null. MethodName:" + method.getName());
         }
         RpcObject rpcObject = new RpcObject();
-        rpcObject.setAgengService(agentService);
+        rpcObject.setAgentService(agentService);
         rpcObject.setMethod(method);
         rpcObject.setArgs(args);
         rpcObject.setRpcConfig(RpcConfig.getRpcConfig(properties));

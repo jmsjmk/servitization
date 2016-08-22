@@ -105,7 +105,7 @@ public class ClassPathRestFulScanner extends ClassPathBeanDefinitionScanner {
                 // but, the actual class of the bean is MapperFactoryBean
                 definition.getPropertyValues().add("agentInterface", definition.getBeanClassName());
                 definition.getPropertyValues().add("properties", properties);
-                definition.setBeanClass(AgentFactroyBean.class);
+                definition.setBeanClass(AgentFactoryBean.class);
                 if (logger.isDebugEnabled()) {
                     logger.debug("Enabling autowire by type for MapperFactoryBean with name '" + holder.getBeanName() + "'.");
                 }

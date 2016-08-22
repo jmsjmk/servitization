@@ -10,7 +10,6 @@ public class RpcClient {
     private static IRpc httpRpc;
 
     public static IRpc getRpcInstance(RPCTypeEnum rpcTypeEnum) {
-
         if (rpcTypeEnum == null) {
             return null;
         }
@@ -39,7 +38,6 @@ public class RpcClient {
                 if (httpRpc == null) {
                     httpRpc = new HttpRpc();
                 }
-
                 return httpRpc;
             } finally {
                 lock.unlock();

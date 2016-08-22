@@ -9,11 +9,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class RpcConfig {
     private static final Lock lock = new ReentrantLock();
-    private Map<String, String> configs = new HashMap<String, String>();
+    private Map<String, String> configs = new HashMap<>();
     private static RpcConfig rpcConfig = null;
-
-    private RpcConfig() {
-    }
 
     private RpcConfig(Properties properties) {
         if (properties != null) {

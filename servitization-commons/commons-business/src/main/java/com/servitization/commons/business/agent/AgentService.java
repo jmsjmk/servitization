@@ -24,10 +24,9 @@ public @interface AgentService {
 
     ContentType contentType() default ContentType.POST_JSON;
 
-    boolean customizeParameter() default false;                            //是否定制参数
+    boolean customizeParameter() default false; //是否定制参数
 
-    int timeOut() default 30000;                            //连接超时时间,默认30秒
+    int timeOut() default 30000;    //连接超时时间,默认30秒
 
-    int readTimeOut() default 200000;                            //读数据超时时间,默认200秒
-
+    int readTimeOut() default 200000;   //读数据超时时间,默认200秒
 }

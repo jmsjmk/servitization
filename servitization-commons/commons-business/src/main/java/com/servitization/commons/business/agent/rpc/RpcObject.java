@@ -8,17 +8,17 @@ import java.lang.reflect.Method;
  * Rpc对象
  */
 public class RpcObject {
-    private AgentService agengService;
+    private AgentService agentService;
     private Method method;
     private Object[] args;
     private RpcConfig rpcConfig;
 
-    public AgentService getAgengService() {
-        return agengService;
+    public AgentService getAgentService() {
+        return agentService;
     }
 
-    public void setAgengService(AgentService agengService) {
-        this.agengService = agengService;
+    public void setAgentService(AgentService agentService) {
+        this.agentService = agentService;
     }
 
     public Method getMethod() {
