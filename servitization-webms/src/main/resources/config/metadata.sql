@@ -117,7 +117,7 @@ INSERT INTO metadata_module VALUES
 INSERT INTO metadata_module VALUES
   ('4', '请求解密模块', 'aESChainHandler', 'com.servitization.yoke.chain.AESChainHandler', '0', '0', NOW(), NOW());
 INSERT INTO metadata_module VALUES
-  ('5', '请求转发', 'servicePorxyHandler', 'com.servitization.proxy.chain.ServiceProxyChainHandler', '0', '0', NOW(),
+  ('5', '请求转发', 'serviceProxyHandler', 'com.servitization.proxy.chain.ServiceProxyChainHandler', '0', '0', NOW(),
    NOW());
 INSERT INTO metadata_module VALUES
   ('6', '异常处理模块', 'errorChainHandler', 'com.servitization.error.ErrorChainHandler', '1', '0', NOW(), NOW());

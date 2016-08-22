@@ -228,7 +228,7 @@ public class ProxyController extends BaseObserver {
 
     @Override
     public String getHandlerName() {
-        return "servicePorxyHandler";
+        return "serviceProxyHandler";
     }
 
     @Override
