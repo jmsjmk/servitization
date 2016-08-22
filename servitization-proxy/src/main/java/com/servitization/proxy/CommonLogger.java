@@ -9,5 +9,4 @@ public class CommonLogger {
     public static Logger getLogger() {
         return logger;
     }
-
 }

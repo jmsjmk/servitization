@@ -43,7 +43,6 @@ public class AsynHttpClient implements IApacheHttpClient {
 
     public AsynHttpClient() {
         NHttpConnectionFactory<ManagedNHttpClientConnection> connFactory = new ManagedNHttpClientConnectionFactory();
-
         Registry<SchemeIOSessionStrategy> seRegistry = RegistryBuilder
                 .<SchemeIOSessionStrategy>create()
                 .register("http", NoopIOSessionStrategy.INSTANCE)
@@ -58,10 +57,8 @@ public class AsynHttpClient implements IApacheHttpClient {
         } catch (IOReactorException e) {
             e.printStackTrace();
         }
-        PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(
-                ioReactor, connFactory, seRegistry);
-        MessageConstraints messageConstraints = MessageConstraints.custom()
-                .setMaxHeaderCount(200).build();
+        PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(ioReactor, connFactory, seRegistry);
+        MessageConstraints messageConstraints = MessageConstraints.custom().setMaxHeaderCount(200).build();
         ConnectionConfig connectionConfig = ConnectionConfig.custom()
                 .setMalformedInputAction(CodingErrorAction.IGNORE)
                 .setUnmappableInputAction(CodingErrorAction.IGNORE)
@@ -109,16 +106,13 @@ public class AsynHttpClient implements IApacheHttpClient {
     }
 
     public HttpResponse sendRequest4Wait(HttpUriRequest request)
-            throws IOException, InterruptedException,
-            ExecutionException {
-        Future<HttpResponse> future = this.closeableHttpAsyncClient.execute(
-                request, new ResultCallBack(request));
+            throws IOException, InterruptedException, ExecutionException {
+        Future<HttpResponse> future = this.closeableHttpAsyncClient.execute(request, new ResultCallBack(request));
         return future.get();
     }
 
     @Override
-    public byte[] sendRequestGetEntityBytes(HttpUriRequest request)
-            throws IOException, NullPointerException,
+    public byte[] sendRequestGetEntityBytes(HttpUriRequest request) throws IOException, NullPointerException,
             InterruptedException, ExecutionException {
         byte[] bytes = null;
         HttpResponse response = sendRequest4Wait(request);
@@ -130,15 +124,11 @@ public class AsynHttpClient implements IApacheHttpClient {
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 bytes = EntityUtils.toByteArray(response.getEntity());
             } else {
-                CommonLogger.getLogger().error(
-                        response.getStatusLine().getReasonPhrase() + ",code:"
+                CommonLogger.getLogger().error(response.getStatusLine().getReasonPhrase() + ",code:"
                                 + response.getStatusLine().getStatusCode());
             }
         } else {
-            CommonLogger.getLogger().warn(
-                    String.format(
-                            "httpclient got a repsonse with empty entity;%d",
-                            resultCode));
+            CommonLogger.getLogger().warn(String.format("httpclient got a repsonse with empty entity;%d", resultCode));
         }
         return bytes;
     }
@@ -157,15 +147,11 @@ public class AsynHttpClient implements IApacheHttpClient {
                     || resultCode == HttpStatus.SC_NOT_MODIFIED) {
                 response.getEntity().writeTo(outputStream);
             } else {
-                CommonLogger.getLogger().error(
-                        response.getStatusLine().getReasonPhrase() + ",code:"
+                CommonLogger.getLogger().error(response.getStatusLine().getReasonPhrase() + ",code:"
                                 + response.getStatusLine().getStatusCode());
             }
         } else {
-            CommonLogger.getLogger().warn(
-                    String.format(
-                            "httpclient got a repsonse with empty entity;%d",
-                            resultCode));
+            CommonLogger.getLogger().warn(String.format("httpclient got a repsonse with empty entity;%d", resultCode));
         }
         return resultCode;
     }

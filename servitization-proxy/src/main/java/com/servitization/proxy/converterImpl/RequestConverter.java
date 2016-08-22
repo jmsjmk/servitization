@@ -6,6 +6,7 @@ import com.servitization.metadata.define.proxy.ServicePool;
 import com.servitization.metadata.define.proxy.TargetService;
 import com.servitization.proxy.IRequestConvert;
 import com.servitization.proxy.check.ProxyCheck;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -30,44 +31,35 @@ public class RequestConverter implements IRequestConvert {
             TargetService targetService, ServicePool servicePool)
             throws URISyntaxException, IllegalAccessException {
         String httpMethod = targetService.getMethod();
-
         List<NameValuePair> params = null;
-        Map<String, String[]> paremterMap = request
-                .getParameterMap();
-        if (paremterMap != null) {
-            params = new ArrayList<NameValuePair>();
-            for (Map.Entry<String, String[]> e : paremterMap.entrySet()) {
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        if (parameterMap != null) {
+            params = new ArrayList<>();
+            for (Map.Entry<String, String[]> e : parameterMap.entrySet()) {
                 if (e.getValue() != null && e.getValue().length > 0) {
-                    params.add(new BasicNameValuePair(e.getKey(),
-                            e.getValue()[0]));
+                    params.add(new BasicNameValuePair(e.getKey(), e.getValue()[0]));
                 } else {
-                    params.add(new BasicNameValuePair(e.getKey(), ""));
+                    params.add(new BasicNameValuePair(e.getKey(), StringUtils.EMPTY));
                 }
             }
         }
-        
-        URI uri = null;
-        String integratedUrl = ProxyCheck.servicePoolUrlCheck(servicePool
-                .getUrl())
-                + ProxyCheck.targetServiceNameCheck(targetService
-                .getServiceName());
+        URI uri;
+        String integratedUrl = ProxyCheck.servicePoolUrlCheck(servicePool.getUrl())
+                + ProxyCheck.targetServiceNameCheck(targetService.getServiceName());
         if (httpMethod.equals("POST")) {
             uri = new URI(integratedUrl);
         } else {
             if (params != null && !params.isEmpty()) {
-                uri = new URI(String.format("%s?%s", integratedUrl,
-                        URLEncodedUtils.format(params, Consts.UTF_8)));
+                uri = new URI(String.format("%s?%s", integratedUrl, URLEncodedUtils.format(params, Consts.UTF_8)));
             } else {
                 uri = new URI(integratedUrl);
             }
         }
-
         HttpRequestBase requestBase = getHttpRequest(uri, httpMethod, params);
-
-        Enumeration<String> headerkeys = request.getHeaderNames();
-        if (headerkeys != null) {
-            CustomHeaderEnum che = null;
-            String headerValue = null;
+        Enumeration<String> headerKeys = request.getHeaderNames();
+        if (headerKeys != null) {
+            CustomHeaderEnum che;
+            String headerValue;
             for (int i = 0; i < ches.length; i++) {
                 che = ches[i];
                 headerValue = request.getHeader(che.headerName());
@@ -76,24 +68,18 @@ public class RequestConverter implements IRequestConvert {
                 }
             }
         }
-        requestBase.setHeader(CustomHeaderEnum.CLIENTIP.headerName(),
-                request.getRemoteIP());
-
+        requestBase.setHeader(CustomHeaderEnum.CLIENTIP.headerName(), request.getRemoteIP());
         RequestConfig config = RequestConfig
                 .custom()
                 .setConnectTimeout(servicePool.getConnectTimeout())
                 .setSocketTimeout(targetService.getSocketTimeout())
-                .setConnectionRequestTimeout(
-                        servicePool.getConnectTimeout()
-                                + targetService.getSocketTimeout() + 1000)
+                .setConnectionRequestTimeout(servicePool.getConnectTimeout() + targetService.getSocketTimeout() + 1000)
                 .build();
         requestBase.setConfig(config);
-
         return requestBase;
     }
 
-    private HttpRequestBase getHttpRequest(URI uri, String httpMethod,
-                                           List<NameValuePair> params) {
+    private HttpRequestBase getHttpRequest(URI uri, String httpMethod, List<NameValuePair> params) {
         HttpRequestBase requestBase = null;
         switch (httpMethod) {
             case "GET":

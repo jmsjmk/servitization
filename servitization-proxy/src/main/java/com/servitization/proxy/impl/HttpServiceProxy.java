@@ -36,12 +36,9 @@ public class HttpServiceProxy implements IServiceProxy {
             throws NullPointerException, IOException,
             IllegalAccessException, URISyntaxException, InterruptedException,
             ExecutionException {
-        ServicePool servicePool = serviceMapper
-                .getServicePoolInfo(targetService.getServicePoolName());
-        HttpUriRequest httpRequest = requestConvert.convert2HttpUriRequest(
-                request, targetService, servicePool);
-        Integer code = httpClientFactory.customHttpClient().sendRequest(
-                httpRequest, response.getOutputStream());
+        ServicePool servicePool = serviceMapper.getServicePoolInfo(targetService.getServicePoolName());
+        HttpUriRequest httpRequest = requestConvert.convert2HttpUriRequest(request, targetService, servicePool);
+        Integer code = httpClientFactory.customHttpClient().sendRequest(httpRequest, response.getOutputStream());
         return code;
     }
 

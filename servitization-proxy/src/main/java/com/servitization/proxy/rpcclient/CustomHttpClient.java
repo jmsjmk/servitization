@@ -32,15 +32,11 @@ public class CustomHttpClient implements IApacheHttpClient {
         Registry<ConnectionSocketFactory> socketFactory = RegistryBuilder
                 .<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
-                .register("https", new SSLConnectionSocketFactory(SSLContexts
-                                .createSystemDefault())).build();
-        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(
-                socketFactory);
-        SocketConfig socketConfig = SocketConfig.custom().setTcpNoDelay(true)
-                .setSoKeepAlive(true).build();
+                .register("https", new SSLConnectionSocketFactory(SSLContexts.createSystemDefault())).build();
+        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactory);
+        SocketConfig socketConfig = SocketConfig.custom().setTcpNoDelay(true).setSoKeepAlive(true).build();
         connManager.setDefaultSocketConfig(socketConfig);
-        ConnectionConfig connectionConfig = ConnectionConfig.custom()
-                .setCharset(Consts.UTF_8)
+        ConnectionConfig connectionConfig = ConnectionConfig.custom().setCharset(Consts.UTF_8)
                 .setMalformedInputAction(CodingErrorAction.IGNORE)
                 .setUnmappableInputAction(CodingErrorAction.IGNORE).build();
         connManager.setDefaultConnectionConfig(connectionConfig);
@@ -59,8 +55,7 @@ public class CustomHttpClient implements IApacheHttpClient {
                 .append(connectionConfig.toString()).append('\t')
                 .append("requestConfig:").append(requestConfig.toString())
                 .toString();
-        CommonLogger.getLogger().info(
-                String.format("httpclient inited %s", info));
+        CommonLogger.getLogger().info(String.format("httpclient inited %s", info));
     }
 
     public CloseableHttpResponse sendRequest(HttpUriRequest request)
@@ -115,24 +110,19 @@ public class CustomHttpClient implements IApacheHttpClient {
             if (response.getEntity() != null) {
                 if (resultCode == HttpStatus.SC_OK || resultCode == HttpStatus.SC_NOT_MODIFIED) {
                     CommonLogger.getLogger().info(
-                            String.format(
-                                    "http result path[%s]. code[%s]. contentType[%s]. length[%d]",
+                            String.format("http result path[%s]. code[%s]. contentType[%s]. length[%d]",
                                     request.getURI().getPath(),
                                     resultCode,
                                     response.getEntity().getContentType(),
                                     response.getEntity().getContentLength()));
                     response.getEntity().writeTo(outputStream);
-
                     /**
                      String s = response.getEntity().toString();
                      String s1 = null;
-
                      s1 = EntityUtils.toString(response.getEntity(),"utf-8");
                      System.out.println("response.getEntity().toString();:"+s);
                      System.out.println("response.getEntity().toString();:"+s1);
-
                      outputStream.write(s1.getBytes());
-
                      System.out.println(response.getEntity().getClass());
                      HttpEntity e = response.getEntity();
                      e.getContent();
@@ -141,13 +131,11 @@ public class CustomHttpClient implements IApacheHttpClient {
                      System.out.println(h.getName() + ":" + h.getValue());
                      }
                      */
-
                 } else {
-                    CommonLogger.getLogger().error(
-                            String.format("http result path[%s]. reasonphrase[%s]. code[%s]. ",
-                                    request.getURI().getPath(),
-                                    response.getStatusLine().getReasonPhrase(),
-                                    response.getStatusLine().getStatusCode()));
+                    CommonLogger.getLogger().error(String.format("http result path[%s]. reasonphrase[%s]. code[%s]. ",
+                            request.getURI().getPath(),
+                            response.getStatusLine().getReasonPhrase(),
+                            response.getStatusLine().getStatusCode()));
                 }
             } else {
                 CommonLogger.getLogger().warn(
