@@ -2,7 +2,7 @@ package com.servitization.metadata.common;
 
 public enum StandardHeaderEnum {
 
-    // 要全部小写，headername从request取出来都只能是小写
+    // 要全部小写，header name从request取出来都只能是小写
     ACCEPT_ENCODING("accept-encoding"),
 
     // response
@@ -17,5 +17,4 @@ public enum StandardHeaderEnum {
     public String headerName() {
         return headerName;
     }
-
 }

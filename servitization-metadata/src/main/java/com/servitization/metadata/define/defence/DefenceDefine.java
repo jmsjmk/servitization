@@ -7,8 +7,7 @@ import java.util.Set;
 
 public interface DefenceDefine extends ChainHandlerDefine {
 
-    public Map<String, String> getStrategyMap();
+    Map<String, String> getStrategyMap();
 
-    public Set<String> getIPWhiteList();
-
+    Set<String> getIPWhiteList();
 }

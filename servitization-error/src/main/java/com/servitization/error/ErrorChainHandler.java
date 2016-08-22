@@ -53,12 +53,9 @@ public class ErrorChainHandler implements ChainHandler {
                             + " occurs an exception: ", ee.exception);
                 }
             }
-
             String rspStr;
             if (hasCodeEntity != null) {
-                rspStr = build(hasCodeEntity.errorCode,
-                        hasCodeEntity.errorMessage,
-                        hasCodeEntity.customErrorEntity);
+                rspStr = build(hasCodeEntity.errorCode, hasCodeEntity.errorMessage, hasCodeEntity.customErrorEntity);
             } else {
                 rspStr = ERROR_PRINT;
             }
@@ -77,10 +74,8 @@ public class ErrorChainHandler implements ChainHandler {
         return HandleResult.CONTINUE;
     }
 
-    private String build(String code, String msg,
-                         Map<String, String> customErrorEntity) {
-        StringBuffer sb = new StringBuffer(
-                "{\"IsError\":true,\"ErrorCode\":\"");
+    private String build(String code, String msg, Map<String, String> customErrorEntity) {
+        StringBuffer sb = new StringBuffer("{\"IsError\":true,\"ErrorCode\":\"");
         sb.append(code);
         sb.append("\",\"ErrorMessage\":\"");
         sb.append(msg);

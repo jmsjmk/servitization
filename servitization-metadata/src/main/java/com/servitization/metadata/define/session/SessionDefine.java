@@ -6,9 +6,7 @@ import java.util.Map;
 
 public interface SessionDefine extends ChainHandlerDefine {
 
-    public Map<String, String> getStrategyMap();
-    
-    public Map<String, StrategyEntry> getStrategEntryMap();
-    
+    Map<String, String> getStrategyMap();
 
+    Map<String, StrategyEntry> getStrategEntryMap();
 }

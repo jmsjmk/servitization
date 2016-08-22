@@ -6,6 +6,5 @@ import java.util.Set;
 
 public interface EncryptDefine extends ChainHandlerDefine {
 
-    public Set<String> getIPWhiteList();
-
+    Set<String> getIPWhiteList();
 }

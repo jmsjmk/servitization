@@ -12,8 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ProxyDefineImpl extends ChainHandlerDefineImpl implements
-        ProxyDefine {
+public class ProxyDefineImpl extends ChainHandlerDefineImpl implements ProxyDefine {
 
     private static final long serialVersionUID = 1L;
     private Set<String> resConvertServiceNames;

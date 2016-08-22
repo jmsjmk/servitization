@@ -16,7 +16,7 @@ public class PvUvDefineImpl extends ChainHandlerDefineImpl implements PvUvDefine
         Element me = parent.addElement(this.getClass().getName());
         me.addAttribute("name", getName());
         me.addAttribute("handlerClazz", getHandlerClazz());
-        int len = 0;
+        int len;
         if (pvUvList != null && (len = pvUvList.size()) > 0) {
             Element e_pvUvList = me.addElement("pvUvList");
             for (int index = 0; index < len; index++) {
@@ -31,11 +31,10 @@ public class PvUvDefineImpl extends ChainHandlerDefineImpl implements PvUvDefine
         this.setName(self.attributeValue("name"));
         this.setHandlerClazz(self.attributeValue("handlerClazz"));
         Element e_pvUvList = self.element("pvUvList");
-        pvUvList = new ArrayList<String>();
+        pvUvList = new ArrayList<>();
         if (e_pvUvList != null) {
-            @SuppressWarnings("unchecked")
             List<Element> entries = e_pvUvList.elements();
-            int len = 0;
+            int len;
             if (entries != null && (len = entries.size()) > 0) {
                 for (int index = 0; index < len; index++) {
                     pvUvList.add(entries.get(index).attributeValue("value"));

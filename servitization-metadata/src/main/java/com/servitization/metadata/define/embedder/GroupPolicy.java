@@ -5,7 +5,6 @@ package com.servitization.metadata.define.embedder;
  */
 public enum GroupPolicy {
 
-
     /**
      * 安全严谨政策：
      * <p>
@@ -23,5 +22,4 @@ public enum GroupPolicy {
      * 2、单个任务超时后，以通过为结果。
      */
     OPEN
-
 }

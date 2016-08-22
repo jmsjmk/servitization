@@ -91,12 +91,10 @@ public class ChainGroupDefineImpl implements ChainGroupDefine {
         String gp = self.attributeValue("groupPolicy");
         if (gp != null)
             groupPolicy = GroupPolicy.valueOf(gp);
-
-        @SuppressWarnings("unchecked")
         List<Element> e_chainElementDefineList = self.elements();
         if (e_chainElementDefineList != null
                 && e_chainElementDefineList.size() > 0) {
-            chainElementDefineList = new ArrayList<ChainElementDefine>();
+            chainElementDefineList = new ArrayList<>();
             for (Element e : e_chainElementDefineList) {
                 Class<?> clazz;
                 ChainElementDefine ced;
@@ -111,5 +109,4 @@ public class ChainGroupDefineImpl implements ChainGroupDefine {
             }
         }
     }
-
 }

@@ -29,19 +29,15 @@ public class ZKBaseStructureBuilder {
             if (zk.exists(Constants.root, false) == null)
                 zk.create(Constants.root, Constants.NONE, Ids.OPEN_ACL_UNSAFE,
                         CreateMode.PERSISTENT);
-
             if (zk.exists(Constants.root + Constants.trunk, false) == null)
                 zk.create(Constants.root + Constants.trunk, Constants.NONE,
                         Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-
             if (zk.exists(Constants.boot, false) == null)
                 zk.create(Constants.boot, Constants.NONE, Ids.OPEN_ACL_UNSAFE,
                         CreateMode.PERSISTENT);
-
             if (zk.exists(Constants.status, false) == null)
                 zk.create(Constants.status, Constants.NONE,
                         Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-
             if (zk.exists(Constants.push, false) == null)
                 zk.create(Constants.push, Constants.NONE, Ids.OPEN_ACL_UNSAFE,
                         CreateMode.PERSISTENT);

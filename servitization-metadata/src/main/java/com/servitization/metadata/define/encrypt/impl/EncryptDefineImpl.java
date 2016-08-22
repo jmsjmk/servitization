@@ -7,8 +7,7 @@ import org.dom4j.Element;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EncryptDefineImpl extends ChainHandlerDefineImpl implements
-        EncryptDefine {
+public class EncryptDefineImpl extends ChainHandlerDefineImpl implements EncryptDefine {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,7 +48,7 @@ public class EncryptDefineImpl extends ChainHandlerDefineImpl implements
         this.setHandlerClazz(self.attributeValue("handlerClazz"));
         Element e_IPWhiteList = self.element("IPWhiteList");
         if (e_IPWhiteList != null) {
-            IPWhiteList = new HashSet<String>();
+            IPWhiteList = new HashSet<>();
             String text = e_IPWhiteList.getText();
             if (text != null && text.length() > 0) {
                 String[] ips = text.split(",");
@@ -61,5 +60,4 @@ public class EncryptDefineImpl extends ChainHandlerDefineImpl implements
             }
         }
     }
-
 }

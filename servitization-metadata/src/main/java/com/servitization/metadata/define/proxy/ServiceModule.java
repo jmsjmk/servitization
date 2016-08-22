@@ -15,12 +15,10 @@ public class ServiceModule implements XmlSerializable {
     public ServiceModule() {
     }
 
-    public ServiceModule(String key, SourceService sourceService,
-                         TargetService targetService) {
+    public ServiceModule(String key, SourceService sourceService, TargetService targetService) {
         this.key = key;
         this.sourceService = sourceService;
         this.targetService = targetService;
-
     }
 
     public String getConvert() {

@@ -41,5 +41,4 @@ public class ChainHandlerDefineImpl implements ChainHandlerDefine {
         this.name = self.attributeValue("name");
         this.handlerClazz = self.attributeValue("handlerClazz");
     }
-
 }

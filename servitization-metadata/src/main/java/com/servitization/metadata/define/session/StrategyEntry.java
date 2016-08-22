@@ -20,8 +20,6 @@ public class StrategyEntry implements XmlSerializable {
 
 	@Override
 	public void deserialize(Element element) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public String getHttpMethod() {
@@ -46,8 +44,6 @@ public class StrategyEntry implements XmlSerializable {
 
 	@Override
 	public void serialize(Element parent) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void setHttpMethod(String httpMethod) {
@@ -69,5 +65,4 @@ public class StrategyEntry implements XmlSerializable {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 }

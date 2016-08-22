@@ -17,11 +17,10 @@ public class StatusInfo {
         this.ip = ip;
     }
 
-    public StatusInfo(String fullstr) {
-        String[] name_version = fullstr.split(",");
+    public StatusInfo(String fullStr) {
+        String[] name_version = fullStr.split(",");
         if (name_version.length != 4)
-            throw new RuntimeException(
-                    "Error fullstr for which length is not 4!");
+            throw new RuntimeException("Error fullStr for which length is not 4!");
         if (name_version[0] != null && name_version[0].trim().length() > 0)
             name = name_version[0];
         else

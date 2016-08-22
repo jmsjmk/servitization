@@ -9,5 +9,4 @@ public interface XmlSerializable extends Serializable {
     void serialize(Element parent);
 
     void deserialize(Element element);
-
 }

@@ -7,8 +7,7 @@ import org.dom4j.Element;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class DefenceDefineImpl extends ChainHandlerDefineImpl implements
-        DefenceDefine {
+public class DefenceDefineImpl extends ChainHandlerDefineImpl implements DefenceDefine {
 
     private static final long serialVersionUID = 1L;
 
@@ -67,8 +66,7 @@ public class DefenceDefineImpl extends ChainHandlerDefineImpl implements
         this.setHandlerClazz(self.attributeValue("handlerClazz"));
         Element e_strategyMap = self.element("strategyMap");
         if (e_strategyMap != null) {
-            strategyMap = new HashMap<String, String>();
-            @SuppressWarnings("unchecked")
+            strategyMap = new HashMap<>();
             List<Element> entries = e_strategyMap.elements();
             if (entries != null && entries.size() > 0) {
                 for (Element e_entry : entries) {
@@ -81,7 +79,7 @@ public class DefenceDefineImpl extends ChainHandlerDefineImpl implements
         }
         Element e_IPWhiteList = self.element("IPWhiteList");
         if (e_IPWhiteList != null) {
-            IPWhiteList = new HashSet<String>();
+            IPWhiteList = new HashSet<>();
             String text = e_IPWhiteList.getText();
             if (text != null && text.length() > 0) {
                 String[] ips = text.split(",");
@@ -93,5 +91,4 @@ public class DefenceDefineImpl extends ChainHandlerDefineImpl implements
             }
         }
     }
-
 }

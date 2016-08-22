@@ -70,7 +70,6 @@ public class ServiceDefineImpl implements ServiceDefine {
 			me.addAttribute("version", version);
 		if (deployModel != null)
 			me.addAttribute("deployModel", deployModel.name());
-
 		if (upChainList != null) {
 			Element child1 = me.addElement("upChainList");
 			for (ChainElementDefine ced : upChainList) {
