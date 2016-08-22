@@ -13,9 +13,6 @@ public class AuthDataService {
 
     private static SessionAuthHelper sessionAuthHelper;
 
-    //private static SessionAuthHttpHelper sessionAuthHttpHelper;
-
-
     public static void init(SessionAuthHelper sessionAuthHelper) {
         AuthDataService.sessionAuthHelper = sessionAuthHelper;
     }

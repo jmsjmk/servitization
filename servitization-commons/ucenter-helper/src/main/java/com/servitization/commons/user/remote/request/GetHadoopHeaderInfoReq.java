@@ -42,5 +42,4 @@ public class GetHadoopHeaderInfoReq extends RemoteRequest {
     public void setDeviceType(int deviceType) {
         this.deviceType = deviceType;
     }
-
 }

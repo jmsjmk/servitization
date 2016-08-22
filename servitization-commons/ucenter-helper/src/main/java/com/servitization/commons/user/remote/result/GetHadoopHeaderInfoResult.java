@@ -28,5 +28,4 @@ public class GetHadoopHeaderInfoResult extends BaseResult {
     public void setAppType(String appType) {
         this.appType = appType;
     }
-
 }
