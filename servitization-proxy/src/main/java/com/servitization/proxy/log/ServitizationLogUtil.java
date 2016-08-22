@@ -19,7 +19,7 @@ public class ServitizationLogUtil {
 
     private static final Logger LOGGER = Logger.getLogger("servitization_log");
 
-    private static final Logger BIGLOG = Logger.getLogger("biglog");
+    private static final Logger JSON_LOG = Logger.getLogger("json_log");
 
     private static final String BUSINESS_LINE = "servitization";
 
@@ -34,13 +34,11 @@ public class ServitizationLogUtil {
      * @param appName
      * @param response
      */
-    public static void writeBigLog(ServitizationLogObj obj, String appName, ImmobileResponse response) {
-        Map<String, Object> map = new HashMap<>();
+    public static void writeJSONLog(ServitizationLogObj obj, String appName, ImmobileResponse response) {
         Log log = new Log();
         Date date = new Date();
         log.setLogTime(String.valueOf(DateUtil.getFormatDate(date, DateUtil.FORMAT_ALL_MM)));
-        log.setElapsedTime(String
-                .valueOf(System.currentTimeMillis() - obj.getStartTime()));
+        log.setElapsedTime(String.valueOf(System.currentTimeMillis() - obj.getStartTime()));
         log.setTraceId(obj.getSpan().getTraceId());
         log.setSpan(obj.getSpan().toSpanString());
         log.setAppName(appName);
@@ -55,12 +53,7 @@ public class ServitizationLogUtil {
         log.setLogTimeStamp(System.currentTimeMillis());
         log.setImei(obj.getImei());
         writeBusinesException(log, response);
-
-        map.put("data", log);
-        map.put("rowKey", "imei,logTimeStamp");
-        map.put("table", "big_log");
-        String logInfo = JSON.toJSONString(map);
-        BIGLOG.info(logInfo);
+        JSON_LOG.info(JSON.toJSONString(log));
     }
 
     /**
@@ -70,14 +63,11 @@ public class ServitizationLogUtil {
      * @param appName
      * @param response
      */
-    public static void writeServitizationLog(ServitizationLogObj obj,
-                                             String appName, ImmobileResponse response) {
+    public static void writeServitizationLog(ServitizationLogObj obj, String appName, ImmobileResponse response) {
         Log log = new Log();
         Date date = new Date();
-        log.setLogTime(String
-                .valueOf(DateUtil.getFormatDate(date, DateUtil.FORMAT_ALL_MM)));
-        log.setElapsedTime(String
-                .valueOf(System.currentTimeMillis() - obj.getStartTime()));
+        log.setLogTime(String.valueOf(DateUtil.getFormatDate(date, DateUtil.FORMAT_ALL_MM)));
+        log.setElapsedTime(String.valueOf(System.currentTimeMillis() - obj.getStartTime()));
         log.setTraceId(obj.getSpan().getTraceId());
         log.setSpan(obj.getSpan().toSpanString());
         log.setAppName(appName);
@@ -95,8 +85,7 @@ public class ServitizationLogUtil {
         stopServitizationLog(obj.getTracer());
     }
 
-    private static void writeBusinesException(Log log,
-                                              ImmobileResponse response) {
+    private static void writeBusinesException(Log log, ImmobileResponse response) {
         try {
             if (response == null)
                 return;
@@ -112,7 +101,7 @@ public class ServitizationLogUtil {
                 log.setBusinessErrorCode("1");
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -130,7 +119,6 @@ public class ServitizationLogUtil {
     private static String getRequestParam(ImmobileRequest request) {
         StringBuilder param = new StringBuilder();
         Map<String, String[]> params = request.getParameterMap();
-
         if (params != null && params.size() > 0) {
             String[] reqParams;
             int i = 0;
@@ -149,7 +137,11 @@ public class ServitizationLogUtil {
         return param.toString();
     }
 
-    // 得到请求头的信息
+    /**
+     * 得到请求头的信息
+     * @param request
+     * @return
+     */
     private static String getRequestHeader(ImmobileRequest request) {
         Enumeration<String> headNames = request.getHeaderNames();
         JSONObject jsonHeader = new JSONObject();
@@ -167,9 +159,7 @@ public class ServitizationLogUtil {
         }
         jsonHeader.put("CustomerClientIP",
                 request.getHeader(CustomHeaderEnum.CLIENTIP.headerName()));
-        jsonHeader.put(CustomHeaderEnum.CLIENTIP.headerName(),
-                request.getRemoteIP());
-
+        jsonHeader.put(CustomHeaderEnum.CLIENTIP.headerName(), request.getRemoteIP());
         return jsonHeader.toString();
     }
 
@@ -196,7 +186,6 @@ public class ServitizationLogUtil {
         Spanner span = tracer.startTrace(traceId, traceId + "-" + "1", "1",
                 SpanTypeEnum.RPC_SERVER_RECEIVED, true);
         TraceUtils.beginTrace(span.getTraceId());
-
         ServitizationLogObj obj = new ServitizationLogObj();
         obj.setMethod(request.getMethod());
         obj.setSpan(span);
@@ -215,7 +204,6 @@ public class ServitizationLogUtil {
                                                 long startTime, String code) {
         String msg = "serverIP[{0}] serverUri[{1}] method[{2}] headers[{3}] "
                 + "params[{4}] time[{5}]ms code[{6}]";
-
         msg = MessageFormat.format(msg, OSUtil.linuxLocalIp(),
                 request.getServiceName(), request.getMethod(),
                 getRequestHeader(request), getRequestParam(request),

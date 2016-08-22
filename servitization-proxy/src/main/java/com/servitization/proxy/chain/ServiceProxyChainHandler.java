@@ -74,7 +74,7 @@ public class ServiceProxyChainHandler implements ChainHandler {
         }
         ServitizationLogUtil.writeServitizationLog(logObj,
                 context.getGlobalContext().getServiceDefine().getName(), response);
-        ServitizationLogUtil.writeBigLog(logObj,
+        ServitizationLogUtil.writeJSONLog(logObj,
                 context.getGlobalContext().getServiceDefine().getName(), response);
         return result;
     }

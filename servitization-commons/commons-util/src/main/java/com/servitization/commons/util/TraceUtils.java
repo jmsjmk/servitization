@@ -8,7 +8,6 @@ public abstract class TraceUtils {
     public static final String TRACE_ID_KEY = "traceId";
 
     public static void beginTrace(String traceId) {
-
         MDC.put(TRACE_ID_KEY, traceId);
     }
 
