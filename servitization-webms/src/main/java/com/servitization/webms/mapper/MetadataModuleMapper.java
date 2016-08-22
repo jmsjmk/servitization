@@ -31,5 +31,4 @@ public interface MetadataModuleMapper {
 
     @DataSource(value = "slave")
     int vertifyModule(Map<String, Object> map);
-
 }

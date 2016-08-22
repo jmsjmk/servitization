@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 @Service
 public class StartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
-    Logger logger = LoggerFactory.getLogger(StartupListener.class);
+    final static Logger LOGGER = LoggerFactory.getLogger(StartupListener.class);
 
     @Resource
     private IMetadataBootService metadataBootService;
@@ -25,8 +25,7 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
             scan();
             isStart = true;
         } else {
-            // two.
-            logger.info("System has been started!!!");
+            LOGGER.info("System has been started!!!");
         }
     }
 
@@ -35,5 +34,4 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
         Thread t = new Thread(bootTask);
         t.start();
     }
-
 }

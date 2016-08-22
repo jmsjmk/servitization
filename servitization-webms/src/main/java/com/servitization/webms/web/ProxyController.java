@@ -66,14 +66,12 @@ public class ProxyController extends BaseObserver {
             metadataProxys = new ArrayList<>();
         }
         int count = proxyService.getMetadataProxyCount(params);
-        int pageCount = count == 0 ? 0 : (count % pageSize == 0 ? count / pageSize : count
-                / pageSize + 1);
+        int pageCount = count == 0 ? 0 : (count % pageSize == 0 ? count / pageSize : count / pageSize + 1);
         modelMap.put("pageIndex", pageIndex);
         modelMap.put("pageSize", pageSize);
         modelMap.put("pageCount", pageCount);
         modelMap.put("metadataProxys", metadataProxys);
         mav.addAllObjects(modelMap);
-
         return mav;
     }
 
@@ -98,7 +96,6 @@ public class ProxyController extends BaseObserver {
         String msg = count == list.size() ? "删除成功" : "部分记录删除失败：没找到相应的记录";
         return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
-
 
     public List<String> getIdList(List<String> list) {
         List<String> idList = new ArrayList<>();

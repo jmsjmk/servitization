@@ -79,5 +79,4 @@ public class MetadataDefineServiceImpl implements IMetadataDefineService {
     public List<MetadataDefine> getMetadataDefineListByMetaIdAndProxyId(long metadataId, long proxyId) {
         return metadataDefineMapper.getMetadataDefineListByMetaIdAndProxyId(metadataId, proxyId);
     }
-
 }

@@ -21,7 +21,7 @@
 			<div class="form-group">
 				<label for="handlerClazz">处理类全路径</label> <input type="text"
 					class="form-control" id="handlerClazz"
-					placeholder="com.elong.mb.ReqServ">
+					placeholder="com.servitization">
 			</div>
 			<div class="form-group">
 				<label for="chain">上下行链条</label> <select class="form-control"

@@ -33,5 +33,4 @@ public class MetadataAesServiceImpl implements IMetadataAesService {
     public int deleteAesWhitelist(List<String> ids) {
         return metadataAesMapper.deleteAesWhitelist(ids);
     }
-
 }

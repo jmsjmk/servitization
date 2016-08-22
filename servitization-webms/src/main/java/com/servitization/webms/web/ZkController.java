@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,12 +28,10 @@ public class ZkController {
     /**
      * 获取mapi项目的zk信息
      *
-     * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "getZkList", method = RequestMethod.GET)
-    public ModelAndView getMetadataPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getMetadataPage() {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("zookeeper");
         return mav;
@@ -43,35 +39,29 @@ public class ZkController {
 
 
     @RequestMapping(value = "getZkInfo", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<byte[]> getZkInfo(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> getZkInfo() {
         Map<String, List<ZkNodeInfo>> zkDataMap = null;
         try {
-            zkDataMap = new HashMap<String, List<ZkNodeInfo>>();
-
-
+            zkDataMap = new HashMap<>();
             ZKBaseStructureBuilder.buildBaseStructure();
             ZooKeeper zk = ZKConnection.zk();
             List<String> ipList = zk.getChildren(Constants.status, false);
-
             List<ZkNodeInfo> bootNode = new ArrayList<>();
             List<ZkNodeInfo> statusNode = new ArrayList<>();
             List<ZkNodeInfo> pushNode = new ArrayList<>();
-
             zkDataMap.put("boot", bootNode);
             zkDataMap.put("status", statusNode);
             zkDataMap.put("push", pushNode);
-
-            ZkNodeInfo zni = null;
+            ZkNodeInfo zni;
             for (String ip : ipList) {
-                String pushInfo = null;
-                String statusInfo = null;
+                String pushInfo;
+                String statusInfo;
                 try {
                     pushInfo = new String(zk.getData(Constants.push + "/" + ip, null, null));
                 } catch (KeeperException e) {
                     e.printStackTrace();
                     pushInfo = e.getMessage();
                 }
-
                 try {
                     statusInfo = new String(zk.getData(Constants.status + "/" + ip, null, null));
                 } catch (KeeperException e) {
@@ -83,7 +73,6 @@ public class ZkController {
                 zni = new ZkNodeInfo(ip, statusInfo);
                 statusNode.add(zni);
             }
-
             LOG.info(zkDataMap.toString());
         } catch (KeeperException e) {
             e.printStackTrace();
@@ -91,7 +80,7 @@ public class ZkController {
             e.printStackTrace();
         }
         byte[] byteArr = JSON.toJSONString(zkDataMap).getBytes();
-        return new ResponseEntity<byte[]>(byteArr, HttpStatus.OK);
+        return new ResponseEntity<>(byteArr, HttpStatus.OK);
     }
 
     class ZkNodeInfo {

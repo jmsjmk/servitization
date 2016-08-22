@@ -17,7 +17,7 @@ public class BootTask implements Runnable {
         while (true) {
             // 初始化现成感觉没啥用一期感觉用处不到
             int result = metadataBootService.bootScan();
-            // LOGGER.info("bootScan "+result);
+            LOGGER.info("bootScan " + result);
             try {
                 Thread.currentThread().sleep(500000);
             } catch (InterruptedException e) {

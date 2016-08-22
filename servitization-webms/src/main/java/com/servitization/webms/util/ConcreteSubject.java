@@ -40,8 +40,7 @@ public class ConcreteSubject implements Subject {
     }
 
     @Override
-    public void builderXml(long metadataId, String handlerName, MetadataModule module,
-                           List<ChainElementDefine> chainList) {
+    public void builderXml(long metadataId, String handlerName, MetadataModule module, List<ChainElementDefine> chainList) {
         if (observerMap.containsKey(handlerName)) {
             observerMap.get(handlerName).builderXml(metadataId, module, chainList);
         }

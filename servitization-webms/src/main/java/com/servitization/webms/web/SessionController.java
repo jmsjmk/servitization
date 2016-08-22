@@ -24,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Controller
@@ -53,56 +52,44 @@ public class SessionController extends BaseObserver {
      * 获取session列表页面
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "getSessionPage", method = RequestMethod.GET)
-    public ModelAndView getMetadataPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getMetadataPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("session");
-
         String metadataId = request.getParameter("metadataId");
-
         if (StringUtils.isBlank(metadataId)) {
             return mav;
         }
-
         String sourceUrl = request.getParameter("sourceUrl");
         String pageIndexStr = request.getParameter("pageIndex");
         String pageSizeStr = request.getParameter("pageSize");
-
         int pageIndex = 0;
         int pageSize = 10;
-
         if (StringUtils.isNotBlank(pageIndexStr)) {
             pageIndex = Integer.parseInt(pageIndexStr);
         }
         if (StringUtils.isNotBlank(pageSizeStr)) {
             pageSize = Integer.parseInt(pageSizeStr);
         }
-
         Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("sourceUrl", sourceUrl);
         params.put("pageIndex", pageIndex * pageSize);
         params.put("pageSize", pageSize);
-
         List<MetadataSession> metadataSessions = metadataSessionService.getMetadataSessionList(params);
         if (metadataSessions == null) {
             metadataSessions = new ArrayList<>();
         }
-
         int count = metadataSessionService.getMetadataSessionCount(params);
         int pageCount = count == 0 ? 0 : (count % pageSize == 0 ? count / pageSize : count / pageSize + 1);
-
         modelMap.put("pageIndex", pageIndex);
         modelMap.put("pageSize", pageSize);
         modelMap.put("pageCount", pageCount);
         modelMap.put("metadataSessions", metadataSessions);
-
         mav.addAllObjects(modelMap);
-
         return mav;
     }
 
@@ -110,69 +97,59 @@ public class SessionController extends BaseObserver {
      * 删除session列表
      *
      * @param request
-     * @param response
      */
     @Permission(name = "update")
     @RequestMapping(value = "deleteMetadataSessions", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> deleteMetadataSessions(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> deleteMetadataSessions(HttpServletRequest request) {
         String ids = request.getParameter("ids");
         List<String> list = JSONArray.parseArray(ids, String.class);
         int count = metadataSessionService.deleteMetadataSessions(list);
         String msg = count == list.size() ? "删除成功" : "部分记录删除失败：没找到相应的记录";
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     /**
      * 获取添加页面
      *
      * @param request
-     * @param response
      * @return
      */
     @Permission(name = "update")
     @RequestMapping(value = "getAddSessionPage", method = RequestMethod.GET)
-    public ModelAndView getSessionAddPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getSessionAddPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("session_add");
         Map<String, Object> modelMap = new HashMap<>();
-
         String proxyId = request.getParameter("proxyId");
-
         if (StringUtils.isNotBlank(proxyId)) {
             MetadataSession metadataSession = metadataSessionService.getSessionById(Long.parseLong(proxyId));
             modelMap.put("metadataSession", metadataSession);
         }
-
         String metaId = request.getParameter("metadataId");
         List<MetadataProxy> list = metadataProxyService.getMetadataProxyList(Long.parseLong(metaId));
-
         modelMap.put("metadataProxyList", list);
         mav.addAllObjects(modelMap);
         return mav;
     }
 
     @RequestMapping(value = "addOrUpdateSession", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> addOrUpdateSession(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> addOrUpdateSession(HttpServletRequest request) {
         String sessionId = request.getParameter("sessionId");
         String metadataId = request.getParameter("metadataId");
         String proxyId = request.getParameter("proxyId");
         String strategy = request.getParameter("strategy");
-
         String reqType = request.getParameter("reqType");
-        String validateurl = request.getParameter("validateurl");
+        String validateUrl = request.getParameter("validateurl");
         String validateMethod = request.getParameter("validateMethod");
-
         MetadataSession metadataSession = new MetadataSession();
         metadataSession.setMetadataId(Integer.parseInt(metadataId));
         metadataSession.setProxyId(Integer.parseInt(proxyId));
         metadataSession.setStrategy(strategy);
         metadataSession.setCreateTime(new Date());
-
         metadataSession.setReqType(reqType);
-        metadataSession.setValidateurl(validateurl);
+        metadataSession.setValidateurl(validateUrl);
         metadataSession.setValidateMethod(validateMethod);
-
-        String msg = "成功";
+        String msg;
         if (StringUtils.isNotBlank(sessionId)) {
             metadataSession.setId(Long.parseLong(sessionId));
             int count = metadataSessionService.updateMetadataSession(metadataSession);
@@ -181,7 +158,7 @@ public class SessionController extends BaseObserver {
             int count = metadataSessionService.addMetadataSession(metadataSession);
             msg = count > 0 ? "添加成功" : "添加失败";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "vertifySession", method = RequestMethod.GET)
@@ -225,16 +202,13 @@ public class SessionController extends BaseObserver {
      */
     public SessionDefineImpl handleSessionDefine(long metadataId) {
         SessionDefineImpl sessionDefine = new SessionDefineImpl();
-
         Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("pageIndex", 0);
         params.put("pageSize", Integer.MAX_VALUE);
-
         List<MetadataSession> list = metadataSessionMapper.getMetadataSessionList(params);
         Map<String, String> strategyMap = new HashMap<>();
         Map<String, StrategyEntry> strategyEntryMap = new HashMap<>();
-
         for (MetadataSession session : list) {
             StrategyEntry strategyEntry = new StrategyEntry();
             String strategyImpClass = strategies.get(session.getStrategy());
@@ -243,7 +217,6 @@ public class SessionController extends BaseObserver {
             strategyEntry.setHttpMethod(session.getValidateMethod());
             strategyEntry.setType(session.getReqType());
             strategyEntry.setUrl(session.getValidateurl());
-
             strategyMap.put(session.getSourceUrl(), strategyImpClass);
             strategyEntryMap.put(session.getSourceUrl(), strategyEntry);
         }
@@ -266,5 +239,4 @@ public class SessionController extends BaseObserver {
             }
         }
     }
-
 }

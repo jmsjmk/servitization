@@ -103,8 +103,7 @@ public class VersionController extends BaseObserver {
      */
     @Permission(name = "update")
     @RequestMapping(value = "addVersion", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<byte[]> addVersion(HttpServletRequest request)
-            throws Exception {
+    public ResponseEntity<byte[]> addVersion(HttpServletRequest request) throws Exception {
         String msg = StringUtils.EMPTY;
         String metadataIdStr = request.getParameter("metadataId");
         long metadataId = Long.parseLong(metadataIdStr);
@@ -115,10 +114,8 @@ public class VersionController extends BaseObserver {
             return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         }
         ConcreteSubject concreteSubject = ConcreteSubject.instances();
-        List<ChainElementDefine> upDefine = metadataService.chainList(concreteSubject, metadataId,
-                metadata.getUpChain());
-        List<ChainElementDefine> downDefine = metadataService.chainList(concreteSubject, metadataId,
-                metadata.getDownChain());
+        List<ChainElementDefine> upDefine = metadataService.chainList(concreteSubject, metadataId, metadata.getUpChain());
+        List<ChainElementDefine> downDefine = metadataService.chainList(concreteSubject, metadataId, metadata.getDownChain());
         ServiceDefineImpl serviceDefine = new ServiceDefineImpl();
         serviceDefine.setName(metadata.getMetaKey());
         serviceDefine.setUpChainList(upDefine);
@@ -171,6 +168,7 @@ public class VersionController extends BaseObserver {
     }
 
     /**
+     * 格式化成XML格式STR
      * @param str
      * @return
      */

@@ -21,5 +21,4 @@ public interface MetadataMachineMapper {
 
     @DataSource(value = "slave")
     MetadataMachine getMetadataMachineById(long id);
-
 }

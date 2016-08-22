@@ -61,9 +61,7 @@ public class BlobStringTypeHandler extends BaseTypeHandler<String> {
     }
 
     @Override
-    public String getNullableResult(CallableStatement cs, int columnIndex)
-            throws SQLException {
-
+    public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         Blob blob = cs.getBlob(columnIndex);
         byte[] returnValue = null;
         String result = null;
@@ -81,9 +79,7 @@ public class BlobStringTypeHandler extends BaseTypeHandler<String> {
     }
 
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int i,
-                                    String parameter, JdbcType jdbcType) throws SQLException {
-
+    public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
         ByteArrayInputStream bis;
         try {
             // 把String转化成byte流
@@ -93,5 +89,4 @@ public class BlobStringTypeHandler extends BaseTypeHandler<String> {
         }
         ps.setBinaryStream(i, bis, parameter.length());
     }
-
 }

@@ -25,8 +25,7 @@ public class UpdateStatusTask implements Runnable {
     private MetadataPublishIpMapper publishIpMapper;
     private long metadataId;
 
-    public UpdateStatusTask(MetadataPublishMapper publishMapper,
-                            MetadataPublishIpMapper publishIpMapper) {
+    public UpdateStatusTask(MetadataPublishMapper publishMapper, MetadataPublishIpMapper publishIpMapper) {
         this.publishIpMapper = publishIpMapper;
         this.publishMapper = publishMapper;
     }

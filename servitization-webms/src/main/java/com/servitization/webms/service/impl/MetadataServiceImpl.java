@@ -70,20 +70,15 @@ public class MetadataServiceImpl implements IMetadataService {
      */
     @Override
     public int addMetadataByCopy(Metadata metadata, String beCopiedMetaId) {
-
         long oldMetaId = Long.parseLong(beCopiedMetaId);
-
         // 复制添加元数据标识
-        // ----函数入参的metadata对象是为了从前端收集输入的id和描述等
+        // 函数入参的metadata对象是为了从前端收集输入的id和描述等
         Metadata metadataBeCopied = metadataMapper.getMetadataById(oldMetaId);
-
         metadata.setCreateTime(new Date());
         metadata.setDeployModel(metadataBeCopied.getDeployModel());
         metadata.setDownChain(metadataBeCopied.getDownChain());
         metadata.setUpChain(metadataBeCopied.getUpChain());
-
         metadataMapper.addMetadata(metadata);
-
         long newMetaId = metadata.getId();
         ConcreteSubject concreteSubject = ConcreteSubject.instances();
         // 复制添加转发配置Proxy
@@ -116,7 +111,6 @@ public class MetadataServiceImpl implements IMetadataService {
                 metadataServicePoolMapper.insertPool(servicePool);
             }
         }
-
         // 复制添加aes白名单
         Map<String, Object> params = new HashMap<>();
         params.put("metadata_id", oldMetaId);
@@ -126,7 +120,6 @@ public class MetadataServiceImpl implements IMetadataService {
         params.put("ips", ips);
         params.put("createTime", new Date());
         metadataAesMapper.addAesWhitelist(params);
-
         // 复制添加防刷白名单
         params = new HashMap<>();
         params.put("metadata_id", oldMetaId);
@@ -151,11 +144,10 @@ public class MetadataServiceImpl implements IMetadataService {
             return chains;
         }
         String[] ids = StringUtils.split(chainStr, ',');
-        List<MetadataModule> modules = null;
-        List<MetadataGroup> groups = null;
-        Chain chain = null;
-        MetadataGroup group = null;
-
+        List<MetadataModule> modules;
+        List<MetadataGroup> groups;
+        Chain chain;
+        MetadataGroup group;
         for (String id : ids) {
             chain = new Chain();
             if (StringUtils.startsWith(id, "m")) {
@@ -168,8 +160,7 @@ public class MetadataServiceImpl implements IMetadataService {
                 groups = metadataGroupMapper.getGroupsByIds(Arrays.asList(id));
                 if (groups != null && groups.size() == 1) {
                     group = groups.get(0);
-                    modules = metadataModuleMapper.getModulesByIds(
-                            Arrays.asList(StringUtils.split(group.getModuleIds().replaceAll("m", ""), ',')));
+                    modules = metadataModuleMapper.getModulesByIds(Arrays.asList(StringUtils.split(group.getModuleIds().replaceAll("m", ""), ',')));
                     group.setMetadataModules(modules);
                     chain.setMetadataGroup(group);
                     chain.setType(1);
@@ -242,16 +233,11 @@ public class MetadataServiceImpl implements IMetadataService {
     @Override
     public List<ChainElementDefine> chainList(ConcreteSubject concreteSubject, long metadataId, String chainStr) {
         List<ChainElementDefine> chainList = new ArrayList<>();
-        // 1.
         List<Chain> chains = handleChain(chainStr);
-
-        List<ChainElementDefine> groupChainList = null;
-
+        List<ChainElementDefine> groupChainList;
         for (Chain chain : chains) {
             if (chain.getType() == 0) {
-                // 2.
                 MetadataModule module = chain.getMetadataModule();
-                // 2.1
                 concreteSubject.builderXml(metadataId, module.getHandlerName(), module, chainList);
             } else {
                 MetadataGroup group = chain.getMetadataGroup();
@@ -267,5 +253,4 @@ public class MetadataServiceImpl implements IMetadataService {
         }
         return chainList;
     }
-
 }

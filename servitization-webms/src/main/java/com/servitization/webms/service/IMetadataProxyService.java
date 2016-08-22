@@ -28,5 +28,4 @@ public interface IMetadataProxyService {
     int sourcesUrlIsAgain(Map<String, Object> params);
 
     void deleteProxyByMetadataid(List<String> args);
-
 }

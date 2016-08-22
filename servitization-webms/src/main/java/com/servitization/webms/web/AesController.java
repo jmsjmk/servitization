@@ -28,15 +28,12 @@ public class AesController extends BaseObserver {
     @RequestMapping(value = "getWhitelistPage", method = RequestMethod.GET)
     public ModelAndView getWhitelistPage(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("aes_whitelist");          //
+        mav.setViewName("aes_whitelist");
         Map<String, Object> modelMap = new HashMap<>();
-
         String metadataId = request.getParameter("metadataId");
         Map<String, Object> params = new HashMap<>();
         params.put("metadata_id", Integer.parseInt(metadataId));
-
         String ips = metadataAesService.getAesWhitelist(params);
-
         modelMap.put("ips", ips == null ? "" : ips);
         mav.addAllObjects(modelMap);
         return mav;
@@ -47,11 +44,11 @@ public class AesController extends BaseObserver {
         String ips = request.getParameter("ips");
         String metadataId = request.getParameter("metadataId");
         // Format ips
-        Set<String> ips_set = null;
+        Set<String> ips_set;
         try {
             ips_set = IPListUtil.ipSpliter(ips);
         } catch (Exception e) {
-            return new ResponseEntity<byte[]>(e.getMessage().getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage().getBytes(), HttpStatus.OK);
         }
         if (ips_set == null)
             ips = "";
@@ -77,9 +74,8 @@ public class AesController extends BaseObserver {
             int rst = metadataAesService.updateAesWhitelist(params);
             if (rst <= 0) msg = "更新失败";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
-
 
     /**
      * 作为观察者，当抽象主题角色删除操作的时候会调用该方法
@@ -95,8 +91,7 @@ public class AesController extends BaseObserver {
     }
 
     @Override
-    public void builderXml(long metadataId, MetadataModule module,
-                           List<ChainElementDefine> chainList) {
+    public void builderXml(long metadataId, MetadataModule module, List<ChainElementDefine> chainList) {
         EncryptDefineImpl define = new EncryptDefineImpl();
         define.setName(module.getHandlerName());
         define.setHandlerClazz(module.getHandlerClazz());
@@ -108,5 +103,4 @@ public class AesController extends BaseObserver {
         }
         chainList.add(define);
     }
-
 }

@@ -25,5 +25,4 @@ public interface MetadataServicePoolMapper {
 
     @DataSource(value = "master")
     void deleteServicePoolByMetadataid(List<String> metadataId);
-
 }

@@ -12,5 +12,4 @@ public class GetAosMachineByNodeResp extends AosBaseResult {
     public void setData(List<AosMachine> data) {
         this.data = data;
     }
-
 }

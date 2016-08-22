@@ -6,7 +6,7 @@ import com.servitization.commons.business.agent.enums.DataTypeEnum;
 import com.servitization.commons.business.agent.enums.MethodTypeEnum;
 import com.servitization.commons.business.agent.enums.RPCTypeEnum;
 import com.servitization.commons.business.agent.rpc.ContentType;
-import com.servitization.webms.entity.AosReturnDataEntitry;
+import com.servitization.webms.entity.AosReturnDataEntity;
 import com.servitization.webms.http.entity.BatchGetAosNodeByMachineNameResp;
 import com.servitization.webms.http.entity.GetAosMachineByNodeResp;
 import com.servitization.webms.http.entity.GetAosNodeByIdResp;
@@ -27,9 +27,9 @@ public interface AosAgent {
     BatchGetAosNodeByMachineNameResp batchGetAosNodeByMachineName(String param, CustomizeParameterEntity entity);
 
     @AgentService(name = "getLoginInfoByUserNameAndPasswd", rpcType = RPCTypeEnum.HTTP, methodType = MethodTypeEnum.POST, reqType = DataTypeEnum.STRING, contentType = ContentType.POST_KV, resultType = DataTypeEnum.JSON, customizeParameter = true)
-    AosReturnDataEntitry getLoginInfoByUserNameAndPasswd(String param, CustomizeParameterEntity entity);
+    AosReturnDataEntity getLoginInfoByUserNameAndPasswd(String param, CustomizeParameterEntity entity);
 
     @AgentService(name = "vertifyTokenToAos", rpcType = RPCTypeEnum.HTTP, methodType = MethodTypeEnum.POST, reqType = DataTypeEnum.STRING, contentType = ContentType.POST_KV, resultType = DataTypeEnum.JSON, customizeParameter = true)
-    AosReturnDataEntitry vertifyTokenToAosPlat(String param, CustomizeParameterEntity entity);
+    AosReturnDataEntity vertifyTokenToAosPlat(String param, CustomizeParameterEntity entity);
 
 }

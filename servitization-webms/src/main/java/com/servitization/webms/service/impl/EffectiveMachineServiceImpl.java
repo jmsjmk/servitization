@@ -54,17 +54,14 @@ public class EffectiveMachineServiceImpl implements IEffectiveMachineService {
             if (ips == null || ips.size() == 0) {
                 return machines;
             }
-
-            EffectiveMachineTask task = null;
+            EffectiveMachineTask task;
             List<EffectiveMachineTask> tasks = new ArrayList<>();
             for (String ip : ips) {
                 task = new EffectiveMachineTask(metadata, versionId, ip, aosAgent, configProvider);
                 tasks.add(task);
             }
-
             List<Future<Machine>> futures = executorService.invokeAll(tasks);
-
-            Machine machine = null;
+            Machine machine;
             for (Future<Machine> future : futures) {
                 machine = future.get();
                 if (machine == null) {
@@ -72,7 +69,6 @@ public class EffectiveMachineServiceImpl implements IEffectiveMachineService {
                 }
                 machines.add(machine);
             }
-
         } catch (KeeperException e) {
             LOGGER.info("获取生效机器列表", e);
         } catch (InterruptedException e) {
@@ -80,7 +76,6 @@ public class EffectiveMachineServiceImpl implements IEffectiveMachineService {
         } catch (ExecutionException e) {
             LOGGER.info("获取生效机器列表", e);
         }
-
         return machines;
     }
 
@@ -89,8 +84,8 @@ public class EffectiveMachineServiceImpl implements IEffectiveMachineService {
      * @return
      */
     public List<StatusInfo> getEffectiveMachineExistInfo() {
-        List<StatusInfo> list = new ArrayList<StatusInfo>();
-        List<String> ips = null;
+        List<StatusInfo> list = new ArrayList<>();
+        List<String> ips;
         try {
             ips = ZKConnection.zk().getChildren(Constants.status, false);
             for (String ip : ips) {
@@ -110,7 +105,6 @@ public class EffectiveMachineServiceImpl implements IEffectiveMachineService {
         return list;
     }
 
-
     @Override
     public boolean[] getEffectiveMachineExistence(List<MetadataVersion> versions) {
         boolean[] result = new boolean[versions.size()];
@@ -126,8 +120,8 @@ public class EffectiveMachineServiceImpl implements IEffectiveMachineService {
             }
             return result;
         }
-        Set<String> versionIdSet = new HashSet<String>();
-        List<GetEffectiveMachineExistenceTask> taskList = new ArrayList<GetEffectiveMachineExistenceTask>();
+        Set<String> versionIdSet = new HashSet<>();
+        List<GetEffectiveMachineExistenceTask> taskList = new ArrayList<>();
         for (String ip : ips) {
             taskList.add(new GetEffectiveMachineExistenceTask(ip));
         }
@@ -176,7 +170,7 @@ public class EffectiveMachineServiceImpl implements IEffectiveMachineService {
         public String call() throws Exception {
             String path = Constants.status + "/" + ip;
             byte[] bytes = ZKConnection.zk().getData(path, false, null);
-            StatusInfo statusInfo = null;
+            StatusInfo statusInfo;
             try {
                 statusInfo = new StatusInfo(new String(bytes));
             } catch (Exception e) {

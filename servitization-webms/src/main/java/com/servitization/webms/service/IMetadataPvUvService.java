@@ -20,5 +20,4 @@ public interface IMetadataPvUvService {
     int deleteMany(List<String> list);
 
     void deletePvUvByMetadataid(List<String> args);
-
 }

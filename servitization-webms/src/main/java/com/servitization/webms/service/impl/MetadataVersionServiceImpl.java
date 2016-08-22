@@ -35,7 +35,6 @@ public class MetadataVersionServiceImpl implements IMetadataVersionService {
     public int addVersion(MetadataVersion version) throws Exception {
         // 1.添加版本
         int versionInsertResult = metadataVersionMapper.addVersion(version);
-
         // 2.添加xml信息
         MetadataXml metadataXml = new MetadataXml();
         metadataXml.setVersionId(version.getId());

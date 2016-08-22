@@ -29,11 +29,10 @@ public class CookieUtil {
             return null;
         }
         Cookie[] cookieArry = request.getCookies();
-        Cookie tempCookie = null;
+        Cookie tempCookie;
         if (cookieArry != null) {
             for (int i = 0; i < cookieArry.length; i++) {
                 tempCookie = cookieArry[i];
-
                 if (StringUtils.equals(tempCookie.getName(), cookieName)) {
                     return tempCookie;
                 }

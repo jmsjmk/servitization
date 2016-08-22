@@ -52,5 +52,4 @@ public interface IMetadataService {
      * @return
      */
     int addMetadataByCopy(Metadata metadata, String beCopiedMetaId);
-
 }

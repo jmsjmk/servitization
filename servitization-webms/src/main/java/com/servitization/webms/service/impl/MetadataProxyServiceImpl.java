@@ -69,6 +69,4 @@ public class MetadataProxyServiceImpl implements IMetadataProxyService {
     public void deleteProxyByMetadataid(List<String> args) {
         metadataProxyMapper.deleteProxyByMetadataid(args);
     }
-
-
 }

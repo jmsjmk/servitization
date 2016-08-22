@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /***
@@ -45,34 +44,29 @@ public class PvUvController extends BaseObserver {
         ModelAndView view = new ModelAndView();
         view.setViewName("pvUv");
         String metadataId = request.getParameter("metadataId");
-
         if (StringUtils.isBlank(metadataId)) {
             return view;
         }
-
         Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
-
         List<MetadataPvUv> result = metadataPvUvService.getMetadataPvUvList(params);
         if (null == result) {
-            result = new ArrayList<MetadataPvUv>();
+            result = new ArrayList<>();
         }
         List<MetadataProxy> proxyList = metadataProxyService.getMetadataProxyList(Long.parseLong(metadataId));
         Map<String, Object> modelMap = new HashMap<>();
-
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-
-        List<MetadataProxy> resultList = null;
-        int pvUvListLen = 0;
+        Map<String, Object> resultMap = new HashMap<>();
+        List<MetadataProxy> resultList;
+        int pvUvListLen;
         if (proxyList == null || (pvUvListLen = result.size()) <= 0) {
             resultList = proxyList;
         } else {
             resultList = new ArrayList<>();
-            Set<String> set = new HashSet<String>();
+            Set<String> set = new HashSet<>();
             for (int i = 0; i < pvUvListLen; i++) {
                 set.add(result.get(i).getSourceUrl());
             }
-            MetadataProxy proxy = null;
+            MetadataProxy proxy;
             for (int i = 0, index = proxyList.size(); i < index; i++) {
                 proxy = proxyList.get(i);
                 if (set.contains(proxy.getSourceUrl())) {
@@ -89,10 +83,9 @@ public class PvUvController extends BaseObserver {
     }
 
     @RequestMapping(value = "showProxyList", method = RequestMethod.GET)
-    public ModelAndView showProxyList(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView showProxyList(HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         view.setViewName("pvUv_add");
-
         String metadataId = request.getParameter("metadataId");
         if (StringUtils.isBlank(metadataId)) {
             return view;
@@ -105,8 +98,9 @@ public class PvUvController extends BaseObserver {
     }
 
     /**
+     * 添加操作
      * @param request
-     * @return 添加操作
+     * @return
      */
     @Permission(name = "update")
     @RequestMapping(value = "addPvUv", method = RequestMethod.POST)
@@ -117,7 +111,7 @@ public class PvUvController extends BaseObserver {
             return "-1";
         }
         String proxyId = request.getParameter("proxyId");
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("proxyId", proxyId);
         /**
@@ -126,7 +120,6 @@ public class PvUvController extends BaseObserver {
         if (metadataPvUvService.vertifyPvUv(params) >= 1) {
             return "-2";
         }
-
         params.put("createTime", new Date());
         /**
          * 添加数据
@@ -142,16 +135,14 @@ public class PvUvController extends BaseObserver {
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(HttpServletRequest request) {
-
         String metadataId = request.getParameter("metadataId");
         String proxyId = request.getParameter("proxyId");
         if (StringUtils.isBlank(metadataId)) {
             return "0";
         }
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("proxyId", proxyId);
-
         return String.valueOf(metadataPvUvService.delete(params));
     }
 
@@ -203,13 +194,11 @@ public class PvUvController extends BaseObserver {
         params.put("pageIndex", 0);
         params.put("pageSize", Integer.MAX_VALUE);
         List<MetadataPvUv> pvUvMetadataList = metadataPvUvService.getMetadataPvUvList(params);
-        int len = 0;
-
+        int len;
         if (null == pvUvMetadataList || (len = pvUvMetadataList.size()) <= 0) {
             return pvUvDefine;
         }
-        List<String> pvUvList = new ArrayList<String>();
-
+        List<String> pvUvList = new ArrayList<>();
         for (int index = 0; index < len; index++) {
             pvUvList.add(pvUvMetadataList.get(index).getSourceUrl());
         }

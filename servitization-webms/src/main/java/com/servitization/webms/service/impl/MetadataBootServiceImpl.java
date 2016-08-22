@@ -207,7 +207,7 @@ public class MetadataBootServiceImpl implements IMetadataBootService {
         // /int versionId =
         // publishMapper.getPublishedVersionIdByRelationId(metadataNode.getId());
         // 根据历史记录情况查找指定版本的xml
-        MetadataVersion metadataVersion = null;
+        MetadataVersion metadataVersion;
         if (versionId > 0) {
             // 根据versionId查询元数据
             metadataVersion = versionMapper.getMetadataVersionById(versionId);
@@ -218,10 +218,9 @@ public class MetadataBootServiceImpl implements IMetadataBootService {
         if (metadataVersion != null) {
             // 推送数据
             if (zk.exists(Constants.boot + "/" + hostName, false) != null) {
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put(Constants.boot_meta, metadataVersion.getMetadataXml());
                 map.put(Constants.boot_version, String.valueOf(metadataVersion.getId()));
-
                 LOGGER.info("path:" + Constants.boot + "/" + hostName);
                 LOGGER.info("data:" + JSON.toJSONString(map));
                 LOGGER.info("version:" + "-1");

@@ -36,11 +36,10 @@ public class EffectiveMachineController {
      * 展示生效机器列表页面
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "getEffectiveMachinePage", method = RequestMethod.GET)
-    public ModelAndView getMetadataPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getMetadataPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("effectivemachine");
@@ -52,9 +51,7 @@ public class EffectiveMachineController {
         params.put("metadataId", metadataId);
         params.put("pageIndex", 0);
         params.put("pageSize", Integer.MAX_VALUE);
-
         List<MetadataVersion> metadataVersions = metadataVersionService.getMetadataVersionList(params);
-
         //获取每个version是否有机器存在
         boolean[] existences = effectiveMachineService.getEffectiveMachineExistence(metadataVersions);
         for (int i = 0; i < metadataVersions.size(); i++) {
@@ -69,8 +66,6 @@ public class EffectiveMachineController {
     /**
      * 获取生效机器列表
      *
-     * @param request
-     * @param response
      * @return
      * @RequestMapping(value = "getEffectiveMachineList", method = RequestMethod.GET)
      * public ModelAndView getEffectiveMachineList(HttpServletRequest request, HttpServletResponse response) {
@@ -96,14 +91,12 @@ public class EffectiveMachineController {
      * return mav;
      * }
      */
-
     @RequestMapping(value = "getEffectiveMachineList", method = RequestMethod.GET)
-    public ModelAndView getEffectiveMachineList(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getEffectiveMachineList() {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("effectivemachinelist");
-        List<StatusInfo> list = new ArrayList<StatusInfo>();
-        list = effectiveMachineService.getEffectiveMachineExistInfo();
+        List<StatusInfo> list = effectiveMachineService.getEffectiveMachineExistInfo();
         modelMap.put("machines", list);
         mav.addAllObjects(modelMap);
         return mav;

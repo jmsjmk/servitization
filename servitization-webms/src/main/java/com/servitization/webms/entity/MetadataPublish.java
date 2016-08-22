@@ -66,6 +66,4 @@ public class MetadataPublish {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-
-
 }

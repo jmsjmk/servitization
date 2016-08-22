@@ -18,5 +18,4 @@ public interface IMetadataServicePoolService {
     List<MetadataServicePool> selectPoolByName(Map<String, Object> param);
 
     void deleteServicePoolByMetadataid(List<String> metadataId);
-
 }

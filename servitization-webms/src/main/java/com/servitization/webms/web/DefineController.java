@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Controller
@@ -38,56 +37,44 @@ public class DefineController extends BaseObserver {
      * 获取防攻击列表页面
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "getDefinePage", method = RequestMethod.GET)
-    public ModelAndView getMetadataPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getMetadataPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("define");
-
         String metadataId = request.getParameter("metadataId");
-
         if (StringUtils.isBlank(metadataId)) {
             return mav;
         }
-
         String sourceUrl = request.getParameter("sourceUrl");
         String pageIndexStr = request.getParameter("pageIndex");
         String pageSizeStr = request.getParameter("pageSize");
-
         int pageIndex = 0;
         int pageSize = 10;
-
         if (StringUtils.isNotBlank(pageIndexStr)) {
             pageIndex = Integer.parseInt(pageIndexStr);
         }
         if (StringUtils.isNotBlank(pageSizeStr)) {
             pageSize = Integer.parseInt(pageSizeStr);
         }
-
         Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("sourceUrl", sourceUrl);
         params.put("pageIndex", pageIndex * pageSize);
         params.put("pageSize", pageSize);
-
         List<MetadataDefine> metadataDefines = metadataDefineService.getMetadataDefineList(params);
         if (metadataDefines == null) {
             metadataDefines = new ArrayList<>();
         }
-
         int count = metadataDefineService.getMetadataDefineCount(params);
         int pageCount = count == 0 ? 0 : (count % pageSize == 0 ? count / pageSize : count / pageSize + 1);
-
         modelMap.put("pageIndex", pageIndex);
         modelMap.put("pageSize", pageSize);
         modelMap.put("pageCount", pageCount);
         modelMap.put("metadataDefines", metadataDefines);
-
         mav.addAllObjects(modelMap);
-
         return mav;
     }
 
@@ -95,11 +82,10 @@ public class DefineController extends BaseObserver {
      * 删除防攻击列表
      *
      * @param request
-     * @param response
      */
     @Permission(name = "update")
     @RequestMapping(value = "deleteMetadataDefines", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> deleteMetadataDefines(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> deleteMetadataDefines(HttpServletRequest request) {
         String ids = request.getParameter("ids");
         List<String> list = JSONArray.parseArray(ids, String.class);
         int count = metadataDefineService.deleteMetadataDefines(list);
@@ -111,33 +97,28 @@ public class DefineController extends BaseObserver {
      * 获取添加页面
      *
      * @param request
-     * @param response
      * @return
      */
     @Permission(name = "update")
     @RequestMapping(value = "getAddDefinePage", method = RequestMethod.GET)
-    public ModelAndView getDefineAddPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getDefineAddPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("define_add");
         Map<String, Object> modelMap = new HashMap<>();
-
         String proxyId = request.getParameter("proxyId");
-
         if (StringUtils.isNotBlank(proxyId)) {
             MetadataDefine metadataDefine = metadataDefineService.getDefineById(Long.parseLong(proxyId));
             modelMap.put("metadataDefine", metadataDefine);
         }
-
         String metaId = request.getParameter("metadataId");
         List<MetadataProxy> list = metadataProxyService.getMetadataProxyList(Long.parseLong(metaId));
-
         modelMap.put("metadataProxyList", list);
         mav.addAllObjects(modelMap);
         return mav;
     }
 
     @RequestMapping(value = "addOrUpdateDefine", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> addOrUpdateDefine(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> addOrUpdateDefine(HttpServletRequest request) {
         String defineId = request.getParameter("defineId");
         String metadataId = request.getParameter("metadataId");
         String proxyId = request.getParameter("proxyId");
@@ -149,8 +130,7 @@ public class DefineController extends BaseObserver {
         metadataDefine.setTimeUnit(Integer.parseInt(timeUnit));
         metadataDefine.setTimes(Integer.parseInt(times));
         metadataDefine.setCreateTime(new Date());
-
-        String msg = "成功";
+        String msg;
         if (StringUtils.isNotBlank(defineId)) {
             metadataDefine.setId(Long.parseLong(defineId));
             int count = metadataDefineService.updateMetadataDefine(metadataDefine);
@@ -159,7 +139,7 @@ public class DefineController extends BaseObserver {
             int count = metadataDefineService.addMetadataDefine(metadataDefine);
             msg = count > 0 ? "添加成功" : "添加失败";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "vertifyDefine", method = RequestMethod.GET)
@@ -174,32 +154,29 @@ public class DefineController extends BaseObserver {
     }
 
     @RequestMapping(value = "getWhitelistPage", method = RequestMethod.GET)
-    public ModelAndView getWhitelistPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getWhitelistPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("define_whitelist");
         Map<String, Object> modelMap = new HashMap<>();
-
         String metadataId = request.getParameter("metadataId");
         Map<String, Object> params = new HashMap<>();
         params.put("metadata_id", Integer.parseInt(metadataId));
-
         String ips = metadataDefineService.getDefineWhitelist(params);
-
         modelMap.put("ips", ips == null ? "" : ips);
         mav.addAllObjects(modelMap);
         return mav;
     }
 
     @RequestMapping(value = "addOrUpdateWhitelist", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> addOrUpdateWhitelist(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> addOrUpdateWhitelist(HttpServletRequest request) {
         String ips = request.getParameter("ips");
         String metadataId = request.getParameter("metadataId");
         // Format ips
-        Set<String> ips_set = null;
+        Set<String> ips_set;
         try {
             ips_set = IPListUtil.ipSpliter(ips);
         } catch (Exception e) {
-            return new ResponseEntity<byte[]>(e.getMessage().getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage().getBytes(), HttpStatus.OK);
         }
         if (ips_set == null) ips = "";
         else ips = IPListUtil.format(ips_set);
@@ -224,7 +201,7 @@ public class DefineController extends BaseObserver {
             int rst = metadataDefineService.updateDefineWhitelist(params);
             if (rst <= 0) msg = "更新失败";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
 
@@ -286,5 +263,4 @@ public class DefineController extends BaseObserver {
             }
         }
     }
-
 }

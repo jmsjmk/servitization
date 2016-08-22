@@ -47,5 +47,4 @@ public class FileConfigProvider implements IConfigProvider, InitializingBean {
     public void set_filePath(String _filePath) {
         this._filePath = _filePath;
     }
-
 }

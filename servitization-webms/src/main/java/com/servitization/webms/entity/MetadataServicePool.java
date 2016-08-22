@@ -101,5 +101,4 @@ public class MetadataServicePool {
     public void setMetadataId(long metadataId) {
         this.metadataId = metadataId;
     }
-
 }

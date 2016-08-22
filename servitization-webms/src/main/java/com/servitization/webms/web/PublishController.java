@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,15 +43,14 @@ public class PublishController {
      * 发布选择版本
      *
      * @param request
-     * @param response
      */
     @Permission(name = "push")
     @RequestMapping(value = "publishMetadataSelectVersion", method = RequestMethod.GET)
-    public ModelAndView publishMetadataSelectVersion(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView publishMetadataSelectVersion(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("version_select");
-        String msg = StringUtils.EMPTY;
+        String msg;
         String metadataId = request.getParameter("metadataId");
         String aosRelationId = request.getParameter("aosRelationId");
         String aosNodeId = request.getParameter("aosNodeId");
@@ -70,12 +68,10 @@ public class PublishController {
         }
         int pageIndex = 0;
         int pageSize = Integer.MAX_VALUE;
-
         Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("pageIndex", pageIndex * pageSize);
         params.put("pageSize", pageSize);
-
         List<MetadataVersion> metadataVersions = metadataVersionService.getMetadataVersionList(params);
         if (metadataVersions == null) {
             metadataVersions = new ArrayList<>();
@@ -91,10 +87,7 @@ public class PublishController {
 
     /**
      * 发布数据推动到zk节点 push下面去
-     * <p>
-     * 1.发布数据<br/>
-     * <p>
-     * 2.
+     * 发布数据
      *
      * @param request
      */
@@ -130,11 +123,10 @@ public class PublishController {
      * 2.线程池维护插入表的对应关系<br/>
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "publishnew", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> publishNew(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> publishNew(HttpServletRequest request) {
         String msg = StringUtils.EMPTY;
         String versionId = request.getParameter("versionId");
         String metadataId = request.getParameter("metadataId");
@@ -147,7 +139,6 @@ public class PublishController {
             msg = "发布数据版本[" + versionId + "]成功";
             System.out.println("********" + msg);
             System.out.println("********msgLength:" + msg.getBytes());
-            // 2.
             metadataPublishService.updataPublishState();
         } else if (result == 1) {
             msg = "调用AOS失败";
@@ -159,17 +150,14 @@ public class PublishController {
         return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "getPublishHistory", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView getPublishHistory(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getPublishHistory(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("publishHistory");
-
         String pageIndexStr = request.getParameter("pageIndex");
         String pageSizeStr = request.getParameter("pageSize");
         String metadataIdStr = request.getParameter("metadataId");
-
         int pageIndex = 0;
         int pageSize = 10;
         long metadataId = 0;
@@ -182,39 +170,31 @@ public class PublishController {
         if (StringUtils.isNotBlank(metadataIdStr)) {
             metadataId = Integer.parseInt(metadataIdStr);
         }
-
         Map<String, Object> params = new HashMap<>();
         params.put("metadataId", metadataId);
         params.put("pageIndex", pageIndex * pageSize);
         params.put("pageSize", pageSize);
-
         List<MetadataPublish> publishHistory = metadataPublishService.getPublishHistoryByNodeRelationId(params);
         if (publishHistory == null) {
             publishHistory = new ArrayList<>();
         }
-
         int count = metadataPublishService.getPublishHistoryCount(params);
         int pageCount = count == 0 ? 0 : (count % pageSize == 0 ? count / pageSize : count / pageSize + 1);
-
         modelMap.put("pageIndex", pageIndex);
         modelMap.put("pageSize", pageSize);
         modelMap.put("pageCount", pageCount);
         modelMap.put("publishHisyory", publishHistory);
-
         mav.addAllObjects(modelMap);
-
         return mav;
     }
 
     @RequestMapping(value = "getPublishDetail", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView getPublishDetail(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getPublishDetail(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("publishDetail");
-
         String publishIdStr = request.getParameter("publishId");
         String nodeRelationId = request.getParameter("nodeRelationId");
-
         long publishId = 0;
         if (StringUtils.isNotBlank(publishIdStr)) {
             publishId = Long.parseLong(publishIdStr);
@@ -223,10 +203,8 @@ public class PublishController {
         if (publishDetail == null) {
             publishDetail = new ArrayList<>();
         }
-
         modelMap.put("publishDetail", publishDetail);
         modelMap.put("nodeRelationId", nodeRelationId);
-
         mav.addAllObjects(modelMap);
         return mav;
     }

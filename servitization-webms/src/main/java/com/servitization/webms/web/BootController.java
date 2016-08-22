@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "webms/boot")
@@ -21,12 +19,10 @@ public class BootController {
     /**
      * 启动支持
      *
-     * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "bootScan", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> bootScan(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> bootScan() {
         String msg = StringUtils.EMPTY;
         int result = metadataBootService.bootScan();
         if (result == 0) {
@@ -38,7 +34,6 @@ public class BootController {
         } else if (result == 3) {
             msg = "部分机器推送失败,请检查";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
-
 }

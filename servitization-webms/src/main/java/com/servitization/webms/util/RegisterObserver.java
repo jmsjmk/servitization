@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RegisterObserver implements BeanPostProcessor {
-    ConcreteSubject subJect = ConcreteSubject.instances();
+    ConcreteSubject subject = ConcreteSubject.instances();
 
     /**
      * bean的前置处理器，当bean的类型是Observer的时候，也就是需要把观察者注册到具体的抽象主题里面
@@ -17,14 +17,12 @@ public class RegisterObserver implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof Observer)
-            subJect.addObserver(((Observer) bean).getHandlerName(), (Observer) bean);
+            subject.addObserver(((Observer) bean).getHandlerName(), (Observer) bean);
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-
         return bean;
     }
-
 }

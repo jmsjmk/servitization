@@ -35,7 +35,6 @@ var id_2 = setInterval(autoMove,line);
 	 if(delVal>460){
 		clearInterval(id_1);
 		clearInterval(id_2);
-	    //window.location.href="http://home.corp.elong.com/home/Site/Index?subsystem=servicePlat";
 	    return ;
 	 }
 	 $(".mvBtn").css("left",delVal);

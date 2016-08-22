@@ -45,9 +45,7 @@ public class EffectiveMachineTask implements Callable<Machine> {
     public Machine call() throws Exception {
         Machine machine = new Machine();
         machine.setMachineIp(ip);
-
         String path = Constants.status + "/" + ip;
-
         try {
             byte[] bytes = ZKConnection.zk().getData(path, false, null);
             StatusInfo statusInfo;
@@ -56,20 +54,15 @@ public class EffectiveMachineTask implements Callable<Machine> {
             } catch (Exception e) {
                 statusInfo = null;
             }
-
             if (statusInfo == null || !StringUtils.equals(metadata.getMetaKey(), statusInfo.getName()) || !StringUtils.equals(versionId, statusInfo.getVersion())) {
                 return null;
             }
-
             machine.setMachineName(statusInfo.getHostname());
-
             String url = configProvider.Get("getAosNodeByMachineName.url") + statusInfo.getHostname() + "/node";
             String param = "authkey=" + ConstantValue.KEY + "&secret=" + ConstantValue.SECRET;
             CustomizeParameterEntity entity = new CustomizeParameterEntity();
             entity.setUrl(url);
-
             GetAosNodeByMachineNameResp resp = aosAgent.getAosNodeByMachineName(param, entity);
-
             if (resp != null && resp.getCode() == 200 && resp.getData() != null && resp.getData().size() > 0) {
                 for (AosNode node : resp.getData()) {
                     if (node.getIsServiceUnit() == 1) {
@@ -81,7 +74,6 @@ public class EffectiveMachineTask implements Callable<Machine> {
         } catch (Exception e) {
             LOGGER.info("获取机器状态exception, path:" + path, e);
         }
-
         return machine;
     }
 }

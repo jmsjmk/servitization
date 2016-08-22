@@ -162,5 +162,4 @@ public class MetadataProxy implements Comparable<MetadataProxy> {
     public int compareTo(MetadataProxy o) {
         return this.sourceUrl.compareTo(o.getSourceUrl());
     }
-
 }

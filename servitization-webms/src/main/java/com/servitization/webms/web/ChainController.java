@@ -35,29 +35,21 @@ public class ChainController {
      * 获取node执行的列表
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "getChainPage", method = RequestMethod.GET)
-    public ModelAndView getChainPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getChainPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("chain");
-
         String req = request.getParameter("metadataId");
-
         Metadata metadata = metadataService.getMetadataById(Long.parseLong(req));
         modelMap.put("metadata", metadata);
-
         List<MetadataGroup> groups = metadataGroupService.getGroupsByMetadataId(Long.parseLong(req));
         modelMap.put("groups", groups);
-
         List<MetadataModule> modules = metadataModuleService.getAllModuleList();
-
         modelMap.put("modules", modules);
-
         mav.addAllObjects(modelMap);
-
         return mav;
     }
 }

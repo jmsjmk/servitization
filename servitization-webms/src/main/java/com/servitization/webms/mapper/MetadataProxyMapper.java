@@ -40,5 +40,4 @@ public interface MetadataProxyMapper {
 
     @DataSource(value = "master")
     void deleteProxyByMetadataid(List<String> args);
-
 }

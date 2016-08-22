@@ -26,7 +26,6 @@ public class IPListUtil {
                 rst.add(ip);
             }
         }
-
         if (rst.size() > 0)
             return rst;
         else
@@ -64,12 +63,11 @@ public class IPListUtil {
     }
 
     public static Set<String> unformat(String ips) {
-        Set<String> ips_set = new HashSet<String>();
+        Set<String> ips_set = new HashSet<>();
         String[] ips_array = ips.split("\n");
         for (String ip : ips_array) {
             ips_set.add(ip);
         }
         return ips_set;
     }
-
 }

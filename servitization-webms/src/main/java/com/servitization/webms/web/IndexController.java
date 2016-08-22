@@ -29,14 +29,14 @@ public class IndexController {
     private IMetadataService metadataService;
 
     @RequestMapping(value = "views/{page}", method = RequestMethod.GET)
-    public ModelAndView page(HttpServletRequest request, HttpServletResponse response, @PathVariable String page) {
+    public ModelAndView page(@PathVariable String page) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName(page);
         return mav;
     }
 
     @RequestMapping(value = "getMetadataList", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getMetadataList(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> getMetadataList() {
         Map<String, Integer> params = new HashMap<>();
         params.put("pageIndex", 0);
         params.put("pageSize", Integer.MAX_VALUE);
@@ -44,18 +44,18 @@ public class IndexController {
         if (list == null) {
             list = new ArrayList<>();
         }
-        return new ResponseEntity<byte[]>(JSON.toJSONString(list).getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(JSON.toJSONString(list).getBytes(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "getDataConfigPage", method = RequestMethod.GET)
-    public ModelAndView getDataConfigPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getDataConfigPage() {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("dataconfig");
         return mav;
     }
 
     @RequestMapping(value = "getVersionAndMachinePage", method = RequestMethod.GET)
-    public ModelAndView getVersionAndMachinePage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getVersionAndMachinePage() {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("versionandmachine");
         return mav;
@@ -68,7 +68,7 @@ public class IndexController {
     public String loginOut(HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = CookieUtil.getCookieFromLocalByName(request, "utoken");
         if (cookie != null) {
-            cookie.setDomain(".elong.com");
+            cookie.setDomain(".");
             cookie.setPath("/");
             cookie.setMaxAge(-3);
             response.addCookie(cookie);

@@ -58,5 +58,4 @@ public class MetadataVersion {
     public void setIsMachineExist(boolean isMachineExist) {
         this.isMachineExist = isMachineExist;
     }
-
 }

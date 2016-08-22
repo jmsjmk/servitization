@@ -15,5 +15,4 @@ public interface IMetadataMachineService {
     int addMetadataMachine(MetadataMachine metadataMachine);
 
     int updateMetadataMachine(MetadataMachine metadataMachine);
-
 }

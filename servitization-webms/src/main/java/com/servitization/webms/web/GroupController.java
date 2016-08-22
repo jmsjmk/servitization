@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,22 +33,16 @@ public class GroupController extends BaseObserver {
     private MetadataGroupMapper metadataGroupMapper;
 
     @RequestMapping(value = "getGroupPage", method = RequestMethod.GET)
-    public ModelAndView getGroupPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getGroupPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("group");
-
         String req = request.getParameter("metadataId");
-
         List<MetadataGroup> groups = metadataGroupService.getGroupsByMetadataId(Long.parseLong(req));
         modelMap.put("metadataGroups", groups);
-
         List<MetadataModule> modules = metadataModuleService.getAllModuleList();
-
         modelMap.put("modules", modules);
-
         mav.addAllObjects(modelMap);
-
         return mav;
     }
 
@@ -57,12 +50,11 @@ public class GroupController extends BaseObserver {
      * 添加或修改group页面
      *
      * @param request
-     * @param response
      * @return
      */
     @Permission(name = "update")
     @RequestMapping(value = "getAddGroupPage", method = RequestMethod.GET)
-    public ModelAndView getAddGroupPage(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getAddGroupPage(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         Map<String, Object> modelMap = new HashMap<>();
         mav.setViewName("group_add");
@@ -78,7 +70,7 @@ public class GroupController extends BaseObserver {
     }
 
     @RequestMapping(value = "addOrUpdateGroup", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> addOrUpdateGroup(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> addOrUpdateGroup(HttpServletRequest request) {
         String metadataId = request.getParameter("metadataId");
         String groupId = request.getParameter("groupId");
         String upModules = request.getParameter("upModules");
@@ -94,14 +86,14 @@ public class GroupController extends BaseObserver {
         group.setSize(Integer.parseInt(size));
         group.setPolicy(policy);
         group.setCreateTime(new Date());
-        String msg = "";
+        String msg;
         // 判断分组
         if (StringUtils.isBlank(upModules) && StringUtils.isBlank(downModules)) {
             msg = "未选择模块";
-            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         } else if (StringUtils.isNotBlank(upModules) && StringUtils.isNotBlank(downModules)) {
             msg = "所选模块不能同时含有上下行模块";
-            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         } else if (StringUtils.isNotBlank(upModules) && StringUtils.isBlank(downModules)) {
             group.setChain(0);
             group.setModuleIds(upModules);
@@ -119,24 +111,23 @@ public class GroupController extends BaseObserver {
             int count = metadataGroupService.addGroup(group);
             msg = count > 0 ? "添加成功" : "添加失败";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     @Permission(name = "update")
     @RequestMapping(value = "delGroup", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> delGroup(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<byte[]> delGroup(HttpServletRequest request) {
         String msg = "删除成功";
         String idString = request.getParameter("groupId");
-
         if (StringUtils.isBlank(idString)) {
             msg = "id不能为空!";
-            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+            return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
         }
         int flag = metadataGroupService.deleteGroup(Long.parseLong(idString));
         if (flag == 0) {
             msg = "删除失败, 请稍后重试!";
         }
-        return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.OK);
+        return new ResponseEntity<>(msg.getBytes(), HttpStatus.OK);
     }
 
     @Override

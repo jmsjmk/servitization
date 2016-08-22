@@ -35,5 +35,4 @@ public interface MetadataPvUvMapper {
 
     @DataSource(value = "master")
     void deletePvUvByMetadataid(List<String> args);
-
 }

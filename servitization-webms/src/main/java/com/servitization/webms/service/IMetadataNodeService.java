@@ -22,5 +22,4 @@ public interface IMetadataNodeService {
     int existNode(long metadataId, int nodeId);
 
     void deleteNodeRelationByMetadataid(List<String> metadataId);
-
 }

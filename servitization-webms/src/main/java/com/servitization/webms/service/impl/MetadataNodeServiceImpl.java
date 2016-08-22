@@ -64,8 +64,7 @@ public class MetadataNodeServiceImpl implements IMetadataNodeService {
         if (nodeIds == null || nodeIds.length == 0) {
             return num;
         }
-
-        MetadataNode node = null;
+        MetadataNode node;
         for (String nodeId : nodeIds) {
             if (!StringUtils.isNumeric(nodeId.trim())) {
                 continue;
@@ -75,31 +74,23 @@ public class MetadataNodeServiceImpl implements IMetadataNodeService {
             if (existNode(metadataId, id) > 0) {
                 continue;
             }
-
             node = getAosNode(id);
             if (node != null) {
                 node.setMetadataId(metadataId);
                 num += addNode(node);
             }
-
         }
         return num;
     }
 
     private MetadataNode getAosNode(int nodeId) {
         MetadataNode node = null;
-
         String url = configProvider.Get("getAosNodeById.url") + nodeId;
-
         CustomizeParameterEntity entity = new CustomizeParameterEntity();
         entity.setUrl(url);
-
         String param = "authkey=" + ConstantValue.KEY + "&secret=" + ConstantValue.SECRET;
-
         GetAosNodeByIdResp resp = aosAgent.getAosNodeById(param, entity);
-
         LOGGER.info("获取aos节点 url:" + url + ", resp:" + JSON.toJSONString(resp));
-
         if (resp != null && resp.getCode() == 200 && resp.getData() != null && resp.getData().getIsServiceUnit() == 1) {
             AosNode aosNode = resp.getData();
             node = new MetadataNode();
@@ -119,5 +110,4 @@ public class MetadataNodeServiceImpl implements IMetadataNodeService {
     public void deleteNodeRelationByMetadataid(List<String> metadataId) {
         metadataNodeMapper.deleteNodeRelationByMetadataid(metadataId);
     }
-
 }

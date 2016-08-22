@@ -31,7 +31,6 @@ public class MetadataMachine {
     }
 
     public long getMetadataId() {
-
         return metadataId;
     }
 
@@ -48,7 +47,6 @@ public class MetadataMachine {
     }
 
     public long getId() {
-
         return id;
     }
 }

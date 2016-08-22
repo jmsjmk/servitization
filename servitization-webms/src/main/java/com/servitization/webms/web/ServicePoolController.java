@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,14 +31,14 @@ public class ServicePoolController extends BaseObserver {
 
     @RequestMapping(value = "selectPools", method = RequestMethod.GET)
     @ResponseBody
-    public String selectPools(HttpServletRequest request, HttpServletResponse response) {
+    public String selectPools(HttpServletRequest request) {
         String metadataId = request.getParameter("metadataId");
         return JSON.toJSONString(metadataServicePoolService.selectPools(Long.parseLong(metadataId)));
     }
 
     @RequestMapping(value = "insertPool", method = RequestMethod.POST)
     @ResponseBody
-    public String insertPool(HttpServletRequest request, HttpServletResponse response) {
+    public String insertPool(HttpServletRequest request) {
         MetadataServicePool pool = new MetadataServicePool();
         long metadataId = Long.parseLong(request.getParameter("metadataId"));
         pool.setMetadataId(metadataId);
@@ -75,7 +74,7 @@ public class ServicePoolController extends BaseObserver {
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "updatePoolByName", method = RequestMethod.POST)
     @ResponseBody
-    public String updatePoolByName(HttpServletRequest request, HttpServletResponse response) {
+    public String updatePoolByName(HttpServletRequest request) {
         MetadataServicePool pool = new MetadataServicePool();
         long metadataId = Long.parseLong(request.getParameter("metadataId"));
         pool.setMetadataId(metadataId);
@@ -99,7 +98,7 @@ public class ServicePoolController extends BaseObserver {
             return "pool name and url can not empty";
         }
         if (metadataServicePoolService.updatePoolByName(pool) > 0) {
-            Map<String, Object> param = new HashMap<String, Object>();
+            Map<String, Object> param = new HashMap<>();
             param.put("metadataId", metadataId);
             param.put("servicePoolName", servicePoolName);
             param.put("oldServicePoolName", oldServicePoolName);
@@ -111,8 +110,8 @@ public class ServicePoolController extends BaseObserver {
 
     @RequestMapping(value = "deletePoolByName", method = RequestMethod.POST)
     @ResponseBody
-    public String deletePoolByName(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> param = new HashMap<String, Object>();
+    public String deletePoolByName(HttpServletRequest request) {
+        Map<String, Object> param = new HashMap<>();
         param.put("servicePoolName", request.getParameter("servicePoolName"));
         param.put("metadataId", Long.parseLong(request.getParameter("metadataId")));
         if (metadataServicePoolService.deletePoolByName(param) > 0) {
@@ -128,7 +127,6 @@ public class ServicePoolController extends BaseObserver {
 
     @Override
     public String getHandlerName() {
-
         return "servicePoolHandler";
     }
 }

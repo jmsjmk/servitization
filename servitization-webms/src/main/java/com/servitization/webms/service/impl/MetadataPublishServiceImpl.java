@@ -51,10 +51,8 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
     @Override
     public int publish(int nodeId, long nodeRelationId, long metadataId, long versionId) {
         String url = configProvider.Get("getAosMachineByNode.url") + nodeId + "/servers";
-
         CustomizeParameterEntity entity = new CustomizeParameterEntity();
         entity.setUrl(url);
-
         String param = "authkey=" + ConstantValue.KEY + "&secret=" + ConstantValue.SECRET;
         // 根据AOS节点获取机器IP列表
         GetAosMachineByNodeResp aosMachineByNodeResp = aosAgent.getAosMachineByNode(param, entity);
@@ -106,7 +104,6 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
         return 0;
     }
 
-
     public void initIpList(String ips, List<String> ipList) {
         if (StringUtils.isEmpty(ips)) {
             return;
@@ -116,7 +113,6 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
             ipList.add(s);
         }
     }
-
 
     public List<String> getMachineIps(List<MetadataMachine> machines) {
         List<String> ips = new ArrayList<>();
@@ -128,7 +124,6 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
         }
         return ips;
     }
-
 
     /**
      * metadata_publish:status[0:正在发布 ;1:发布成功; 2:发布失败]
@@ -144,7 +139,6 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
         long versionId = Long.parseLong(versionIdStr);
         MetadataVersion version = versionMapper.getMetadataVersionById(versionId);
         long metadataId = Long.valueOf(metadataIdStr);
-
         List<MetadataMachine> machines = metadataMachineService.getMachineListByMtdtId(String.valueOf(metadataId));
         ipList = getMachineIps(machines);
         if (null == ipList || ipList.size() == 0) {
@@ -219,5 +213,4 @@ public class MetadataPublishServiceImpl implements IMetadataPublishService {
     public List<MetadataPublishIp> getPublishDetail(long publishId) {
         return publishIpMapper.getPublishIpsByJobId(publishId);
     }
-
 }

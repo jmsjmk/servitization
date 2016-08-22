@@ -44,5 +44,4 @@ public class MetadataServicePoolServiceImpl implements IMetadataServicePoolServi
     public void deleteServicePoolByMetadataid(List<String> metadataId) {
         metadataServicePoolMapper.deleteServicePoolByMetadataid(metadataId);
     }
-
 }

@@ -95,5 +95,4 @@ public class MetadataSession {
     public void setValidateurl(String validateurl) {
         this.validateurl = validateurl;
     }
-
 }
